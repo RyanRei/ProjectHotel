@@ -6,6 +6,7 @@
 [ext_resource type="Resource" uid="uid://cp84m54cdi8us" path="res://Assets/ItemHolders/Encounters/Shift 1/encounter_1.tres" id="4_uyxfn"]
 [ext_resource type="PackedScene" uid="uid://ba3nri8t48jc6" path="res://Scenes/subtitlesText.tscn" id="4_wnmts"]
 [ext_resource type="PackedScene" uid="uid://p5ev8eu8tcfi" path="res://Scenes/Telephone.tscn" id="6_cm8yc"]
+[ext_resource type="PackedScene" uid="uid://eywvpoklnusj" path="res://Assets/3D Models/computah.glb" id="7_i2uxr"]
 
 [sub_resource type="Resource" id="Resource_tsy7g"]
 script = ExtResource("2_2hvnh")
@@ -65,3 +66,6 @@ transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 3.05
 light_energy = 16.0
 spot_range = 3.8424966
 spot_angle = 21.033018
+
+[node name="computah" parent="." unique_id=1114786589 instance=ExtResource("7_i2uxr")]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, -0.6714854, 0.1842078, -0.21041298)
