@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cp6w8467hemxp"
+path="res://.godot/imported/Cat Meow Sound Effect ~ Attract Cats, Sounds Cats Love [su6_bKJJk74].mp3-5f575c4a493408ef6b99d68ccdb0fd68.mp3str"
+
+[deps]
+
+source_file="res://Assets/Sound/voicelines/Cat Meow Sound Effect ~ Attract Cats, Sounds Cats Love [su6_bKJJk74].mp3"
+dest_files=["res://.godot/imported/Cat Meow Sound Effect ~ Attract Cats, Sounds Cats Love [su6_bKJJk74].mp3-5f575c4a493408ef6b99d68ccdb0fd68.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="EncounterData" format=3 uid="uid://borvgm7cvlbtd"]
+
+[ext_resource type="Script" uid="uid://b5vh1alvaioay" path="res://Scripts/ResrouceScripts/EncounterData.gd" id="1_7jpkf"]
+[ext_resource type="PackedScene" uid="uid://cu3jpjd8bf44a" path="res://Scenes/humanEntity.tscn" id="2_mflej"]
+
+[resource]
+script = ExtResource("1_7jpkf")
+day = 1
+shift = 1
+visitor_scene = ExtResource("2_mflej")

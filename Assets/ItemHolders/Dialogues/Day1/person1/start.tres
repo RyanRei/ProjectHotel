@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="DialogueNode" format=3 uid="uid://clcjdcl23htao"]
+
+[ext_resource type="Script" uid="uid://vwswsn27uvpe" path="res://Scripts/ResrouceScripts/DialougeChoice.gd" id="1_hiyxu"]
+[ext_resource type="Resource" uid="uid://cgkvoufv46cny" path="res://Assets/ItemHolders/Dialogues/Day1/person1/v2.tres" id="2_7mbn4"]
+[ext_resource type="Script" uid="uid://cwgrdj7ntjmds" path="res://Scripts/ResrouceScripts/DialougeNode.gd" id="2_vxp0u"]
+[ext_resource type="AudioStream" uid="uid://c5bm085mdtkyl" path="res://Assets/Sound/voicelines/sans voice [gGROjaIw5Xw].mp3" id="4_7mbn4"]
+
+[resource]
+script = ExtResource("2_vxp0u")
+voiceline = ExtResource("4_7mbn4")
+text = "Hi my name is john scott , its pleasure to meet you uwu urmm yaemete kudasai uwaaaaaaaaaaaaaaaaaaaaaaaa,
+flare is the furriest person iv ever seen , being gay isnt enough ssws
+"
+duration = 5.0
+next_node = ExtResource("2_7mbn4")
+metadata/_custom_type_script = "uid://cwgrdj7ntjmds"

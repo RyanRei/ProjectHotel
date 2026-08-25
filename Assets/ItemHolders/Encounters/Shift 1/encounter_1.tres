@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="EncounterData" format=3 uid="uid://cp84m54cdi8us"]
+
+[ext_resource type="Resource" uid="uid://clcjdcl23htao" path="res://Assets/ItemHolders/Dialogues/Day1/person1/start.tres" id="1_jh53n"]
+[ext_resource type="Script" uid="uid://b5vh1alvaioay" path="res://Scripts/ResrouceScripts/EncounterData.gd" id="2_6kddr"]
+
+[resource]
+script = ExtResource("2_6kddr")
+name = "John Scott"
+caller_type = "Innocent"
+dialogue = ExtResource("1_jh53n")
+communication_type = "CALL"

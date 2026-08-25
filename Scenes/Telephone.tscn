@@ -1,5 +1,9 @@
 [gd_scene format=3 uid="uid://p5ev8eu8tcfi"]
 
+[ext_resource type="Script" uid="uid://r31xqfposrtj" path="res://Scenes/telephone.gd" id="1_c1elu"]
+[ext_resource type="AudioStream" uid="uid://drcslc6fruwa7" path="res://Assets/Sound/sfx/telephone ringing.mp3" id="2_4tfhl"]
+[ext_resource type="AudioStream" uid="uid://duxkps54u67wf" path="res://Assets/Sound/sfx/phone pickup.mp3" id="3_gappx"]
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_u8vdq"]
 size = Vector3(1.3660889, 0.7836914, 1.6835938)
 
@@ -16,6 +20,9 @@ material = SubResource("StandardMaterial3D_cm8yc")
 size = Vector3(1.635952, 1.3309326, 0.34516144)
 
 [node name="Telephone" type="Area3D" unique_id=1259159639]
+script = ExtResource("1_c1elu")
+ringSound = ExtResource("2_4tfhl")
+pickupSound = ExtResource("3_gappx")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=625714897]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.18304443, 0.19995117, 0)
@@ -28,3 +35,13 @@ mesh = SubResource("BoxMesh_uyxfn")
 [node name="phone2" type="MeshInstance3D" parent="." unique_id=431533335]
 transform = Transform3D(-0.016114712, -0.9998652, -0.0031467548, 2.8984206e-11, -0.0031471637, 0.99999505, -0.99987006, 0.016114615, 5.071555e-05, 0.13960004, -0.03360182, 0.027789354)
 mesh = SubResource("BoxMesh_cm8yc")
+
+[node name="RingAudio" type="AudioStreamPlayer3D" parent="." unique_id=545542883]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.16342407, 0.27568328, 0)
+stream = ExtResource("2_4tfhl")
+volume_db = -3.544
+unit_size = 2.0
+pitch_scale = 0.78
+max_distance = 343.37
+
+[connection signal="input_event" from="." to="." method="_on_input_event"]

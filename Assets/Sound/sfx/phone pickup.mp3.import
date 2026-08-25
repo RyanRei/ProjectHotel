@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://duxkps54u67wf"
+path="res://.godot/imported/phone pickup.mp3-43fcf8a7ea0cbfdf9a7f32a16645a793.mp3str"
+
+[deps]
+
+source_file="res://Assets/Sound/sfx/phone pickup.mp3"
+dest_files=["res://.godot/imported/phone pickup.mp3-43fcf8a7ea0cbfdf9a7f32a16645a793.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0.0
+bpm=0.0
+beat_count=0
+bar_beats=4

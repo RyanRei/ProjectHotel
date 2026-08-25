@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://ba3nri8t48jc6"]
+
+[ext_resource type="Script" uid="uid://dduj3ikfjpmta" path="res://Scripts/dialogBox.gd" id="1_iscj4"]
+
+[node name="DialogBox" type="Control" unique_id=1159827636]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_iscj4")
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=235053116]
+visible = false
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Subtitles" type="Label" parent="." unique_id=1865542858]
+custom_minimum_size = Vector2(145.715, 0)
+layout_mode = 0
+offset_left = 42.0
+offset_top = 494.0
+offset_right = 1144.0
+offset_bottom = 644.0
+theme_override_font_sizes/font_size = 30
+autowrap_mode = 3
+
+[node name="Timer" type="Timer" parent="." unique_id=680127966]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1832244512]
+volume_db = -1.769

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="DialogueNode" format=3 uid="uid://cgkvoufv46cny"]
+
+[ext_resource type="Script" uid="uid://vwswsn27uvpe" path="res://Scripts/ResrouceScripts/DialougeChoice.gd" id="1_8dkei"]
+[ext_resource type="Resource" uid="uid://d3w4suy60xdk1" path="res://Assets/ItemHolders/Dialogues/Day1/person1/v3.tres" id="2_i0jhk"]
+[ext_resource type="Script" uid="uid://cwgrdj7ntjmds" path="res://Scripts/ResrouceScripts/DialougeNode.gd" id="2_qru3f"]
+[ext_resource type="AudioStream" uid="uid://cp6w8467hemxp" path="res://Assets/Sound/voicelines/Cat Meow Sound Effect ~ Attract Cats, Sounds Cats Love [su6_bKJJk74].mp3" id="4_i0jhk"]
+
+[resource]
+script = ExtResource("2_qru3f")
+voiceline = ExtResource("4_i0jhk")
+text = "Im looking for a hotel"
+duration = 5.0
+next_node = ExtResource("2_i0jhk")
+metadata/_custom_type_script = "uid://cwgrdj7ntjmds"

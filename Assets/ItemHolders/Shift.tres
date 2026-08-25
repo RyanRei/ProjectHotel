@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="Day" format=3 uid="uid://c2ccemp0x3u0r"]
+
+[ext_resource type="Script" uid="uid://b5vh1alvaioay" path="res://Scripts/ResrouceScripts/EncounterData.gd" id="1_0121u"]
+[ext_resource type="Script" uid="uid://8570ain8w4hx" path="res://Scripts/ResrouceScripts/Day.gd" id="2_8fqgl"]
+
+[resource]
+script = ExtResource("2_8fqgl")
