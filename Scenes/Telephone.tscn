@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://p5ev8eu8tcfi"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_u8vdq"]
+size = Vector3(1.3660889, 0.7836914, 1.6835938)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cm8yc"]
+albedo_color = Color(0.1843273, 0.1794443, 0.1794443, 1)
+metallic = 0.61
+
+[sub_resource type="BoxMesh" id="BoxMesh_uyxfn"]
+material = SubResource("StandardMaterial3D_cm8yc")
+size = Vector3(1.635952, 0.40576172, 0.34516144)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cm8yc"]
+material = SubResource("StandardMaterial3D_cm8yc")
+size = Vector3(1.635952, 1.3309326, 0.34516144)
+
+[node name="Telephone" type="Area3D" unique_id=1259159639]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=625714897]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.18304443, 0.19995117, 0)
+shape = SubResource("BoxShape3D_u8vdq")
+
+[node name="phone" type="MeshInstance3D" parent="." unique_id=1484717483]
+transform = Transform3D(-0.016114712, -0.9998652, -0.0031467548, 2.8984206e-11, -0.0031471637, 0.99999505, -0.99987006, 0.016114615, 5.071555e-05, -0.20089674, 0.28131533, 0.035918474)
+mesh = SubResource("BoxMesh_uyxfn")
+
+[node name="phone2" type="MeshInstance3D" parent="." unique_id=431533335]
+transform = Transform3D(-0.016114712, -0.9998652, -0.0031467548, 2.8984206e-11, -0.0031471637, 0.99999505, -0.99987006, 0.016114615, 5.071555e-05, 0.13960004, -0.03360182, 0.027789354)
+mesh = SubResource("BoxMesh_cm8yc")
