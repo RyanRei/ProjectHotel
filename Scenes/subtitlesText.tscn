@@ -29,3 +29,9 @@ autowrap_mode = 3
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1832244512]
 volume_db = -1.769
+
+[node name="Choices" type="VBoxContainer" parent="." unique_id=1442718126]
+layout_mode = 0
+offset_top = 494.0
+offset_right = 652.0
+offset_bottom = 645.0

@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="DialogueNode" format=3 uid="uid://bwnujohgt3trh"]
+
+[ext_resource type="Script" uid="uid://vwswsn27uvpe" path="res://Scripts/ResrouceScripts/DialougeChoice.gd" id="1_xn7es"]
+[ext_resource type="Script" uid="uid://cwgrdj7ntjmds" path="res://Scripts/ResrouceScripts/DialougeNode.gd" id="2_mwwas"]
+[ext_resource type="AudioStream" uid="uid://c5bm085mdtkyl" path="res://Assets/Sound/voicelines/sans voice [gGROjaIw5Xw].mp3" id="3_mwwas"]
+
+[resource]
+script = ExtResource("2_mwwas")
+voiceline = ExtResource("3_mwwas")
+text = "raghu is gay not me"
+duration = 3.0
+metadata/_custom_type_script = "uid://cwgrdj7ntjmds"

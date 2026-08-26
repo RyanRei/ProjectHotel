@@ -7,7 +7,7 @@ extends Control
 
 func _ready() -> void:
 	DialogueManager.dialogue_started.connect(run_dialogue)
-	print("Connected")
+	DialogueManager.choices_requested.connect(show_choices)
 
 
 func run_dialogue(current_node:DialogueNode):
@@ -48,7 +48,32 @@ func hide_line():
 	tween.tween_property(text_label, "modulate:a", 0.0, 0.6)
 	return tween
 
-#
+
+
+
+func show_choices(choices: Array[DialogueChoice]):
+	for child in $Choices.get_children():
+		child.queue_free()
+
+	for choice in choices:
+		var button := Button.new()
+		button.text = choice.text
+		$Choices.add_child(button)
+
+		button.pressed.connect(_on_choice_pressed.bind(choice))
+
+func _on_choice_pressed(choice: DialogueChoice):
+	$Choices.hide()
+	DialogueManager.choose(choice)
+
+
+
+
+
+
+
+
+
 #func change_line(text: String):
 	#var tween = create_tween()
 	#tween.tween_property(text_label, "modulate:a", 0.0, 0.2)

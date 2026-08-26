@@ -1,6 +1,7 @@
 extends Node
 signal dialogue_started
 signal dialogue_finished
+signal choices_requested(choices: Array[DialogueChoice])
 
 var current_node: DialogueNode
 var active := false
@@ -24,18 +25,20 @@ func advance():
 		"REJECT":
 			return end_dialogue("REJECT")
 			
-	if not current_node.choices.is_empty():
-		return
-
+		"QUESTION":
+			
+			if not current_node.choices.is_empty():
+				print("question")
+				choices_requested.emit(current_node.choices)
+				return
+			
 	if current_node.next_node:
 		current_node = current_node.next_node
 		play_current_node()
 	else:
 		end_dialogue("NORMAL")
 		
-func choose(index: int):
-	var choice = current_node.choices[index]
-
+func choose(choice: DialogueChoice):
 	current_node = choice.next_node
 	play_current_node()
 	
