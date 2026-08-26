@@ -18,6 +18,12 @@ func play_current_node():
 	#DialogueUI.show_node(current_node)
 
 func advance():
+	match current_node.final_choice:
+		"ACCEPT":
+			return end_dialogue("ACCEPT")
+		"REJECT":
+			return end_dialogue("REJECT")
+			
 	if not current_node.choices.is_empty():
 		return
 
@@ -25,7 +31,7 @@ func advance():
 		current_node = current_node.next_node
 		play_current_node()
 	else:
-		end_dialogue()
+		end_dialogue("NORMAL")
 		
 func choose(index: int):
 	var choice = current_node.choices[index]
@@ -33,6 +39,6 @@ func choose(index: int):
 	current_node = choice.next_node
 	play_current_node()
 	
-func end_dialogue():
+func end_dialogue(final_choice:String):
 	active = false
 	dialogue_finished.emit()

@@ -1,10 +1,11 @@
 [gd_resource type="Resource" script_class="EncounterData" format=3 uid="uid://borvgm7cvlbtd"]
 
 [ext_resource type="Script" uid="uid://b5vh1alvaioay" path="res://Scripts/ResrouceScripts/EncounterData.gd" id="1_7jpkf"]
-[ext_resource type="PackedScene" uid="uid://cu3jpjd8bf44a" path="res://Scenes/humanEntity.tscn" id="2_mflej"]
+[ext_resource type="Resource" uid="uid://dyt2qa48ltoht" path="res://Assets/ItemHolders/Dialogues/Day1/person2/start.tres" id="1_ohncl"]
 
 [resource]
 script = ExtResource("1_7jpkf")
-day = 1
-shift = 1
-visitor_scene = ExtResource("2_mflej")
+name = "guh"
+caller_type = "Killer"
+dialogue = ExtResource("1_ohncl")
+communication_type = "CALL"

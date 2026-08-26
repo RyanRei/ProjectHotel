@@ -5,3 +5,5 @@ extends Resource
 @export var duration:float
 @export var next_node:DialogueNode
 @export var choices: Array[DialogueChoice]
+@export var wait_for_prompt: bool=false
+@export_enum("ACCEPT","REJECT","QUESTION","NORMAL") var final_choice:String="NORMAL"

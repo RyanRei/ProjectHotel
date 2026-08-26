@@ -2,6 +2,7 @@ extends Control
 @onready var text_label: Label = $Subtitles
 @onready var timer: Timer = $Timer
 @onready var audio_stream_player: AudioStreamPlayer = $AudioStreamPlayer
+@export var accept_reject:AcceptRejectButton
 
 
 func _ready() -> void:
@@ -23,6 +24,15 @@ func run_dialogue(current_node:DialogueNode):
 	
 	await timer.timeout
 	await hide_line().finished
+	
+	if current_node.wait_for_prompt:
+		if current_node.next_node:
+			accept_reject.turnOn(true)
+		else:
+			accept_reject.turnOn(false)
+		var choiceMade:String=await accept_reject.choiceMade
+		current_node.final_choice=choiceMade
+		accept_reject.turnOff()
 	DialogueManager.advance()
 	pass
 

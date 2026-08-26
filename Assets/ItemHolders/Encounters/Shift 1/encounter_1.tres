@@ -2,10 +2,12 @@
 
 [ext_resource type="Resource" uid="uid://clcjdcl23htao" path="res://Assets/ItemHolders/Dialogues/Day1/person1/start.tres" id="1_jh53n"]
 [ext_resource type="Script" uid="uid://b5vh1alvaioay" path="res://Scripts/ResrouceScripts/EncounterData.gd" id="2_6kddr"]
+[ext_resource type="PackedScene" uid="uid://cu3jpjd8bf44a" path="res://Scenes/humanEntity.tscn" id="2_ykowu"]
 
 [resource]
 script = ExtResource("2_6kddr")
-name = "John Scott"
+name = "Tracey Morgan"
 caller_type = "Innocent"
 dialogue = ExtResource("1_jh53n")
+model = ExtResource("2_ykowu")
 communication_type = "CALL"
