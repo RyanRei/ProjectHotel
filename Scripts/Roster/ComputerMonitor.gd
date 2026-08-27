@@ -17,7 +17,6 @@ var active_row := 0
 
 
 func _ready() -> void:
-	set_process_unhandled_input(true)
 	screen_mesh = find_screen_mesh(self)
 	if screen_mesh == null:
 		push_warning("ComputerMonitor could not find the imported computerScreen mesh.")
@@ -25,28 +24,6 @@ func _ready() -> void:
 	create_idle_display()
 	create_click_area()
 	set_process(true)
-
-func _unhandled_input(event: InputEvent) -> void:
-	if not (event is InputEventMouseButton \
-		and event.button_index == MOUSE_BUTTON_LEFT \
-		and event.pressed):
-		return
-	var camera := get_viewport().get_camera_3d()
-	if camera == null or click_area == null:
-		return
-	var pointer_position: Vector2 = event.position
-	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-		pointer_position = get_viewport().get_visible_rect().size * 0.5
-	var origin := camera.project_ray_origin(pointer_position)
-	var destination := origin + camera.project_ray_normal(pointer_position) * 20.0
-	var query := PhysicsRayQueryParameters3D.create(origin, destination)
-	query.collide_with_areas = true
-	query.collide_with_bodies = false
-	var hit := camera.get_world_3d().direct_space_state.intersect_ray(query)
-	if not hit.is_empty() and hit.get("collider") == click_area:
-		interact()
-		get_viewport().set_input_as_handled()
-
 
 func _process(delta: float) -> void:
 	if idle_viewport == null:
@@ -221,23 +198,8 @@ func create_click_area() -> void:
 		bounds.end.z + 0.008
 	)
 	click_area.add_child(shape)
-	click_area.input_event.connect(_on_monitor_input_event)
 	click_area.mouse_entered.connect(func() -> void: Input.set_default_cursor_shape(Input.CURSOR_POINTING_HAND))
 	click_area.mouse_exited.connect(func() -> void: Input.set_default_cursor_shape(Input.CURSOR_ARROW))
-
-
-func _on_monitor_input_event(
-	_camera: Node,
-	event: InputEvent,
-	_event_position: Vector3,
-	_normal: Vector3,
-	_shape_index: int
-) -> void:
-	if event is InputEventMouseButton \
-		and event.button_index == MOUSE_BUTTON_LEFT \
-		and event.pressed:
-		interact()
-		get_viewport().set_input_as_handled()
 
 
 func interact() -> void:

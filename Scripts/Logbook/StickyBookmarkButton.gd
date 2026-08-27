@@ -23,7 +23,7 @@ func configure(color_value: Color, faces_right: bool) -> void:
 func _draw() -> void:
 	var width := size.x
 	var height := size.y
-	var cut := 9.0
+	var cut := 8.0
 	var shape := PackedVector2Array()
 	if points_right:
 		shape = PackedVector2Array([Vector2(0, 0), Vector2(width - cut, 0), Vector2(width, cut), Vector2(width, height - cut), Vector2(width - cut, height), Vector2(0, height)])
@@ -37,6 +37,16 @@ func _draw() -> void:
 	if is_pressed():
 		fill = fill.darkened(0.08)
 	draw_colored_polygon(shape, fill)
+	# A darker strip is the section tucked beneath the page stack.
+	var buried_strip := PackedVector2Array()
+	if points_right:
+		buried_strip = PackedVector2Array([Vector2(0, 1), Vector2(9, 1), Vector2(9, height - 1), Vector2(0, height - 1)])
+	else:
+		buried_strip = PackedVector2Array([Vector2(width - 9, 1), Vector2(width, 1), Vector2(width, height - 1), Vector2(width - 9, height - 1)])
+	draw_colored_polygon(buried_strip, Color(0.20, 0.14, 0.08, 0.16))
+	# Subtle fibres keep the control from looking like a flat UI rectangle.
+	for grain_y in [13.0, 31.0, 49.0]:
+		draw_line(Vector2(12, grain_y), Vector2(width - 12, grain_y + 0.5), Color(1, 0.93, 0.76, 0.10), 1.0)
 	draw_polyline(shape + PackedVector2Array([shape[0]]), Color("493629"), 1.5, true)
 	var crease_x := 10.0 if points_right else width - 10.0
 	draw_line(Vector2(crease_x, 7), Vector2(crease_x, height - 7), Color(0.25, 0.18, 0.12, 0.30), 1.0)
@@ -45,7 +55,7 @@ func _draw() -> void:
 	var font := ThemeDB.fallback_font
 	var lines := text.split("\n", false)
 	var font_size := 10
-	var line_height := 12.0
+	var line_height := 13.0
 	var block_height := float(lines.size()) * line_height
 	var first_baseline := (height - block_height) * 0.5 + float(font_size)
 	for line_index in lines.size():

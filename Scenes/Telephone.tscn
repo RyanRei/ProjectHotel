@@ -49,5 +49,3 @@ max_distance = 343.37
 
 [node name="telephone" parent="." unique_id=318535350 instance=ExtResource("4_2rlcx")]
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0.54437745, -0.06018561, -0.19816768)
-
-[connection signal="input_event" from="." to="." method="_on_input_event"]

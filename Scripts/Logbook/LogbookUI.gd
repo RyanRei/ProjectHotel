@@ -10,19 +10,19 @@ const MUTED_INK := Color("6f6354")
 const PAPER := Color("d8c7a2")
 const PAPER_DARK := Color("bea980")
 const COVER := Color("3b2b22")
-const TAB_COLORS := [Color("a95445"), Color("b58439"), Color("6f8150"), Color("4f777a")]
+const TAB_COLORS := [Color("d2a23f"), Color("9eb7bf"), Color("cf8078"), Color("a5a95d"), Color("c97b3d")]
 
 var pages: Array[Dictionary] = [
-	{"tab":"SHIFT", "title":"SHIFT 1  •  AUGUST 26", "subtitle":"6:00 PM — 6:00 AM", "entries":[["6:00 PM","Shift opened. Roster last synchronized at 5:45 PM."],["7:40 PM","Tracey Miller, Room 101, pre-authorized visitor Maya Chen."],["9:00 PM","Room 102 checkout deadline. Sennet Cole no longer has active access."],["12:00 AM","Roster update window begins. Confirm conflicting records here."]]},
-	{"tab":"VISITORS", "title":"EXPECTED VISITORS", "subtitle":"Verify ID and arrival window", "entries":[["8:30–9:15","Maya Chen → Tracey Miller, Room 101. License ending 6621."],["10:15–11:00","Clara Hayes → William Hayes, Room 103. National ID ending 4408."],["11:30–12:00","Daniel Ortiz → Nina Patel, Room 104. Passport ending 9184."],["IMPORTANT","A matching name alone is not proof. Confirm the host and one fixed detail."]]},
-	{"tab":"RESIDENTS", "title":"RESIDENT NOTES", "subtitle":"Special requirements and exceptions", "entries":[["ROOM 101","Tracey Miller. Phone ending 7734. Visitor call recorded at 7:40 PM."],["ROOM 103","William Hayes has impaired hearing. Repeat questions clearly; allow extra time."],["ROOM 104","Nina Patel. Phone ending 1183. Daniel Ortiz expected before midnight."],["ROOM 107","Marcus Reed is away and expects to return after midnight."]]},
-	{"tab":"INCIDENTS", "title":"INCIDENTS & MAINTENANCE", "subtitle":"Record anything unusual", "entries":[["6:25 PM","Lobby camera briefly lost signal. Restored at 6:31 PM."],["7:05 PM","Room 102 checkout recorded; cleaning inspection still pending."],["8:05 PM","Unknown person claimed Room 102 access. Entry denied."],["NOTICE","No maintenance staff are scheduled after 10:00 PM."]]},
+	{"tab":"SHIFT", "title":"SHIFT 1  •  AUGUST 26", "subtitle":"6:00 PM — 6:00 AM", "columns":["TIME","LOG ENTRY"], "rows":[["6:00 PM","Shift opened; roster synchronized at 5:45 PM."],["7:40 PM","Tracey Miller authorized visitor Maya Chen."],["9:00 PM","Room 102 checkout deadline."],["12:00 AM","Roster update window begins."]], "details":"Night reception duty. Review every visitor against the roster and the resident's call.", "key_points":["Confirm the host and room number.","Check the stated arrival window.","Record every access decision."], "notes":"Roster information may conflict during the midnight update."},
+	{"tab":"VISITORS", "title":"EXPECTED VISITORS", "subtitle":"Verify identity and arrival window", "columns":["TIME","VISITOR / HOST"], "rows":[["8:30–9:15","Maya Chen — Tracey Miller, Room 101."],["10:15–11:00","Clara Hayes — William Hayes, Room 103."],["11:30–12:00","Daniel Ortiz — Nina Patel, Room 104."]], "details":"Only visitors recorded by a resident may enter. A matching name by itself is not proof.", "key_points":["Request the visitor's ID.","Confirm the resident's full name.","Verify one fixed detail."], "notes":"Keep the original resident call time beside each authorization."},
+	{"tab":"RESIDENTS", "title":"RESIDENT NOTES", "subtitle":"Requirements and exceptions", "columns":["ROOM","RESIDENT / NOTE"], "rows":[["101","Tracey Miller — phone ending 7734."],["103","William Hayes — impaired hearing."],["104","Nina Patel — visitor expected before midnight."],["107","Marcus Reed — returning after midnight."]], "details":"Resident notes contain accessibility requirements and exceptions that affect verification.", "key_points":["Allow extra time when required.","Never reveal private roster details.","Cross-check visitor authorization."], "notes":"Repeat questions clearly for William Hayes in Room 103."},
+	{"tab":"INCIDENTS", "title":"INCIDENT REPORTS", "subtitle":"Security and maintenance record", "columns":["TIME","INCIDENT"], "rows":[["6:25 PM","Lobby camera signal lost; restored 6:31 PM."],["7:05 PM","Room 102 checkout recorded."],["8:05 PM","Unknown visitor claimed Room 102 access."]], "details":"Unusual activity, access attempts, and equipment failures must be recorded here.", "key_points":["Note the exact time.","Record the claimed identity.","Escalate repeated attempts."], "notes":"No maintenance staff are scheduled after 10:00 PM."},
 ]
 
 var current_page := 0
 var turning := false
-var left_tabs: VBoxContainer
-var right_tabs: VBoxContainer
+var left_tabs: Control
+var right_tabs: Control
 var page_surface: PanelContainer
 var title_label: Label
 var subtitle_label: Label
@@ -45,9 +45,23 @@ func _ready() -> void:
 	visible = false
 
 func _input(event: InputEvent) -> void:
-	if visible and event.is_action_pressed("ui_cancel"):
+	if not visible:
+		return
+	if event.is_action_pressed("ui_cancel"):
 		close_logbook()
 		get_viewport().set_input_as_handled()
+	elif event is InputEventMouseButton \
+		and event.button_index == MOUSE_BUTTON_LEFT \
+		and event.pressed \
+		and not is_point_over_book(event.position):
+		close_logbook()
+		get_viewport().set_input_as_handled()
+
+func is_point_over_book(screen_position: Vector2) -> bool:
+	if page_surface == null:
+		return false
+	# Include the small bookmark overhangs as part of the book interaction area.
+	return page_surface.get_global_rect().grow(20.0).has_point(screen_position)
 
 func open_logbook() -> void:
 	visible = true
@@ -64,15 +78,16 @@ func build_interface() -> void:
 	var dimmer := ColorRect.new()
 	dimmer.color = Color(0.025, 0.02, 0.016, 0.80)
 	dimmer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	dimmer.mouse_filter = Control.MOUSE_FILTER_STOP
+	dimmer.gui_input.connect(_on_background_input)
 	add_child(dimmer)
 	var layout := AspectRatioContainer.new()
 	layout.ratio = 1.5
 	layout.stretch_mode = AspectRatioContainer.STRETCH_FIT
 	layout.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE, 34)
 	add_child(layout)
-	left_tabs = VBoxContainer.new()
-	left_tabs.custom_minimum_size.x = 116
-	left_tabs.add_theme_constant_override("separation", 7)
+	left_tabs = Control.new()
+	left_tabs.custom_minimum_size.x = 94
 	page_surface = PanelContainer.new()
 	page_surface.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	page_surface.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -99,15 +114,20 @@ func build_interface() -> void:
 	left_page.clip_contents = true
 	left_page.add_theme_stylebox_override("panel", make_page_style(true))
 	open_pages.add_child(left_page)
+	var left_padding := MarginContainer.new()
+	add_page_margins(left_padding)
+	left_page.add_child(left_padding)
 	var left_layout := VBoxContainer.new()
 	left_layout.add_theme_constant_override("separation", 12)
-	left_page.add_child(left_layout)
+	left_padding.add_child(left_layout)
 	var header := HBoxContainer.new()
 	left_layout.add_child(header)
 	var heading := VBoxContainer.new()
 	heading.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	header.add_child(heading)
 	title_label = make_label("", 20, INK)
+	title_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	title_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	heading.add_child(title_label)
 	subtitle_label = make_label("", 13, MUTED_INK)
 	heading.add_child(subtitle_label)
@@ -126,19 +146,15 @@ func build_interface() -> void:
 	right_page.clip_contents = true
 	right_page.add_theme_stylebox_override("panel", make_page_style(false))
 	open_pages.add_child(right_page)
+	var right_padding := MarginContainer.new()
+	add_page_margins(right_padding)
+	right_page.add_child(right_padding)
 	var right_layout := VBoxContainer.new()
 	right_layout.add_theme_constant_override("separation", 12)
-	right_page.add_child(right_layout)
-	var right_header := HBoxContainer.new()
-	right_layout.add_child(right_header)
+	right_padding.add_child(right_layout)
 	var daily_log := make_label("DAILY LOG  •  CONTINUED", 13, MUTED_INK)
 	daily_log.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	right_header.add_child(daily_log)
-	var close_button := Button.new()
-	close_button.text = "CLOSE"
-	close_button.custom_minimum_size = Vector2(100, 40)
-	close_button.pressed.connect(close_logbook)
-	right_header.add_child(close_button)
+	right_layout.add_child(daily_log)
 	right_layout.add_child(HSeparator.new())
 	right_entries = VBoxContainer.new()
 	right_entries.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -170,23 +186,29 @@ func build_interface() -> void:
 	left_tabs.anchor_right = 0.0
 	left_tabs.anchor_top = 0.18
 	left_tabs.anchor_bottom = 0.18
-	left_tabs.offset_left = -24
-	left_tabs.offset_right = 80
+	left_tabs.offset_left = -18
+	left_tabs.offset_right = 76
 	left_tabs.offset_top = 0
-	left_tabs.offset_bottom = 0
+	left_tabs.offset_bottom = 290
 	tab_layer.add_child(left_tabs)
-	right_tabs = VBoxContainer.new()
-	right_tabs.custom_minimum_size.x = 116
-	right_tabs.add_theme_constant_override("separation", 7)
+	right_tabs = Control.new()
+	right_tabs.custom_minimum_size.x = 94
 	right_tabs.anchor_left = 1.0
 	right_tabs.anchor_right = 1.0
 	right_tabs.anchor_top = 0.18
 	right_tabs.anchor_bottom = 0.18
-	right_tabs.offset_left = -80
-	right_tabs.offset_right = 24
+	right_tabs.offset_left = -76
+	right_tabs.offset_right = 18
 	right_tabs.offset_top = 0
-	right_tabs.offset_bottom = 0
+	right_tabs.offset_bottom = 290
 	tab_layer.add_child(right_tabs)
+
+func _on_background_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton \
+		and event.button_index == MOUSE_BUTTON_LEFT \
+		and event.pressed:
+		close_logbook()
+		get_viewport().set_input_as_handled()
 
 func turn_to_page(index: int) -> void:
 	if turning or index == current_page:
@@ -233,23 +255,55 @@ func show_page(index: int) -> void:
 		for child in container.get_children():
 			container.remove_child(child)
 			child.queue_free()
-	for entry_index in page.entries.size():
-		var entry = page.entries[entry_index]
-		var row := PanelContainer.new()
-		row.clip_contents = true
-		row.add_theme_stylebox_override("panel", make_style(Color.TRANSPARENT, Color.TRANSPARENT, 0, 0, 8))
-		var row_layout := HBoxContainer.new()
-		row_layout.add_theme_constant_override("separation", 18)
-		row.add_child(row_layout)
-		var time_label := make_label(str(entry[0]), 12, INK)
-		time_label.custom_minimum_size.x = 82
-		row_layout.add_child(time_label)
-		var note_label := make_label(str(entry[1]), 13, INK)
-		note_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		note_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-		note_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		row_layout.add_child(note_label)
-		(left_entries if entry_index < 2 else right_entries).add_child(row)
+	var table_header := HBoxContainer.new()
+	table_header.add_theme_constant_override("separation", 12)
+	var first_column_header := make_label(str(page.columns[0]), 11, MUTED_INK)
+	first_column_header.custom_minimum_size.x = 62
+	first_column_header.clip_text = true
+	table_header.add_child(first_column_header)
+	var second_column_header := make_label(str(page.columns[1]), 11, MUTED_INK)
+	second_column_header.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	second_column_header.clip_text = true
+	table_header.add_child(second_column_header)
+	left_entries.add_child(table_header)
+	left_entries.add_child(HSeparator.new())
+	for row_data in page.rows:
+		var row := HBoxContainer.new()
+		row.custom_minimum_size.y = 38
+		row.add_theme_constant_override("separation", 12)
+		var first_value := make_label(str(row_data[0]), 11, INK)
+		first_value.custom_minimum_size.x = 62
+		first_value.clip_text = true
+		first_value.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		row.add_child(first_value)
+		var second_value := make_label(str(row_data[1]), 11, INK)
+		second_value.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		second_value.clip_text = true
+		second_value.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		second_value.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		second_value.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		row.add_child(second_value)
+		left_entries.add_child(row)
+	var notes_heading := make_section_heading("NOTES")
+	left_entries.add_child(notes_heading)
+	var notes_label := make_label(str(page.notes), 11, INK)
+	notes_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	notes_label.clip_text = true
+	left_entries.add_child(notes_label)
+
+	right_entries.add_child(make_section_heading("SECTION DETAILS"))
+	var detail_label := make_label(str(page.details), 11, INK)
+	detail_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	detail_label.clip_text = true
+	detail_label.custom_minimum_size.y = 76
+	right_entries.add_child(detail_label)
+	right_entries.add_child(make_section_heading("KEY POINTS"))
+	for point in page.key_points:
+		var point_label := make_label("•  " + str(point), 11, INK)
+		point_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		point_label.clip_text = true
+		point_label.custom_minimum_size.y = 26
+		right_entries.add_child(point_label)
 	page_number.text = "—  %d / %d  —" % [current_page + 1, pages.size()]
 	rebuild_tabs()
 
@@ -261,20 +315,39 @@ func rebuild_tabs() -> void:
 			continue
 		var tab := StickyTabScript.new() as Button
 		tab.text = "%d\n%s" % [index + 1, str(pages[index].tab).replace(" ", "\n")]
-		tab.custom_minimum_size = Vector2(104, 58)
+		tab.custom_minimum_size = Vector2(94, 64)
 		tab.pressed.connect(turn_to_page.bind(index))
 		var destination := left_tabs if index < current_page else right_tabs
-		tab.call("configure", TAB_COLORS[index], destination == left_tabs)
+		# Right bookmarks expose their right edge; left bookmarks expose left.
+		tab.call("configure", TAB_COLORS[index], destination == right_tabs)
 		destination.add_child(tab)
-		tab.rotation = deg_to_rad(-0.7 if destination == left_tabs else 0.7)
+		tab.position = Vector2(0, index * 70)
+		tab.rotation = deg_to_rad(-0.45 if destination == left_tabs else 0.45)
 		tab.pivot_offset = tab.custom_minimum_size * 0.5
 
 func make_label(text_value: String, font_size: int, color: Color) -> Label:
 	var label := Label.new()
 	label.text = text_value
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	label.add_theme_font_size_override("font_size", font_size)
 	label.add_theme_color_override("font_color", color)
 	return label
+
+func add_page_margins(container: MarginContainer) -> void:
+	# The binder texture includes stacked page edges outside the usable sheet.
+	# Keep content inside the visible paper rather than the larger control bounds.
+	container.add_theme_constant_override("margin_left", 40)
+	container.add_theme_constant_override("margin_right", 40)
+	container.add_theme_constant_override("margin_top", 24)
+	container.add_theme_constant_override("margin_bottom", 24)
+
+func make_section_heading(text_value: String) -> VBoxContainer:
+	var section := VBoxContainer.new()
+	section.add_theme_constant_override("separation", 4)
+	section.add_child(make_label(text_value, 12, INK))
+	section.add_child(HSeparator.new())
+	return section
 
 func make_style(fill: Color, border: Color, border_width: int, radius: int, margin: int) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
@@ -289,7 +362,7 @@ func make_style(fill: Color, border: Color, border_width: int, radius: int, marg
 	return style
 
 func make_page_style(is_left: bool) -> StyleBoxFlat:
-	var style := make_style(Color.TRANSPARENT, Color.TRANSPARENT, 0, 0, 20)
+	var style := make_style(Color.TRANSPARENT, Color.TRANSPARENT, 0, 0, 0)
 	style.corner_radius_top_right = 1 if is_left else 5
 	style.corner_radius_bottom_right = 1 if is_left else 5
 	style.corner_radius_top_left = 5 if is_left else 1

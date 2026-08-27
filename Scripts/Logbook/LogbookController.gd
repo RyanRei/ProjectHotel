@@ -1,3 +1,4 @@
+@tool
 class_name LogbookController
 extends Node3D
 
@@ -13,11 +14,17 @@ var page_material: StandardMaterial3D
 var turn_direction := 1.0
 const PAGE_WIDTH_SEGMENTS := 24
 const PAGE_LENGTH_SEGMENTS := 6
+# The animated GLB reports a very large skinned AABB (roughly the whole desk).
+# Use a deliberate hitbox around the visible closed book instead.
+const CLICKABLE_CENTER := Vector3(0.0, 0.08, 0.0)
+const CLICKABLE_SIZE := Vector3(0.28, 1.9, 2.4)
 signal page_turn_midpoint
 signal page_turn_finished
 
 func _ready() -> void:
-	set_process_unhandled_input(true)
+	apply_compact_editor_bounds()
+	if Engine.is_editor_hint():
+		return
 	add_to_group("logbook_controller")
 	animation_player = find_animation_player(self)
 	click_area = Area3D.new()
@@ -31,23 +38,45 @@ func _ready() -> void:
 	var box := BoxShape3D.new()
 	var bounds := calculate_mesh_bounds()
 	book_bounds = bounds
-	clickable_center = bounds.position + bounds.size * 0.5
-	clickable_size = Vector3(
-		bounds.size.x * 1.12,
-		bounds.size.y * 1.12,
-		maxf(bounds.size.z * 1.8, 0.0018)
-	)
+	clickable_center = CLICKABLE_CENTER
+	clickable_size = CLICKABLE_SIZE
 	box.size = clickable_size
 	collision.shape = box
 	collision.position = clickable_center
 	click_area.add_child(collision)
-	click_area.input_event.connect(_on_book_input_event)
 	if animation_player != null and animation_player.has_animation(page_animation):
 		var animation: Animation = animation_player.get_animation(page_animation)
 		animation_player.play(page_animation)
 		animation_player.seek(animation.length, true)
 		animation_player.pause()
 	create_turning_page()
+
+func apply_compact_editor_bounds() -> void:
+	var book_mesh := find_book_mesh(self)
+	if book_mesh == null:
+		return
+	# The skinned GLB ships with an invalid animation AABB spanning most of the
+	# desk. Convert a compact root-local book box into the mesh's local space so
+	# Godot's editor selection outline stays around the visible prop.
+	var desired := AABB(Vector3(-0.45, -1.5, -2.0), Vector3(0.9, 3.0, 4.0))
+	var minimum := Vector3(INF, INF, INF)
+	var maximum := Vector3(-INF, -INF, -INF)
+	for x in [desired.position.x, desired.end.x]:
+		for y in [desired.position.y, desired.end.y]:
+			for z in [desired.position.z, desired.end.z]:
+				var mesh_corner := book_mesh.to_local(to_global(Vector3(x, y, z)))
+				minimum = minimum.min(mesh_corner)
+				maximum = maximum.max(mesh_corner)
+	book_mesh.custom_aabb = AABB(minimum, maximum - minimum)
+
+func find_book_mesh(node: Node) -> MeshInstance3D:
+	if node is MeshInstance3D and node.name == "Book_0":
+		return node as MeshInstance3D
+	for child in node.get_children():
+		var result := find_book_mesh(child)
+		if result != null:
+			return result
+	return null
 
 func find_animation_player(node: Node) -> AnimationPlayer:
 	if node is AnimationPlayer:
@@ -157,40 +186,6 @@ func collect_meshes(node: Node, output: Array[MeshInstance3D]) -> void:
 		if child is MeshInstance3D:
 			output.append(child as MeshInstance3D)
 		collect_meshes(child, output)
-
-func _on_book_input_event(
-	_camera: Node,
-	event: InputEvent,
-	_event_position: Vector3,
-	_normal: Vector3,
-	_shape_index: int
-) -> void:
-	if event is InputEventMouseButton \
-		and event.button_index == MOUSE_BUTTON_LEFT \
-		and event.pressed:
-		interact()
-		get_viewport().set_input_as_handled()
-
-func _unhandled_input(event: InputEvent) -> void:
-	if not (event is InputEventMouseButton \
-		and event.button_index == MOUSE_BUTTON_LEFT \
-		and event.pressed):
-		return
-	var camera := get_viewport().get_camera_3d()
-	if camera == null or click_area == null:
-		return
-	var pointer_position: Vector2 = event.position
-	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-		pointer_position = get_viewport().get_visible_rect().size * 0.5
-	var origin := camera.project_ray_origin(pointer_position)
-	var destination := origin + camera.project_ray_normal(pointer_position) * 20.0
-	var query := PhysicsRayQueryParameters3D.create(origin, destination)
-	query.collide_with_areas = true
-	query.collide_with_bodies = false
-	var hit := camera.get_world_3d().direct_space_state.intersect_ray(query)
-	if not hit.is_empty() and hit.get("collider") == click_area:
-		interact()
-		get_viewport().set_input_as_handled()
 
 func interact() -> void:
 	var ui := get_tree().get_first_node_in_group("logbook_ui")
