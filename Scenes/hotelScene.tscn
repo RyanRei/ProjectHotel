@@ -6,7 +6,14 @@
 [ext_resource type="Resource" uid="uid://cp84m54cdi8us" path="res://Assets/ItemHolders/Encounters/Shift 1/encounter_1.tres" id="4_uyxfn"]
 [ext_resource type="PackedScene" uid="uid://ba3nri8t48jc6" path="res://Scenes/subtitlesText.tscn" id="4_wnmts"]
 [ext_resource type="PackedScene" uid="uid://p5ev8eu8tcfi" path="res://Scenes/Telephone.tscn" id="6_cm8yc"]
-[ext_resource type="PackedScene" uid="uid://eywvpoklnusj" path="res://Assets/3D Models/computah.glb" id="7_i2uxr"]
+[ext_resource type="PackedScene" uid="uid://bb8bpfxy4igwf" path="res://Assets/3D Models/Computer/desktop_computer.glb" id="7_i2uxr"]
+[ext_resource type="PackedScene" path="res://Scenes/RosterUI.tscn" id="8_roster"]
+[ext_resource type="Script" uid="uid://m6c7lfrjow88" path="res://Scripts/Roster/ComputerMonitor.gd" id="9_monitor"]
+[ext_resource type="Script" uid="uid://b7i3xkbxsn32n" path="res://Scripts/DeskCameraController.gd" id="10_camera"]
+[ext_resource type="Script" uid="uid://dop5fevvwspt4" path="res://Scripts/InteractionHand.gd" id="11_hand"]
+[ext_resource type="PackedScene" uid="uid://bkokulgyibxid" path="res://Assets/3D Models/Logbook/simple_animated_book.glb" id="12_logbook"]
+[ext_resource type="Script" uid="uid://ca5auu7qff8vv" path="res://Scripts/Logbook/LogbookController.gd" id="13_logbook_controller"]
+[ext_resource type="PackedScene" path="res://Scenes/LogbookUI.tscn" id="14_logbook_ui"]
 
 [sub_resource type="Resource" id="Resource_tsy7g"]
 script = ExtResource("2_2hvnh")
@@ -24,16 +31,31 @@ background_mode = 2
 sky = SubResource("Sky_uyxfn")
 
 [sub_resource type="BoxMesh" id="BoxMesh_2hvnh"]
-size = Vector3(7.7604675, 5.755371, 2.3679504)
+size = Vector3(16.607285, 5.755371, 2.3679504)
 
 [node name="Node3D" type="Node3D" unique_id=1681156658]
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=808229973]
-transform = Transform3D(1, 0, 0, 0, 0.8115312, 0.5843092, 0, -0.5843092, 0.8115312, 1.4315639, 2.2005334, 3.7781596)
+transform = Transform3D(1, 0, 0, 0, 0.8115312, 0.5843092, 0, -0.5843092, 0.8115312, 0.6124649, 3.0116806, 4.781933)
+script = ExtResource("10_camera")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=479090964]
 
 [node name="DialogBox" parent="CanvasLayer" unique_id=1159827636 instance=ExtResource("4_wnmts")]
+
+[node name="RosterUI" parent="CanvasLayer" unique_id=1232414128 instance=ExtResource("8_roster")]
+
+[node name="LogbookUI" parent="CanvasLayer" unique_id=1590920189 instance=ExtResource("14_logbook_ui")]
+
+[node name="InteractionHand" type="Control" parent="CanvasLayer" unique_id=2121991977]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("11_hand")
 
 [node name="Encounter Manager" type="Node" parent="." unique_id=446126930 node_paths=PackedStringArray("phone")]
 process_mode = 3
@@ -55,11 +77,15 @@ environment = SubResource("Environment_u8vdq")
 [node name="models" type="Node" parent="." unique_id=673787417]
 
 [node name="table" type="MeshInstance3D" parent="models" unique_id=715094914]
-transform = Transform3D(1, 0, 0, 0, -0.0031471637, 0.99999505, 0, -0.99999505, -0.0031471637, 1.1124725, -1.0599473, 0.070963144)
+transform = Transform3D(1, 0, 0, 0, -0.0031471637, 0.99999505, 0, -0.99999505, -0.0031471637, -0.00818634, 0.030091047, -0.021722317)
 mesh = SubResource("BoxMesh_2hvnh")
 
 [node name="Telephone" parent="models" unique_id=1621591714 instance=ExtResource("6_cm8yc")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.0247061, 0.673687, 1.6530213)
+transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 4.7373743, 1.3004613, 1.6530213)
+
+[node name="Logbook" parent="models" unique_id=910161856 instance=ExtResource("12_logbook")]
+transform = Transform3D(2.472168e-08, 0.5655661, -0.4925799, 0.75, -3.278354e-08, 0, -2.1531351e-08, -0.4925799, -0.5655661, -4.7103457, 1.4375776, 1.3262135)
+script = ExtResource("13_logbook_controller")
 
 [node name="SpotLight3D" type="SpotLight3D" parent="." unique_id=1808260354]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 3.0506716, 4.270852, 1.6162932)
@@ -68,4 +94,5 @@ spot_range = 3.8424966
 spot_angle = 21.033018
 
 [node name="computah" parent="." unique_id=1114786589 instance=ExtResource("7_i2uxr")]
-transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, -0.6714854, 0.1842078, -0.21041298)
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 1.1036923, 2.4672322, 1.1709936)
+script = ExtResource("9_monitor")
