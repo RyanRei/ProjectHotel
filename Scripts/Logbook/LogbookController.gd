@@ -191,3 +191,5 @@ func interact() -> void:
 	var ui := get_tree().get_first_node_in_group("logbook_ui")
 	if ui != null and ui.has_method("open_logbook"):
 		ui.call("open_logbook")
+		
+		

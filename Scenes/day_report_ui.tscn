@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://yqtwdwhowpt1"]
+
+[ext_resource type="Script" uid="uid://b2vl5vubbfnjf" path="res://Scripts/DayReportUI.gd" id="1_hbn3v"]
+
+[node name="DayReportUI" type="Control" unique_id=86161530]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_hbn3v")
+
+[node name="Newspaper" type="PanelContainer" parent="." unique_id=1572627117]
+layout_mode = 0
+offset_right = 1147.0
+offset_bottom = 617.0
+
+[node name="Content" type="VBoxContainer" parent="Newspaper" unique_id=1870215478]
+layout_mode = 2
+
+[node name="DayLabel" type="Label" parent="Newspaper/Content" unique_id=1748706475]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="Results" type="VBoxContainer" parent="Newspaper/Content" unique_id=198760198]
+layout_mode = 2
+
+[node name="CloseButton" type="Button" parent="Newspaper/Content" unique_id=1629493372]
+layout_mode = 2
+text = "Close Report"

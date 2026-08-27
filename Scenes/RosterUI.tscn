@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://dneeofe0xoqcs"]
 
-[ext_resource type="Script" path="res://Scripts/Roster/RosterUI.gd" id="1_roster"]
+[ext_resource type="Script" uid="uid://c02kdc2ii6fgo" path="res://Scripts/Roster/RosterUI.gd" id="1_roster"]
 
-[node name="RosterUI" type="Control"]
+[node name="RosterUI" type="Control" unique_id=824477994]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

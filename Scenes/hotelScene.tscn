@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://c6armlyvnvfwd"]
 
 [ext_resource type="PackedScene" uid="uid://b6ys87ahxtae" path="res://Assets/3D Models/Desk/reception_table.glb" id="1_15lvy"]
-[ext_resource type="Script" uid="uid://docvqd05nv4q1" path="res://Scripts/EncounterManager.gd" id="1_lov0d"]
+[ext_resource type="Script" uid="uid://docvqd05nv4q1" path="res://Scripts/Managers/EncounterManager.gd" id="1_lov0d"]
 [ext_resource type="Script" uid="uid://8570ain8w4hx" path="res://Scripts/ResrouceScripts/Day.gd" id="2_2hvnh"]
 [ext_resource type="PackedScene" uid="uid://dl5f5ftvq363h" path="res://Scenes/encounter_proceed_button.tscn" id="2_m1xol"]
 [ext_resource type="Script" uid="uid://b5vh1alvaioay" path="res://Scripts/ResrouceScripts/EncounterData.gd" id="3_wnmts"]
@@ -12,7 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://p5ev8eu8tcfi" path="res://Scenes/Telephone.tscn" id="6_cm8yc"]
 [ext_resource type="PackedScene" uid="uid://bb8bpfxy4igwf" path="res://Assets/3D Models/Computer/desktop_computer.glb" id="7_i2uxr"]
 [ext_resource type="Resource" uid="uid://borvgm7cvlbtd" path="res://Assets/ItemHolders/Encounters/Shift 1/encounter_2.tres" id="7_yrwa2"]
-[ext_resource type="PackedScene" path="res://Scenes/RosterUI.tscn" id="8_roster"]
+[ext_resource type="PackedScene" uid="uid://dneeofe0xoqcs" path="res://Scenes/RosterUI.tscn" id="8_roster"]
 [ext_resource type="Script" uid="uid://m6c7lfrjow88" path="res://Scripts/Roster/ComputerMonitor.gd" id="9_monitor"]
 [ext_resource type="Script" uid="uid://b7i3xkbxsn32n" path="res://Scripts/DeskCameraController.gd" id="10_camera"]
 [ext_resource type="Script" uid="uid://dop5fevvwspt4" path="res://Scripts/InteractionHand.gd" id="11_hand"]
@@ -20,7 +20,8 @@
 [ext_resource type="Material" uid="uid://cwh8rslkxmpov" path="res://Assets/3D Models/Book/notebook.tres" id="12_u3pq5"]
 [ext_resource type="PackedScene" uid="uid://b51biclicg0bf" path="res://Assets/3D Models/Bulb/light.glb" id="13_jloce"]
 [ext_resource type="Script" uid="uid://ca5auu7qff8vv" path="res://Scripts/Logbook/LogbookController.gd" id="13_logbook_controller"]
-[ext_resource type="PackedScene" path="res://Scenes/LogbookUI.tscn" id="14_logbook_ui"]
+[ext_resource type="PackedScene" uid="uid://yqtwdwhowpt1" path="res://Scenes/day_report_ui.tscn" id="13_qnepm"]
+[ext_resource type="PackedScene" uid="uid://cw0yaw10bfhlc" path="res://Scenes/LogbookUI.tscn" id="14_logbook_ui"]
 [ext_resource type="Texture2D" uid="uid://uaaui4wtmpk7" path="res://Assets/Textures/alterwall.jpg" id="20_5hxig"]
 
 [sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_cm8yc"]
@@ -36,6 +37,10 @@ sky = SubResource("Sky_uyxfn")
 [sub_resource type="Resource" id="Resource_tsy7g"]
 script = ExtResource("2_2hvnh")
 encounters = Array[ExtResource("3_wnmts")]([ExtResource("4_uyxfn"), ExtResource("7_yrwa2")])
+metadata/_custom_type_script = "uid://8570ain8w4hx"
+
+[sub_resource type="Resource" id="Resource_wpuwu"]
+script = ExtResource("2_2hvnh")
 metadata/_custom_type_script = "uid://8570ain8w4hx"
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5hxig"]
@@ -150,12 +155,15 @@ accept_reject = NodePath("../accept_reject")
 
 [node name="accept_reject" parent="UI" unique_id=1154958162 instance=ExtResource("4_abrt6")]
 
-[node name="Encounter Manager" type="Node" parent="." unique_id=446126930 node_paths=PackedStringArray("phone", "encounter_button")]
+[node name="DayReportUI" parent="UI" unique_id=86161530 instance=ExtResource("13_qnepm")]
+
+[node name="Encounter Manager" type="Node" parent="." unique_id=446126930 node_paths=PackedStringArray("phone", "encounter_button", "day_report_ui")]
 process_mode = 3
 script = ExtResource("1_lov0d")
 phone = NodePath("../models/Telephone")
 encounter_button = NodePath("../UI/continue_encounters")
-days = Array[ExtResource("2_2hvnh")]([SubResource("Resource_tsy7g")])
+days = Array[ExtResource("2_2hvnh")]([SubResource("Resource_tsy7g"), SubResource("Resource_wpuwu")])
+day_report_ui = NodePath("../UI/DayReportUI")
 
 [node name="empty" type="Node3D" parent="." unique_id=84633623]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.2494283, -1.555706, -3.681975)
@@ -165,7 +173,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.2494283, -1.555706, -3.681
 [node name="OmniLight3D4" type="OmniLight3D" parent="Lights" unique_id=171112688]
 transform = Transform3D(0.999905, 0.013746126, 0.0010868423, -0.013758895, 0.99982375, 0.0127736535, -0.0009110624, -0.012787393, 0.99991786, -32.69966, 0.5002718, -15.439408)
 light_color = Color(1, 0.84966666, 0.78, 1)
-light_energy = 5.073
+light_energy = 4.757
 light_indirect_energy = 16.0
 light_volumetric_fog_energy = 5.38
 omni_range = 149.20726
@@ -175,6 +183,7 @@ transform = Transform3D(0.998379, 2.4878615e-09, -0.056915637, 0.056915637, -4.3
 light_color = Color(0.28046393, 0.379823, 0.42634302, 1)
 light_energy = 40.0
 light_specular = 2.258
+shadow_enabled = true
 spot_range = 6.3599453
 spot_angle = 20.232937
 
@@ -183,6 +192,7 @@ transform = Transform3D(0.40241337, 0.6643933, -0.62979764, -0.91206235, 0.35016
 light_color = Color(0.28046393, 0.379823, 0.42634302, 1)
 light_energy = 40.0
 light_specular = 2.258
+shadow_enabled = true
 spot_range = 6.0899944
 spot_angle = 89.99
 
@@ -195,26 +205,34 @@ omni_range = 8.721
 [node name="OmniLight3D" type="OmniLight3D" parent="Lights/OmniLight3D" unique_id=1233346839]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.946735, 3.8407269, 0.72105026)
 light_color = Color(1, 0.89, 0.89, 1)
+light_energy = 0.368
 light_indirect_energy = 1.66
 light_volumetric_fog_energy = 13.0
 light_size = 0.555
+shadow_enabled = true
 
 [node name="OmniLight3D2" type="OmniLight3D" parent="Lights" unique_id=145564592]
 transform = Transform3D(1, 0, 0, 0, -0.520924, 0.85360307, 0, -0.85360307, -0.520924, -2.8914318, 13.010827, -8.211379)
+visible = false
 light_color = Color(1, 0.889, 0.82, 1)
-light_energy = 6.265
+light_energy = 1.107
 light_indirect_energy = 16.0
 light_volumetric_fog_energy = 16.0
 light_size = 0.493
 light_specular = 1.834
+shadow_enabled = true
+shadow_bias = 0.034
+shadow_normal_bias = 2.645
+shadow_transmittance_bias = -0.582
+shadow_opacity = 0.75
 omni_range = 35.586117
 
 [node name="OmniLight3D3" type="OmniLight3D" parent="Lights" unique_id=1985307974]
 transform = Transform3D(0.9999762, 0.006874963, 0.00052147126, -0.0068781553, 0.99995595, 0.0063888333, -0.00047752523, -0.006392268, 0.9999795, 32.62258, 3.1644402, -27.830126)
 light_color = Color(1, 0.87, 0.87, 1)
-light_energy = 2.644
+light_energy = 1.065
 light_indirect_energy = 16.0
-light_volumetric_fog_energy = 5.38
+light_volumetric_fog_energy = 3.906
 omni_range = 54.55811
 
 [node name="Audio" type="Node" parent="." unique_id=521623217]

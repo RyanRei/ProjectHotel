@@ -1,19 +1,19 @@
 extends Node
 signal dialogue_started
-signal dialogue_finished
+signal dialogue_finished(choice:String)
 signal choices_requested(choices: Array[DialogueChoice])
 
 var current_node: DialogueNode
 var active := false
 
 func start_dialogue(start_node: DialogueNode):
-	print("check2")
+	
 	current_node = start_node
 	active = true
 	play_current_node()
 
 func play_current_node():
-	print("check3")
+	
 	dialogue_started.emit(current_node)
 	pass
 	#DialogueUI.show_node(current_node)
@@ -28,7 +28,7 @@ func advance():
 		"QUESTION":
 			
 			if not current_node.choices.is_empty():
-				print("question")
+			
 				choices_requested.emit(current_node.choices)
 				return
 			
@@ -44,4 +44,4 @@ func choose(choice: DialogueChoice):
 	
 func end_dialogue(final_choice:String):
 	active = false
-	dialogue_finished.emit()
+	dialogue_finished.emit(final_choice)

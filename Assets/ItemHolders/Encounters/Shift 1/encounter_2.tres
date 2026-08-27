@@ -6,6 +6,6 @@
 [resource]
 script = ExtResource("1_7jpkf")
 name = "guh"
-caller_type = "Killer"
+caller_type = "KILLER"
 dialogue = ExtResource("1_ohncl")
-communication_type = "CALL"
+communication_type = "RESIDENT"
