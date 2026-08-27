@@ -1,7 +1,9 @@
 @tool
 class_name LogbookController
 extends Node3D
-
+@export var logbook:LogbookUI
+@export var logUpdateAudio:AudioStreamPlayer3D
+@export var pageFlipAudio:AudioStreamPlayer3D
 var click_area: Area3D
 var clickable_center := Vector3.ZERO
 var clickable_size := Vector3.ZERO
@@ -191,5 +193,34 @@ func interact() -> void:
 	var ui := get_tree().get_first_node_in_group("logbook_ui")
 	if ui != null and ui.has_method("open_logbook"):
 		ui.call("open_logbook")
+		
+		
+func updateLogbook(encounter:EncounterData) -> void:
+	if logbook:
+		print("logbook")
+		var index=GameState.day-1
+		
+		logbook.pages[index]["rows"].append([encounter.time,encounter.name])
+		logbook.pages[index]["notes"]=logbook.pages[index]["notes"]+"\n"+encounter.LogbookEntry
+		print(logbook.pages[index])
+		logbook.show_page(GameState.day-1)
+		logUpdateAudio.play()
+		pass
+		
+		
+func add_page():
+	var index=GameState.day-1
+	logbook.pages.append({
+		"tab":"VISITORS",
+		"title":"EXPECTED VISITORS",
+		"subtitle":"Day %d"%GameState.day,
+
+		"columns":["TIME","VISITOR"],
+		"rows":[
+		],
+		"notes":""
+		})
+	logbook.show_page(GameState.day-1)
+	pageFlipAudio.play()
 		
 		

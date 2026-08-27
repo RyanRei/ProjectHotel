@@ -11,3 +11,5 @@ caller_type = "INNOCENT"
 dialogue = ExtResource("1_jh53n")
 model = ExtResource("2_ykowu")
 communication_type = "RESIDENT"
+time = "6:30 PM"
+LogbookEntry = "yayayaya"

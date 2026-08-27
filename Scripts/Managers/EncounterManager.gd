@@ -1,5 +1,6 @@
 class_name EncounterManager
 extends Node
+@export var logBookController:LogbookController
 var encounterOngoing:=false
 @export var phone:Phone
 @export var encounter_button:EncounterProceedButton
@@ -30,11 +31,16 @@ func start_encounter():
 	if not has_encounter():
 		return
 		
-	await encounter_startup_props()
 	
-	encounterOngoing=true
+	
+	#await encounter_startup_props()
+	#encounterOngoing=true
 	
 	var encounter = get_current_encounter()
+	
+	await encounter_startup_props(encounter)
+	encounterOngoing=true
+	
 	if encounter.communication_type=="RESIDENT":
 		await wait_for_phone()
 	elif encounter.communication_type=="VISITOR":
@@ -61,24 +67,35 @@ func start_encounter():
 	encounterOngoing = false
 
 
+#func has_encounter() -> bool:
+	#while GameState.day <= days.size():
+		#var day = days[GameState.day - 1]
+		#print(day.encounters.size())
+	#
+		#if GameState.encounter <= day.encounters.size():
+			#
+			#return true
+#
+		#if GameState.day == days.size():
+		#
+			#return false
+#
+		#GameState.day += 1
+		#GameState.encounter = 1
+	#
+	#return false
+	
+	
 func has_encounter() -> bool:
 	while GameState.day <= days.size():
 		var day = days[GameState.day - 1]
-		print(day.encounters.size())
-	
+
 		if GameState.encounter <= day.encounters.size():
-			
 			return true
 
-		if GameState.day == days.size():
-		
-			return false
+		return false
 
-		GameState.day += 1
-		GameState.encounter = 1
-	
 	return false
-	
 	
 	
 	
@@ -98,8 +115,8 @@ func wait_for_phone():
 
 
 #to control whatever we wanna do at start of encounter
-func encounter_startup_props():
-	update_logbook()
+func encounter_startup_props(encounter:EncounterData):
+	logBookController.updateLogbook(encounter)
 	await encounter_button.turnOff()
 	pass
 
@@ -121,9 +138,7 @@ func encounter_end_props(encounter:EncounterData,choice:String):
 	await encounter_button.turnOn()
 	pass
 	
-	
-func update_logbook():
-	pass
+
 	
 	
 	
@@ -140,5 +155,6 @@ func end_day():
 
 	GameState.day += 1
 	GameState.encounter = 1
+	logBookController.add_page()
 
 	

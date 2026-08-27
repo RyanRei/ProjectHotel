@@ -25,16 +25,12 @@ var pages: Array[Dictionary] = [
 
 		"columns":["TIME","VISITOR"],
 		"rows":[
-			["8:30 PM","Maya Chensss"],
-			["10:15 PM","Clara Hayes"],
-			["11:30 PM","Daniel Ortiz"]
 		],
 
-		"details":"Only visitors recorded by a resident may enter. A matching name by itself is not proof.",
+		#"details":"Only visitors recorded by a resident may enter. A matching name by itself is not proof.",
 
 
-		"notes":"Keep the original authorization time recorded.
-		hi dawg"
+		"notes":""
 	}
 ]
 

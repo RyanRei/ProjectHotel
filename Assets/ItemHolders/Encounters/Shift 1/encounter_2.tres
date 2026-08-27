@@ -9,3 +9,5 @@ name = "guh"
 caller_type = "KILLER"
 dialogue = ExtResource("1_ohncl")
 communication_type = "RESIDENT"
+time = "Your MOM"
+LogbookEntry = "garama"
