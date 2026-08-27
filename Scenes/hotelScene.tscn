@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c6armlyvnvfwd"]
 
-[ext_resource type="Script" uid="uid://docvqd05nv4q1" path="res://Scripts/EncounterManager.gd" id="1_lov0d"]
+[ext_resource type="Script" uid="uid://docvqd05nv4q1" path="res://Scripts/Managers/EncounterManager.gd" id="1_lov0d"]
 [ext_resource type="Script" uid="uid://8570ain8w4hx" path="res://Scripts/ResrouceScripts/Day.gd" id="2_2hvnh"]
 [ext_resource type="PackedScene" uid="uid://dl5f5ftvq363h" path="res://Scenes/encounter_proceed_button.tscn" id="2_m1xol"]
 [ext_resource type="Script" uid="uid://b5vh1alvaioay" path="res://Scripts/ResrouceScripts/EncounterData.gd" id="3_wnmts"]
@@ -10,13 +10,16 @@
 [ext_resource type="PackedScene" uid="uid://p5ev8eu8tcfi" path="res://Scenes/Telephone.tscn" id="6_cm8yc"]
 [ext_resource type="PackedScene" uid="uid://bb8bpfxy4igwf" path="res://Assets/3D Models/Computer/desktop_computer.glb" id="7_i2uxr"]
 [ext_resource type="Resource" uid="uid://borvgm7cvlbtd" path="res://Assets/ItemHolders/Encounters/Shift 1/encounter_2.tres" id="7_yrwa2"]
-[ext_resource type="PackedScene" path="res://Scenes/RosterUI.tscn" id="8_roster"]
+[ext_resource type="PackedScene" uid="uid://dneeofe0xoqcs" path="res://Scenes/RosterUI.tscn" id="8_roster"]
 [ext_resource type="Script" uid="uid://m6c7lfrjow88" path="res://Scripts/Roster/ComputerMonitor.gd" id="9_monitor"]
 [ext_resource type="Script" uid="uid://b7i3xkbxsn32n" path="res://Scripts/DeskCameraController.gd" id="10_camera"]
 [ext_resource type="Script" uid="uid://dop5fevvwspt4" path="res://Scripts/InteractionHand.gd" id="11_hand"]
 [ext_resource type="PackedScene" uid="uid://bkokulgyibxid" path="res://Assets/3D Models/Logbook/simple_animated_book.glb" id="12_logbook"]
 [ext_resource type="Script" uid="uid://ca5auu7qff8vv" path="res://Scripts/Logbook/LogbookController.gd" id="13_logbook_controller"]
-[ext_resource type="PackedScene" path="res://Scenes/LogbookUI.tscn" id="14_logbook_ui"]
+[ext_resource type="PackedScene" uid="uid://yqtwdwhowpt1" path="res://Scenes/day_report_ui.tscn" id="13_qnepm"]
+[ext_resource type="PackedScene" uid="uid://cw0yaw10bfhlc" path="res://Scenes/LogbookUI.tscn" id="14_logbook_ui"]
+[ext_resource type="Resource" uid="uid://b0jqimso2xpsb" path="res://Assets/ItemHolders/Encounters/Shift 2/encounter_1.tres" id="19_u3pq5"]
+[ext_resource type="Resource" uid="uid://bosukl3h62n8u" path="res://Assets/ItemHolders/Encounters/Shift 2/encounter_2.tres" id="20_5hxig"]
 
 [sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_cm8yc"]
 ground_color = Color(0.89985204, 0.4907532, 0.21794471, 1)
@@ -34,6 +37,11 @@ size = Vector3(16.607285, 5.755371, 2.3679504)
 [sub_resource type="Resource" id="Resource_tsy7g"]
 script = ExtResource("2_2hvnh")
 encounters = Array[ExtResource("3_wnmts")]([ExtResource("4_uyxfn"), ExtResource("7_yrwa2")])
+metadata/_custom_type_script = "uid://8570ain8w4hx"
+
+[sub_resource type="Resource" id="Resource_wpuwu"]
+script = ExtResource("2_2hvnh")
+encounters = Array[ExtResource("3_wnmts")]([ExtResource("19_u3pq5"), ExtResource("20_5hxig")])
 metadata/_custom_type_script = "uid://8570ain8w4hx"
 
 [node name="Node3D" type="Node3D" unique_id=1681156658]
@@ -58,13 +66,9 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("11_hand")
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=436142256]
-
-[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="." unique_id=923016706]
-visible = false
-
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=814402336]
 transform = Transform3D(1, 0, 0, 0, 0.2726441, 0.962115, 0, -0.962115, 0.2726441, 0, 3.2879791, 1)
+visible = false
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=882528315]
 environment = SubResource("Environment_u8vdq")
@@ -95,12 +99,15 @@ accept_reject = NodePath("../accept_reject")
 
 [node name="accept_reject" parent="UI" unique_id=1154958162 instance=ExtResource("4_abrt6")]
 
-[node name="Encounter Manager" type="Node" parent="." unique_id=446126930 node_paths=PackedStringArray("phone", "encounter_button")]
+[node name="DayReportUI" parent="UI" unique_id=86161530 instance=ExtResource("13_qnepm")]
+
+[node name="Encounter Manager" type="Node" parent="." unique_id=446126930 node_paths=PackedStringArray("phone", "encounter_button", "day_report_ui")]
 process_mode = 3
 script = ExtResource("1_lov0d")
 phone = NodePath("../models/Telephone")
 encounter_button = NodePath("../UI/continue_encounters")
-days = Array[ExtResource("2_2hvnh")]([SubResource("Resource_tsy7g")])
+days = Array[ExtResource("2_2hvnh")]([SubResource("Resource_tsy7g"), SubResource("Resource_wpuwu")])
+day_report_ui = NodePath("../UI/DayReportUI")
 
 [node name="empty" type="Node3D" parent="." unique_id=84633623]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.2494283, -1.555706, -3.681975)
@@ -108,7 +115,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.2494283, -1.555706, -3.681
 [node name="Lights" type="Node" parent="." unique_id=1123067539]
 
 [node name="SpotLight3D" type="SpotLight3D" parent="Lights" unique_id=1808260354]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 3.9373913, 3.7794857, 0.46422982)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 4.860696, 3.7794857, 1.5313122)
 light_color = Color(0.28046393, 0.379823, 0.42634302, 1)
 light_energy = 40.0
 light_specular = 2.258

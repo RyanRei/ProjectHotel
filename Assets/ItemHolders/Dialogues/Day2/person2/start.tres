@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="DialogueNode" format=3 uid="uid://c2jl0gy78u1we"]
+
+[ext_resource type="Script" uid="uid://vwswsn27uvpe" path="res://Scripts/ResrouceScripts/DialougeChoice.gd" id="1_pculh"]
+[ext_resource type="Resource" uid="uid://cvqfgvcsaqfrp" path="res://Assets/ItemHolders/Dialogues/Day2/person2/v3.tres" id="2_1rnta"]
+[ext_resource type="Script" uid="uid://cwgrdj7ntjmds" path="res://Scripts/ResrouceScripts/DialougeNode.gd" id="3_h8ruj"]
+[ext_resource type="AudioStream" uid="uid://c5bm085mdtkyl" path="res://Assets/Sound/voicelines/sans voice [gGROjaIw5Xw].mp3" id="4_2bv60"]
+
+[resource]
+script = ExtResource("3_h8ruj")
+voiceline = ExtResource("4_2bv60")
+text = "dawg stfy"
+duration = 5.0
+next_node = ExtResource("2_1rnta")
+metadata/_custom_type_script = "uid://cwgrdj7ntjmds"

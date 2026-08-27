@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://cwgrdj7ntjmds" path="res://Scripts/ResrouceScripts/DialougeNode.gd" id="2_vxp0u"]
 [ext_resource type="Resource" uid="uid://docpw8r7s8ns4" path="res://Assets/ItemHolders/Dialogues/Day1/person1/player questions/q1.tres" id="3_6dryl"]
 [ext_resource type="Resource" uid="uid://bwnujohgt3trh" path="res://Assets/ItemHolders/Dialogues/Day1/person1/v3.tres" id="3_tphpg"]
-[ext_resource type="AudioStream" uid="uid://c5bm085mdtkyl" path="res://Assets/Sound/voicelines/sans voice [gGROjaIw5Xw].mp3" id="4_7mbn4"]
+[ext_resource type="AudioStream" uid="uid://duxkps54u67wf" path="res://Assets/Sound/sfx/phone pickup.mp3" id="6_tphpg"]
 
 [sub_resource type="Resource" id="Resource_iscj4"]
 script = ExtResource("1_hiyxu")
@@ -21,7 +21,7 @@ metadata/_custom_type_script = "uid://vwswsn27uvpe"
 
 [resource]
 script = ExtResource("2_vxp0u")
-voiceline = ExtResource("4_7mbn4")
+voiceline = ExtResource("6_tphpg")
 text = "Hello. I'm Tracey Morgan from Room 104. I left my access card in my room when I came downstairs.
 Could you unlock the door for me?"
 duration = 5.0

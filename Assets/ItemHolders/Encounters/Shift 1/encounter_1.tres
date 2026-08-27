@@ -7,7 +7,7 @@
 [resource]
 script = ExtResource("2_6kddr")
 name = "Tracey Morgan"
-caller_type = "Innocent"
+caller_type = "INNOCENT"
 dialogue = ExtResource("1_jh53n")
 model = ExtResource("2_ykowu")
-communication_type = "CALL"
+communication_type = "RESIDENT"

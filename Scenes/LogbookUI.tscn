@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://cw0yaw10bfhlc"]
 
-[ext_resource type="Script" path="res://Scripts/Logbook/LogbookUI.gd" id="1_logbook_ui"]
+[ext_resource type="Script" uid="uid://dmpum4i2lix2r" path="res://Scripts/Logbook/LogbookUI.gd" id="1_logbook_ui"]
 
-[node name="LogbookUI" type="Control"]
+[node name="LogbookUI" type="Control" unique_id=163756196]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

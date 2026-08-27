@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="EncounterData" format=3 uid="uid://b0jqimso2xpsb"]
+
+[ext_resource type="Resource" uid="uid://dvlw1gc3gvttb" path="res://Assets/ItemHolders/Dialogues/Day2/person1/start.tres" id="1_wvpx0"]
+[ext_resource type="PackedScene" uid="uid://cu3jpjd8bf44a" path="res://Scenes/humanEntity.tscn" id="2_owkio"]
+[ext_resource type="Script" uid="uid://b5vh1alvaioay" path="res://Scripts/ResrouceScripts/EncounterData.gd" id="3_dicee"]
+
+[resource]
+script = ExtResource("3_dicee")
+name = "dawg"
+caller_type = "INNOCENT"
+dialogue = ExtResource("1_wvpx0")
+model = ExtResource("2_owkio")
+communication_type = "RESIDENT"

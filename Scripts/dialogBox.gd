@@ -11,7 +11,7 @@ func _ready() -> void:
 
 
 func run_dialogue(current_node:DialogueNode):
-	print("check4")
+
 	show_line(current_node.text)
 	
 	audio_stream_player.stream=current_node.voiceline
@@ -37,7 +37,7 @@ func run_dialogue(current_node:DialogueNode):
 	pass
 
 func show_line(text:String):
-	print(text)
+	
 	text_label.text = text
 	text_label.modulate.a = 0
 	var tween = create_tween()
@@ -51,35 +51,85 @@ func hide_line():
 
 
 
+
+
+
+
+
+var dialogue_choices: Array[DialogueChoice]
+var selected_choice := 0
+
+
 func show_choices(choices: Array[DialogueChoice]):
+	dialogue_choices = choices
+	selected_choice = 0
+	$Choices.show()
+
 	for child in $Choices.get_children():
 		child.queue_free()
 
 	for choice in choices:
-		var button := Button.new()
-		button.text = choice.text
-		$Choices.add_child(button)
+		var panel := PanelContainer.new()
+		var label := Label.new()
 
-		button.pressed.connect(_on_choice_pressed.bind(choice))
+		label.text = choice.text
+		label.add_theme_font_size_override("font_size", 30)
+		panel.add_child(label)
 
-func _on_choice_pressed(choice: DialogueChoice):
-	$Choices.hide()
-	DialogueManager.choose(choice)
+		var style := StyleBoxFlat.new()
+		style.bg_color = Color(0.1, 0.1, 0.1, 0.8)
+		style.corner_radius_top_left = 10
+		style.corner_radius_top_right = 10
+		style.corner_radius_bottom_left = 10
+		style.corner_radius_bottom_right = 10
+		panel.add_theme_stylebox_override("panel", style)
 
+		$Choices.add_child(panel)
 
+	update_choice_display()
+	
+func _input(event):
+	if not $Choices.visible:
+		return
 
+	if event.is_action_pressed("Move Up"):
+		selected_choice = max(0, selected_choice - 1)
+		update_choice_display()
 
+	elif event.is_action_pressed("Move Down"):
+		selected_choice = min(dialogue_choices.size() - 1, selected_choice + 1)
+		update_choice_display()
 
+	elif event.is_action_pressed("Confirm"):
+		var choice = dialogue_choices[selected_choice]
+		$Choices.hide()
+		DialogueManager.choose(choice)
+		
+func update_choice_display():
+	for i in dialogue_choices.size():
+		var panel: PanelContainer = $Choices.get_child(i)
+		var style: StyleBoxFlat = panel.get_theme_stylebox("panel").duplicate()
 
+		if i == selected_choice:
+			style.bg_color = Color(0.384, 0.384, 0.384, 0.9)
+		else:
+			style.bg_color = Color(0.1, 0.1, 0.1, 0.8)
 
+		panel.add_theme_stylebox_override("panel", style)
+			
+			
 
-
-#func change_line(text: String):
-	#var tween = create_tween()
-	#tween.tween_property(text_label, "modulate:a", 0.0, 0.2)
-	#await tween.finished
+#func show_choices(choices: Array[DialogueChoice]):
+	#for child in $Choices.get_children():
+		#child.queue_free()
 #
-	#text_label.text = text
+	#for choice in choices:
+		#var button := Button.new()
+		#button.text = choice.text
+		#$Choices.add_child(button)
 #
-	#tween = create_tween()
-	#tween.tween_property(text_label, "modulate:a", 1.0, 0.2)
+		#button.pressed.connect(_on_choice_pressed.bind(choice))
+#
+#func _on_choice_pressed(choice: DialogueChoice):
+	#$Choices.hide()
+	#DialogueManager.choose(choice)
