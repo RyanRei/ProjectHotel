@@ -20,7 +20,7 @@ size = Vector3(1.635952, 0.40576172, 0.34516144)
 material = SubResource("StandardMaterial3D_cm8yc")
 size = Vector3(1.635952, 1.3309326, 0.34516144)
 
-[node name="Telephone" type="Area3D" unique_id=1259159639]
+[node name="Telephone" type="Area3D" groups=["interactable"] unique_id=1259159639]
 script = ExtResource("1_c1elu")
 ringSound = ExtResource("2_4tfhl")
 pickupSound = ExtResource("3_gappx")

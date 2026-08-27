@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://bmplohl8iiuca"]
+
+[ext_resource type="PackedScene" uid="uid://b18a8ql3i8d15" path="res://Assets/3D Models/Telephone/telephone.glb" id="1_a202f"]
+
+[node name="Node3D" type="Node3D" unique_id=1941512764]
+
+[node name="telephone" parent="." unique_id=318535350 instance=ExtResource("1_a202f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4663924, 0, 1.1010141)
