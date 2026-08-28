@@ -27,7 +27,7 @@ func advance():
 		"QUESTION":
 			
 			if not current_node.choices.is_empty():
-			
+				print("hi")
 				choices_requested.emit(current_node.choices)
 				return
 			

@@ -8,6 +8,7 @@ extends Control
 func _ready() -> void:
 	DialogueManager.dialogue_started.connect(run_dialogue)
 	DialogueManager.choices_requested.connect(show_choices)
+	$Choices.hide()
 
 
 func run_dialogue(current_node:DialogueNode):
@@ -34,8 +35,9 @@ func run_dialogue(current_node:DialogueNode):
 			print("im in here")
 			accept_reject.turnOn(false)
 		var choiceMade:String=await accept_reject.choiceMade
-		current_node.final_choice=choiceMade
 		accept_reject.turnOff()
+		current_node.final_choice=choiceMade
+		
 	DialogueManager.advance()
 	pass
 
@@ -104,6 +106,7 @@ func _input(event):
 		update_choice_display()
 
 	elif event.is_action_pressed("Confirm"):
+		print("hii")
 		var choice = dialogue_choices[selected_choice]
 		$Choices.hide()
 		DialogueManager.choose(choice)
