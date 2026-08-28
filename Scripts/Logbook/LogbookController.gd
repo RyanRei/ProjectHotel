@@ -197,12 +197,12 @@ func interact() -> void:
 		
 func updateLogbook(encounter:EncounterData) -> void:
 	if logbook:
-		print("logbook")
+		
 		var index=GameState.day-1
 		
 		logbook.pages[index]["rows"].append([encounter.time,encounter.name])
 		logbook.pages[index]["notes"]=logbook.pages[index]["notes"]+"\n"+encounter.LogbookEntry
-		print(logbook.pages[index])
+		
 		logbook.show_page(GameState.day-1)
 		logUpdateAudio.play()
 		pass
@@ -211,8 +211,8 @@ func updateLogbook(encounter:EncounterData) -> void:
 func add_page():
 	var index=GameState.day-1
 	logbook.pages.append({
-		"tab":"VISITORS",
-		"title":"EXPECTED VISITORS",
+		"tab":"LOGBOOK",
+		"title":"LOGBOOK",
 		"subtitle":"Day %d"%GameState.day,
 
 		"columns":["TIME","VISITOR"],

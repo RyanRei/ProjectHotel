@@ -19,8 +19,8 @@ const TAB_COLORS := [
 
 var pages: Array[Dictionary] = [
 		{
-		"tab":"VISITORS",
-		"title":"EXPECTED VISITORS",
+		"tab":"LOGBOOK",
+		"title":"LOGBOOK",
 		"subtitle":"Day 1",
 
 		"columns":["TIME","VISITOR"],

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="DialogueChoice" format=3 uid="uid://jkj0klun1q3n"]
+
+[ext_resource type="Resource" uid="uid://fngmxinscka0" path="res://Assets/ItemHolders/Dialogues/Day1/Arthur Williams/guest responses/r2.tres" id="1_476us"]
+[ext_resource type="Script" uid="uid://vwswsn27uvpe" path="res://Scripts/ResrouceScripts/DialougeChoice.gd" id="2_2gej4"]
+
+[resource]
+script = ExtResource("2_2gej4")
+text = "When did you check in?"
+next_node = ExtResource("1_476us")
+metadata/_custom_type_script = "uid://vwswsn27uvpe"

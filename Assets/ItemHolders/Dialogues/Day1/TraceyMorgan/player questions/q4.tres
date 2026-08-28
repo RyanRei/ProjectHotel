@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="DialogueChoice" format=3 uid="uid://cbr6wds1yo0sb"]
+
+[ext_resource type="Script" uid="uid://vwswsn27uvpe" path="res://Scripts/ResrouceScripts/DialougeChoice.gd" id="1_84s3j"]
+[ext_resource type="Resource" uid="uid://djgoj3l1kunsg" path="res://Assets/ItemHolders/Dialogues/Day1/TraceyMorgan/guest responses/r4.tres" id="1_dtkuv"]
+
+[resource]
+script = ExtResource("1_84s3j")
+text = "Why do you not have a working accesscard?"
+next_node = ExtResource("1_dtkuv")
+metadata/_custom_type_script = "uid://vwswsn27uvpe"

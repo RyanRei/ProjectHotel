@@ -97,6 +97,20 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_ln3j4")
 theme_override_styles/hover = SubResource("StyleBoxFlat_xgi3m")
 text = "Ask Question"
 
+[node name="question2" type="Button" parent="." unique_id=1152446814]
+visible = false
+layout_mode = 0
+offset_left = -830.0
+offset_top = -203.0
+offset_right = -603.0
+offset_bottom = -136.0
+theme_override_font_sizes/font_size = 23
+theme_override_styles/normal = SubResource("StyleBoxFlat_bmnh5")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_ln3j4")
+theme_override_styles/hover = SubResource("StyleBoxFlat_xgi3m")
+text = "Ask Question"
+
 [connection signal="pressed" from="accept" to="." method="_on_accept_pressed"]
 [connection signal="pressed" from="reject" to="." method="_on_reject_pressed"]
 [connection signal="pressed" from="question" to="." method="_on_question_pressed"]
+[connection signal="pressed" from="question2" to="." method="_on_question_pressed"]

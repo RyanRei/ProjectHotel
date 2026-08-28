@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="DialogueChoice" format=3 uid="uid://ccwlmo0pu2j1g"]
+
+[ext_resource type="Resource" uid="uid://b4ycyt58gtnh0" path="res://Assets/ItemHolders/Dialogues/Day1/MayaChen/guest responses/r1.tres" id="1_nt172"]
+[ext_resource type="Script" uid="uid://vwswsn27uvpe" path="res://Scripts/ResrouceScripts/DialougeChoice.gd" id="2_3ho1w"]
+
+[resource]
+script = ExtResource("2_3ho1w")
+text = "Who are you visiting?"
+next_node = ExtResource("1_nt172")
+metadata/_custom_type_script = "uid://vwswsn27uvpe"

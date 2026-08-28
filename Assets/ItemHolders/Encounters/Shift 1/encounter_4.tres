@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="EncounterData" format=3 uid="uid://dvpitgbkkwxsb"]
+
+[ext_resource type="Resource" uid="uid://bb673hp4fbba" path="res://Assets/ItemHolders/Dialogues/Day1/Arthur Williams/start.tres" id="1_nmqnq"]
+[ext_resource type="Script" uid="uid://b5vh1alvaioay" path="res://Scripts/ResrouceScripts/EncounterData.gd" id="2_3ymc3"]
+
+[resource]
+script = ExtResource("2_3ymc3")
+name = "Arthur Williams"
+caller_type = "INNOCENT"
+dialogue = ExtResource("1_nmqnq")
+communication_type = "RESIDENT"
+time = "12:24 AM"
+LogbookEntry = "Standing note - Arthur Williams has severe hearing loss; hearing aid unreliable. 11:48 PM - Arthur called reception from Room 112 about the radiator humming again. Maintenance deferred untilmorning."

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="DialogueChoice" format=3 uid="uid://ct5f2dqh46buv"]
+
+[ext_resource type="Resource" uid="uid://bx5nvktf6idyj" path="res://Assets/ItemHolders/Dialogues/Day1/TraceyMorgan/guest responses/r3.tres" id="1_aqonr"]
+[ext_resource type="Script" uid="uid://vwswsn27uvpe" path="res://Scripts/ResrouceScripts/DialougeChoice.gd" id="1_rpgnd"]
+
+[resource]
+script = ExtResource("1_rpgnd")
+text = "Is anyone else registered in your room?"
+next_node = ExtResource("1_aqonr")
+metadata/_custom_type_script = "uid://vwswsn27uvpe"

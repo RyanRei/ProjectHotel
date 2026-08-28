@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="DialogueChoice" format=3 uid="uid://boucc8adn82o"]
+
+[ext_resource type="Resource" uid="uid://lou28nk78mcx" path="res://Assets/ItemHolders/Dialogues/Day1/MayaChen/guest responses/r3.tres" id="1_dv3d6"]
+[ext_resource type="Script" uid="uid://vwswsn27uvpe" path="res://Scripts/ResrouceScripts/DialougeChoice.gd" id="2_w3f6q"]
+
+[resource]
+script = ExtResource("2_w3f6q")
+text = "What is your relationship to them?"
+next_node = ExtResource("1_dv3d6")
+metadata/_custom_type_script = "uid://vwswsn27uvpe"

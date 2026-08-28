@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="EncounterData" format=3 uid="uid://cp84m54cdi8us"]
 
-[ext_resource type="Resource" uid="uid://clcjdcl23htao" path="res://Assets/ItemHolders/Dialogues/Day1/person1/start.tres" id="1_jh53n"]
+[ext_resource type="Resource" uid="uid://dvlw1gc3gvttb" path="res://Assets/ItemHolders/Dialogues/Day1/TraceyMorgan/start.tres" id="1_jh53n"]
 [ext_resource type="Script" uid="uid://b5vh1alvaioay" path="res://Scripts/ResrouceScripts/EncounterData.gd" id="2_6kddr"]
 [ext_resource type="PackedScene" uid="uid://cu3jpjd8bf44a" path="res://Scenes/humanEntity.tscn" id="2_ykowu"]
 
@@ -11,5 +11,5 @@ caller_type = "INNOCENT"
 dialogue = ExtResource("1_jh53n")
 model = ExtResource("2_ykowu")
 communication_type = "RESIDENT"
-time = "6:30 PM"
-LogbookEntry = "yayayaya"
+time = "6:50 PM"
+LogbookEntry = "6:35 PM - Tracey Morgan called from the lobby phone and reported that her card may be inside Room 104."

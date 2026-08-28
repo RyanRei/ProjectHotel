@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="DialogueNode" format=3 uid="uid://kd0amevmcn32"]
+
+[ext_resource type="Script" uid="uid://vwswsn27uvpe" path="res://Scripts/ResrouceScripts/DialougeChoice.gd" id="1_elq85"]
+[ext_resource type="Script" uid="uid://cwgrdj7ntjmds" path="res://Scripts/ResrouceScripts/DialougeNode.gd" id="2_1k0nh"]
+[ext_resource type="AudioStream" uid="uid://duxkps54u67wf" path="res://Assets/Sound/sfx/phone pickup.mp3" id="3_nbt6v"]
+
+[resource]
+script = ExtResource("2_1k0nh")
+voiceline = ExtResource("3_nbt6v")
+text = "Between 10:15 and 10:45. I am here at 10:32."
+wait_for_prompt = true
+metadata/_custom_type_script = "uid://cwgrdj7ntjmds"

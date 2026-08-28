@@ -26,9 +26,12 @@ func run_dialogue(current_node:DialogueNode):
 	await hide_line().finished
 	
 	if current_node.wait_for_prompt:
-		if current_node.next_node:
+		#if current_node.next_node:
+		if current_node.choices :
+			print(current_node.choices.size())
 			accept_reject.turnOn(true)
 		else:
+			print("im in here")
 			accept_reject.turnOn(false)
 		var choiceMade:String=await accept_reject.choiceMade
 		current_node.final_choice=choiceMade

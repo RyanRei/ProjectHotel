@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="DialogueChoice" format=3 uid="uid://con0n2qiudjmw"]
+
+[ext_resource type="Resource" uid="uid://bwsyqt6ynw622" path="res://Assets/ItemHolders/Dialogues/Day1/DanielReeves/guest responses/r1.tres" id="1_jsbqf"]
+[ext_resource type="Script" uid="uid://vwswsn27uvpe" path="res://Scripts/ResrouceScripts/DialougeChoice.gd" id="1_yxcpg"]
+
+[resource]
+script = ExtResource("1_yxcpg")
+text = "Who made the reservation?"
+next_node = ExtResource("1_jsbqf")
+metadata/_custom_type_script = "uid://vwswsn27uvpe"

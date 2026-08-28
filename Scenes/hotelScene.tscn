@@ -26,7 +26,9 @@
 [ext_resource type="AudioStream" uid="uid://cbaafyuvhebc2" path="res://Assets/Sound/sfx/pageFlip.mp3" id="17_ue4or"]
 [ext_resource type="Texture2D" uid="uid://uaaui4wtmpk7" path="res://Assets/Textures/alterwall.jpg" id="20_5hxig"]
 [ext_resource type="Resource" uid="uid://b0jqimso2xpsb" path="res://Assets/ItemHolders/Encounters/Shift 2/encounter_1.tres" id="24_c24b1"]
+[ext_resource type="Resource" uid="uid://ocqe63udp2ju" path="res://Assets/ItemHolders/Encounters/Shift 1/encounter_3.tres" id="25_2gwif"]
 [ext_resource type="Resource" uid="uid://bosukl3h62n8u" path="res://Assets/ItemHolders/Encounters/Shift 2/encounter_2.tres" id="25_ue4or"]
+[ext_resource type="Resource" uid="uid://dvpitgbkkwxsb" path="res://Assets/ItemHolders/Encounters/Shift 1/encounter_4.tres" id="26_vnq4p"]
 
 [sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_cm8yc"]
 ground_color = Color(0.89985204, 0.4907532, 0.21794471, 1)
@@ -40,7 +42,7 @@ sky = SubResource("Sky_uyxfn")
 
 [sub_resource type="Resource" id="Resource_u3pq5"]
 script = ExtResource("2_2hvnh")
-encounters = Array[ExtResource("3_wnmts")]([ExtResource("4_uyxfn"), ExtResource("7_yrwa2")])
+encounters = Array[ExtResource("3_wnmts")]([ExtResource("4_uyxfn"), ExtResource("7_yrwa2"), ExtResource("25_2gwif"), ExtResource("26_vnq4p")])
 metadata/_custom_type_script = "uid://8570ain8w4hx"
 
 [sub_resource type="Resource" id="Resource_5hxig"]
@@ -184,7 +186,7 @@ days = Array[ExtResource("2_2hvnh")]([SubResource("Resource_u3pq5"), SubResource
 day_report_ui = NodePath("../CanvasLayer/DayReportUI")
 
 [node name="empty" type="Node3D" parent="." unique_id=84633623]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.2494283, -1.555706, -3.681975)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.403927, -1.555706, -19.83374)
 
 [node name="Lights" type="Node" parent="." unique_id=1123067539]
 

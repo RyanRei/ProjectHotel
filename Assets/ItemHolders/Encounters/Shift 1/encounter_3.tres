@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EncounterData" format=3 uid="uid://ocqe63udp2ju"]
+
+[ext_resource type="Resource" uid="uid://xqymro2joytb" path="res://Assets/ItemHolders/Dialogues/Day1/MayaChen/start.tres" id="1_pc78f"]
+[ext_resource type="Script" uid="uid://b5vh1alvaioay" path="res://Scripts/ResrouceScripts/EncounterData.gd" id="2_1imvv"]
+[ext_resource type="PackedScene" uid="uid://cu3jpjd8bf44a" path="res://Scenes/humanEntity.tscn" id="2_ids8x"]
+
+[resource]
+script = ExtResource("2_1imvv")
+name = " Maya Chen"
+caller_type = "INNOCENT"
+dialogue = ExtResource("1_pc78f")
+model = ExtResource("2_ids8x")
+communication_type = "VISITOR"
+time = "10:32 PM"
+LogbookEntry = "9:55 PM - Tracey Morgan called reception: Maya Chen is a former coworker bringing a blue document folder. Admit between 10:15 PM and 10:45 PM."

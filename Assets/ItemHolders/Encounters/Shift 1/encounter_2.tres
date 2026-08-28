@@ -1,13 +1,13 @@
 [gd_resource type="Resource" script_class="EncounterData" format=3 uid="uid://borvgm7cvlbtd"]
 
 [ext_resource type="Script" uid="uid://b5vh1alvaioay" path="res://Scripts/ResrouceScripts/EncounterData.gd" id="1_7jpkf"]
-[ext_resource type="Resource" uid="uid://dyt2qa48ltoht" path="res://Assets/ItemHolders/Dialogues/Day1/person2/start.tres" id="1_ohncl"]
+[ext_resource type="Resource" uid="uid://dyt2qa48ltoht" path="res://Assets/ItemHolders/Dialogues/Day1/DanielReeves/start.tres" id="1_ohncl"]
 
 [resource]
 script = ExtResource("1_7jpkf")
-name = "guh"
+name = "Daniel Reeves"
 caller_type = "KILLER"
 dialogue = ExtResource("1_ohncl")
 communication_type = "RESIDENT"
-time = "Your MOM"
-LogbookEntry = "garama"
+time = "9:15 PM"
+LogbookEntry = "8:55 PM - Michael Turner requested fresh towels for Room 207. No card fault was reported for Daniel Reeves."
