@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://csgldlotwb6qk"]
+
+[node name="TutorialDialogs" type="Control" unique_id=1808227615]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1455095710]
+layout_mode = 0
+offset_right = 1158.0
+offset_bottom = 638.0
+color = Color(0, 0, 0, 0.39607844)
+
+[node name="Panel" type="Panel" parent="." unique_id=555293616]
+layout_mode = 0
+offset_left = 196.0
+offset_top = 461.0
+offset_right = 1021.0
+offset_bottom = 627.0
+
+[node name="Label" type="Label" parent="Panel" unique_id=1672422357]
+layout_mode = 0
+offset_left = 108.0
+offset_top = 44.0
+offset_right = 713.0
+offset_bottom = 165.0
+theme_override_font_sizes/font_size = 26

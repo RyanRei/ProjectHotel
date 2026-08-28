@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://b6ys87ahxtae" path="res://Assets/3D Models/Desk/reception_table.glb" id="1_15lvy"]
 [ext_resource type="Script" uid="uid://docvqd05nv4q1" path="res://Scripts/Managers/EncounterManager.gd" id="1_lov0d"]
+[ext_resource type="PackedScene" uid="uid://corhltbkplr48" path="res://Scenes/Tutorial/TutorialManager.tscn" id="1_vnq4p"]
 [ext_resource type="Script" uid="uid://8570ain8w4hx" path="res://Scripts/ResrouceScripts/Day.gd" id="2_2hvnh"]
 [ext_resource type="PackedScene" uid="uid://dl5f5ftvq363h" path="res://Scenes/encounter_proceed_button.tscn" id="2_m1xol"]
 [ext_resource type="Script" uid="uid://b5vh1alvaioay" path="res://Scripts/ResrouceScripts/EncounterData.gd" id="3_wnmts"]
@@ -81,6 +82,8 @@ roughness = 0.8
 transform = Transform3D(1, 0, 0, 0, 0.99428475, 0.10676092, 0, -0.10676092, 0.99428475, -2.3753223, 3.9513483, 4.5586495)
 fov = 86.29041
 script = ExtResource("10_camera")
+
+[node name="TutorialManager" parent="." unique_id=764230886 instance=ExtResource("1_vnq4p")]
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=1109577428]
 
@@ -176,7 +179,7 @@ transform = Transform3D(0.088670745, -4.9992137, 0, 4.9992137, 0.088670745, 0, 0
 [node name="light" parent="models" unique_id=1780392581 instance=ExtResource("13_jloce")]
 transform = Transform3D(4.9729, 0, -0.5198722, 0, 5, 0, 0.5198722, 0, 4.9729, -2.8372889, 12.966834, -8.635136)
 
-[node name="Encounter Manager" type="Node" parent="." unique_id=446126930 node_paths=PackedStringArray("logBookController", "phone", "encounter_button", "day_report_ui")]
+[node name="Encounter Manager" type="Node" parent="." unique_id=446126930 node_paths=PackedStringArray("logBookController", "phone", "encounter_button", "day_report_ui", "tutorial")]
 process_mode = 3
 script = ExtResource("1_lov0d")
 logBookController = NodePath("../models/Logbook")
@@ -184,6 +187,7 @@ phone = NodePath("../models/Telephone")
 encounter_button = NodePath("../UI/continue_encounters")
 days = Array[ExtResource("2_2hvnh")]([SubResource("Resource_u3pq5"), SubResource("Resource_5hxig")])
 day_report_ui = NodePath("../CanvasLayer/DayReportUI")
+tutorial = NodePath("../TutorialManager")
 
 [node name="empty" type="Node3D" parent="." unique_id=84633623]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.403927, -1.555706, -19.83374)

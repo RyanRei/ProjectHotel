@@ -8,6 +8,7 @@ var day_results: Array[Dictionary] = []
 @export var days: Array[Day]
 @export var day_report_ui: DayReportUI
 @export var guestModel:Node3D
+@export var tutorial:TutorialManager
 enum MovePosition {
 	MOVE_IN,
 	MOVE_OUT
@@ -15,7 +16,8 @@ enum MovePosition {
 
 func _ready() -> void:
 	#start_encounter()
-	encounter_button.startEncounter.connect(start_encounter)
+	#encounter_button.startEncounter.connect(start_encounter)
+	start_encounter()
 	
 
 
@@ -34,12 +36,12 @@ func start_encounter():
 		return
 	if not has_encounter():
 		return
-		
-	
-	
 	#await encounter_startup_props()
 	#encounterOngoing=true
-	
+	if GameState.day==1 and GameState.encounter==1:
+		tutorial.welcome()
+		
+		
 	var encounter = get_current_encounter()
 	
 	await encounter_startup_props(encounter)
