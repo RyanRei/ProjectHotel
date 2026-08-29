@@ -1,0 +1,66 @@
+[gd_scene format=3 uid="uid://baabtnhguem4d"]
+
+[ext_resource type="PackedScene" uid="uid://cubjoahd57ayy" path="res://Scenes/Tutorial/panelTexts.tscn" id="1_evslo"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u8vdq"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 10
+corner_detail = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vvulu"]
+bg_color = Color(0.14509805, 0.14509805, 0.14509805, 0.5882353)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 29
+corner_radius_bottom_left = 28
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bgc5f"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 15
+border_width_top = 15
+border_width_right = 15
+border_width_bottom = 15
+border_color = Color(0, 0.43489882, 0.901637, 1)
+border_blend = true
+corner_radius_top_left = 33
+corner_radius_top_right = 33
+corner_radius_bottom_right = 33
+corner_radius_bottom_left = 33
+
+[node name="box_pointing_to_text" type="Control" unique_id=69050541]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="pointer" type="Panel" parent="." unique_id=517012215]
+layout_mode = 0
+offset_left = 625.7294
+offset_top = 306.93976
+offset_right = 631.93945
+offset_bottom = 523.2679
+rotation = 0.44041714
+theme_override_styles/panel = SubResource("StyleBoxFlat_u8vdq")
+
+[node name="PanelTexts" parent="." unique_id=1698298257 instance=ExtResource("1_evslo")]
+visible = true
+layout_mode = 1
+
+[node name="Panel" type="Panel" parent="PanelTexts/PanelContainer" parent_id_path=PackedInt32Array(1698298257, 975044402) index="0" unique_id=1718068102]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_vvulu")
+
+[node name="box" type="PanelContainer" parent="PanelTexts" unique_id=1463505934]
+layout_mode = 0
+offset_left = 419.0
+offset_top = 162.0
+offset_right = 1095.0
+offset_bottom = 299.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_bgc5f")
+
+[editable path="PanelTexts"]

@@ -1,3 +1,4 @@
+class_name DialogBox
 extends Control
 
 @onready var text_label: Label = $DialoguePanel/MarginContainer/VBoxContainer/Subtitles
@@ -11,6 +12,14 @@ extends Control
 @export var accept_reject: AcceptRejectButton
 @export_range(10.0, 120.0, 1.0) var characters_per_second := 48.0
 
+@export var tutorial:TutorialManager
+signal confirmqn #for tutorial
+signal tab_checked
+var tutorial_check_tab_active := false
+var move_up_locked := false
+var move_down_locked := false
+var confirm_locked := false
+var toggle_hud_locked := false
 var typing := false
 var waiting_for_line_audio := false
 var reveal_text := ""
@@ -146,8 +155,40 @@ func present_action_prompt() -> void:
 	hint_label.text = "[TAB] Inspect Desk"
 	hint_label.show()
 	accept_reject.show()
+	
+		
 	accept_reject.turnOn(DialogueManager.get_remaining_question_count())
-
+	if GameState.day==1 and GameState.encounter==1 :
+		if tutorial.question_asked == 1:
+			tutorial.question_asked += 1
+			await tutorial.introduce_tabs()
+		elif tutorial.question_asked == 2 and tutorial.should_check_tab:
+			tutorial.question_asked += 1
+			await tutorial.check_tab_button()
+	
+	if GameState.day == 1 and GameState.encounter == 2:
+		
+		
+		if tutorial.question_asked == 1 or tutorial.question_asked==2:
+			
+			tutorial.question_asked += 1
+			await tutorial.enc2QuestionPointer()
+		elif tutorial.question_asked == 3 :
+			print("tabbing")
+			tutorial.question_asked += 1
+			await tutorial.e2_check_tab_button()
+	if GameState.day == 1 and GameState.encounter == 3:
+		print(tutorial.question_asked)
+		
+		if tutorial.question_asked == 1 or tutorial.question_asked==2:
+			
+			tutorial.question_asked += 1
+			await tutorial.enc3QuestionPointer()
+		#elif tutorial.question_asked == 3 :
+			#print("tabbing")
+			#tutorial.question_asked += 1
+			#await tutorial.e2_check_tab_button()
+		
 	var choice_made: String = await accept_reject.choiceMade
 	is_decision_pending = false
 	hint_label.hide()
@@ -190,6 +231,30 @@ func toggle_action_hud():
 		hint_label.text = "[TAB] Open Actions"
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
+func lock_move_up() -> void:
+	move_up_locked = true
+
+func unlock_move_up() -> void:
+	move_up_locked = false
+
+func lock_move_down() -> void:
+	move_down_locked = true
+
+func unlock_move_down() -> void:
+	move_down_locked = false
+
+func lock_confirm() -> void:
+	confirm_locked = true
+
+func unlock_confirm() -> void:
+	confirm_locked = false
+
+func lock_toggle_hud() -> void:
+	toggle_hud_locked = true
+
+func unlock_toggle_hud() -> void:
+	toggle_hud_locked = false
+
 func wait_for_advance() -> void:
 	awaiting_advance = true
 	while awaiting_advance:
@@ -222,6 +287,7 @@ func hide_line():
 	return tween
 
 func show_choices(choices: Array[DialogueChoice]):
+	
 	if choices.is_empty():
 		hide_dialogue_ui()
 		return
@@ -236,6 +302,10 @@ func show_choices(choices: Array[DialogueChoice]):
 
 	dialogue_choices = choices
 	selected_choice = 0
+	if GameState.day==1 and GameState.encounter==2 :
+		if  tutorial.question_asked==2 or tutorial.question_asked==3:
+	
+			selected_choice=1
 	$DialoguePanel.hide()
 	question_menu.show()
 	question_menu.modulate.a = 0.0
@@ -263,6 +333,12 @@ func _input(event):
 		return
 
 	if event.is_action_pressed("toggle_hud") and DialogueManager.active:
+		if toggle_hud_locked:
+			get_viewport().set_input_as_handled()
+			return
+		if tutorial_check_tab_active:
+			tutorial_check_tab_active = false
+			tab_checked.emit()
 		toggle_action_hud()
 		get_viewport().set_input_as_handled()
 		return
@@ -274,12 +350,17 @@ func _input(event):
 		return
 
 	if is_in_choices and event.is_action_pressed("Cancel Decision"):
+		if accept_reject.canceled_locked:
+			return
 		return_to_action_hud()
 		get_viewport().set_input_as_handled()
 		return
 
 	if not question_menu.visible:
 		if event.is_action_pressed("Confirm"):
+			if confirm_locked:
+				get_viewport().set_input_as_handled()
+				return
 			if typing:
 				typing = false
 				text_label.text = reveal_text
@@ -293,14 +374,28 @@ func _input(event):
 		return
 
 	if event.is_action_pressed("Move Up"):
+		if move_up_locked:
+			get_viewport().set_input_as_handled()
+			return
 		selected_choice = max(0, selected_choice - 1)
 		update_choice_display()
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("Move Down"):
+		if move_down_locked:
+			get_viewport().set_input_as_handled()
+			return
+		
 		selected_choice = min(dialogue_choices.size() - 1, selected_choice + 1)
+		if GameState.encounter==3 and GameState.day==1:
+			if tutorial.question_asked==2:
+				print("reaches heree")
+				selected_choice = min(1, selected_choice + 1)
 		update_choice_display()
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("Confirm"):
+		if confirm_locked:
+			get_viewport().set_input_as_handled()
+			return
 		if dialogue_choices.is_empty():
 			return
 		var choice = dialogue_choices[selected_choice]
@@ -312,12 +407,27 @@ func _input(event):
 		
 		question_menu.hide()
 		DialogueManager.choose(choice)
+		confirmqn.emit()
 		get_viewport().set_input_as_handled()
 
 func update_choice_display():
 	for i in dialogue_choices.size():
 		var choice_button: DialogueChoiceButton = choices_container.get_child(i)
 		choice_button.set_selected(i == selected_choice)
+	if GameState.day==1 and GameState.encounter==1 :
+		if tutorial.question_asked==2:
+			await tutorial.select_question()
+
+	elif GameState.day == 1 and GameState.encounter == 2:
+		if tutorial.question_asked == 2 or tutorial.question_asked == 3 :
+			#print("going here")
+			await tutorial.enc2SelectQuestion()
+			
+	elif GameState.day == 1 and GameState.encounter == 3:
+		if tutorial.question_asked == 2 :
+			#print("going here")
+			await tutorial.enc3SelectQuestion()
+		
 
 
 func return_to_action_hud() -> void:
@@ -339,6 +449,11 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _process(_delta: float) -> void:
 	history_indicator.visible = DialogueManager.active and not GameState.desk_state
+
+
+
+
+
 
 
 func toggle_history() -> void:

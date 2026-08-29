@@ -5,12 +5,16 @@
 [ext_resource type="PackedScene" uid="uid://corhltbkplr48" path="res://Scenes/Tutorial/TutorialManager.tscn" id="1_vnq4p"]
 [ext_resource type="Script" uid="uid://8570ain8w4hx" path="res://Scripts/ResrouceScripts/Day.gd" id="2_2hvnh"]
 [ext_resource type="PackedScene" uid="uid://dl5f5ftvq363h" path="res://Scenes/encounter_proceed_button.tscn" id="2_m1xol"]
+[ext_resource type="PackedScene" uid="uid://cubjoahd57ayy" path="res://Scenes/Tutorial/panelTexts.tscn" id="3_vw611"]
 [ext_resource type="Script" uid="uid://b5vh1alvaioay" path="res://Scripts/ResrouceScripts/EncounterData.gd" id="3_wnmts"]
 [ext_resource type="PackedScene" uid="uid://c2na11fytckj2" path="res://Scenes/accept_reject_button.tscn" id="4_abrt6"]
 [ext_resource type="PackedScene" uid="uid://6e1dhnjjhsd" path="res://Assets/3D Models/Book/book.glb" id="4_jmvtc"]
 [ext_resource type="Resource" uid="uid://cp84m54cdi8us" path="res://Assets/ItemHolders/Encounters/Shift 1/encounter_1.tres" id="4_uyxfn"]
+[ext_resource type="Script" uid="uid://dv6jaggoi3q3q" path="res://Scripts/TutorialPointer.gd" id="4_w5r7g"]
 [ext_resource type="PackedScene" uid="uid://ba3nri8t48jc6" path="res://Scenes/subtitlesText.tscn" id="4_wnmts"]
+[ext_resource type="PackedScene" uid="uid://ynqdo42m44m7" path="res://Scenes/Tutorial/hand_model.tscn" id="5_75spv"]
 [ext_resource type="PackedScene" uid="uid://p5ev8eu8tcfi" path="res://Scenes/Telephone.tscn" id="6_cm8yc"]
+[ext_resource type="PackedScene" uid="uid://baabtnhguem4d" path="res://Scenes/Tutorial/box_pointing_to_text.tscn" id="6_rs52r"]
 [ext_resource type="PackedScene" uid="uid://bb8bpfxy4igwf" path="res://Assets/3D Models/Computer/desktop_computer.glb" id="7_i2uxr"]
 [ext_resource type="Resource" uid="uid://borvgm7cvlbtd" path="res://Assets/ItemHolders/Encounters/Shift 1/encounter_2.tres" id="7_yrwa2"]
 [ext_resource type="PackedScene" uid="uid://dneeofe0xoqcs" path="res://Scenes/RosterUI.tscn" id="8_roster"]
@@ -42,16 +46,6 @@ sky_material = SubResource("PhysicalSkyMaterial_cm8yc")
 background_mode = 2
 sky = SubResource("Sky_uyxfn")
 
-[sub_resource type="Resource" id="Resource_u3pq5"]
-script = ExtResource("2_2hvnh")
-encounters = Array[ExtResource("3_wnmts")]([ExtResource("4_uyxfn"), ExtResource("7_yrwa2"), ExtResource("25_2gwif"), ExtResource("26_vnq4p")])
-metadata/_custom_type_script = "uid://8570ain8w4hx"
-
-[sub_resource type="Resource" id="Resource_5hxig"]
-script = ExtResource("2_2hvnh")
-encounters = Array[ExtResource("3_wnmts")]([ExtResource("24_c24b1"), ExtResource("25_ue4or")])
-metadata/_custom_type_script = "uid://8570ain8w4hx"
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5hxig"]
 albedo_color = Color(0.74, 0.74, 0.74, 1)
 albedo_texture = ExtResource("20_5hxig")
@@ -77,23 +71,146 @@ albedo_texture = ExtResource("20_5hxig")
 metallic_specular = 0.19
 roughness = 0.8
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u8vdq"]
+bg_color = Color(0, 0, 0, 0.8117647)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bgc5f"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 15
+border_width_top = 15
+border_width_right = 15
+border_width_bottom = 15
+border_color = Color(0, 0.43489882, 0.901637, 1)
+border_blend = true
+corner_radius_top_left = 33
+corner_radius_top_right = 33
+corner_radius_bottom_right = 33
+corner_radius_bottom_left = 33
+
+[sub_resource type="Resource" id="Resource_u3pq5"]
+script = ExtResource("2_2hvnh")
+encounters = Array[ExtResource("3_wnmts")]([ExtResource("4_uyxfn"), ExtResource("7_yrwa2"), ExtResource("25_2gwif"), ExtResource("26_vnq4p")])
+metadata/_custom_type_script = "uid://8570ain8w4hx"
+
+[sub_resource type="Resource" id="Resource_5hxig"]
+script = ExtResource("2_2hvnh")
+encounters = Array[ExtResource("3_wnmts")]([ExtResource("24_c24b1"), ExtResource("25_ue4or")])
+metadata/_custom_type_script = "uid://8570ain8w4hx"
+
 [node name="Node3D" type="Node3D" unique_id=1681156658]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=882528315]
+environment = SubResource("Environment_u8vdq")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=808229973]
 transform = Transform3D(1, 0, 0, 0, 0.99428475, 0.10676092, 0, -0.10676092, 0.99428475, -2.3753223, 3.9513483, 4.5586495)
 fov = 86.29041
 script = ExtResource("10_camera")
 
+[node name="models" type="Node" parent="." unique_id=673787417]
+
+[node name="reception_table" parent="models" unique_id=1800046158 instance=ExtResource("1_15lvy")]
+transform = Transform3D(3.535534, 0, -3.535534, 0, 5, 0, 3.535534, 0, 3.535534, -1.6761309, 0, 3.9475596)
+
+[node name="Telephone" parent="models" unique_id=1621591714 instance=ExtResource("6_cm8yc")]
+transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 0.7720361, 2.0122602, 2.2082567)
+
+[node name="computah" parent="models" unique_id=1114786589 instance=ExtResource("7_i2uxr")]
+transform = Transform3D(7.9988327, -0.0007051654, -0.13666779, 0, 7.9998937, -0.041277084, 0.1366696, 0.04127106, 7.9987264, -2.1664891, 2.9574757, 1.562563)
+script = ExtResource("9_monitor")
+
+[node name="defaultMaterial" parent="models/computah/Sketchfab_model/Collada visual scene group/Mouse_Wheel_Low" parent_id_path=PackedInt32Array(1114786589, 475541606) index="0" unique_id=554555474]
+transform = Transform3D(0.39959186, 9.313323e-05, 0.018049983, -9.313345e-05, 0.3999994, -2.0982698e-06, -0.018049983, -2.1059532e-06, 0.39959213, -0.14093643, -0.030498207, 0.20731899)
+
+[node name="defaultMaterial2" parent="models/computah/Sketchfab_model/Collada visual scene group/Mouse_Low" parent_id_path=PackedInt32Array(1114786589, 352854908) index="0" unique_id=2070005797]
+transform = Transform3D(0.39888582, 0.0001539214, 0.029831205, -0.00015392152, 0.3999998, -5.746493e-06, -0.029831205, -5.74952e-06, 0.39888588, -0.13918996, -0.030419528, 0.2191678)
+
+[node name="defaultMaterial3" parent="models/computah/Sketchfab_model/Collada visual scene group/Base_Low" parent_id_path=PackedInt32Array(1114786589, 1777794563) index="0" unique_id=394983047]
+transform = Transform3D(0.39999992, 3.637979e-12, -2.7939677e-09, 0, 0.39999992, 9.313226e-10, 3.7252903e-09, -1.1641532e-09, 0.39999992, 0.002469182, -0.019545555, 0.14461479)
+
+[node name="defaultMaterial4" parent="models/computah/Sketchfab_model/Collada visual scene group/Vert_Low" parent_id_path=PackedInt32Array(1114786589, 1875643566) index="0" unique_id=1392626751]
+transform = Transform3D(0.2999999, 7.275958e-12, -4.1909516e-09, -1.6370905e-11, 0.3, 2.2118911e-09, 2.7939677e-09, -1.7462298e-09, 0.3, 0.0084812045, -0.05689746, 0.1804916)
+
+[node name="defaultMaterial5" parent="models/computah/Sketchfab_model/Collada visual scene group/Computer_Low" parent_id_path=PackedInt32Array(1114786589, 1713742004) index="0" unique_id=510536054]
+transform = Transform3D(0.49997613, -0.0013246113, 0.004698918, 0.000566037, 0.49372703, 0.078952394, -0.004849129, -0.078943305, 0.49370477, 0.004231155, -0.00551641, 0.24766394)
+
+[node name="defaultMaterial6" parent="models/computah/Sketchfab_model/Collada visual scene group/Key_Board_Low" parent_id_path=PackedInt32Array(1114786589, 1531244796) index="0" unique_id=1808161109]
+transform = Transform3D(0.3499632, 2.6129557e-05, 0.0050641145, -2.6129625e-05, 0.3500003, -1.8964056e-07, -0.0050641196, -1.9290019e-07, 0.34996325, -0.07371694, -0.058675766, 0.15438148)
+
+[node name="Logbook" parent="models" unique_id=2051017322 node_paths=PackedStringArray("logbook", "logUpdateAudio", "pageFlipAudio") instance=ExtResource("4_jmvtc")]
+transform = Transform3D(4.7995405, 3.783498e-10, -0.06642935, -1.6734703e-10, 4.7999973, 3.1664968e-08, 0.06642932, -3.5390258e-08, 4.7995377, -6.4314528, 1.8376517, 2.226637)
+script = ExtResource("13_logbook_controller")
+logbook = NodePath("../../CanvasLayer/LogbookUI")
+logUpdateAudio = NodePath("whencorniferbemapping")
+pageFlipAudio = NodePath("pageflip")
+
+[node name="Collada visual scene group" parent="models/Logbook/Sketchfab_model" parent_id_path=PackedInt32Array(2051017322, 125633443) index="0" unique_id=1202365656]
+transform = Transform3D(1, 0, 0, 0, -4.3711385e-08, -0.99999994, 0, 0.99999994, -4.3711385e-08, 0, 0, 0)
+
+[node name="defaultMaterial_001" parent="models/Logbook/Sketchfab_model/Collada visual scene group/notebook" parent_id_path=PackedInt32Array(2051017322, 1030892043) index="0" unique_id=1484271737]
+transform = Transform3D(-0.99800265, 0.14202243, 0.027653921, -0.056808602, -2.495963, 0.00078626315, 0.027653925, -0.0019657402, 0.99961776, 0.15295768, 0.022822142, -0.0021170676)
+surface_material_override/0 = ExtResource("12_u3pq5")
+
+[node name="defaultMaterial" parent="models/Logbook/Sketchfab_model/Collada visual scene group/penna" parent_id_path=PackedInt32Array(2051017322, 1552377788) index="0" unique_id=1057759552]
+transform = Transform3D(1, -2.0816682e-17, 2.7939677e-09, -1.3877788e-17, 1.0000001, -1.3322676e-15, 0, 1.7763568e-15, 1.0000002, 0.37629592, 0, -0.005208224)
+
+[node name="whencorniferbemapping" type="AudioStreamPlayer3D" parent="models/Logbook" unique_id=1175347376]
+transform = Transform3D(0.20833333, 1.2101339e-11, 3.0267984e-09, 1.7347235e-18, 0.20833348, 1.6176849e-10, -2.3283064e-10, 1.110223e-16, 0.20833345, 0.15418065, 0, -0.0021339655)
+stream = ExtResource("12_5hxig")
+
+[node name="pageflip" type="AudioStreamPlayer3D" parent="models/Logbook" unique_id=1925952393]
+transform = Transform3D(0.20833333, 1.2101339e-11, 3.0267984e-09, 1.7347235e-18, 0.20833348, 1.6176849e-10, -2.3283064e-10, 1.110223e-16, 0.20833345, 0.15418065, 0, -0.0021339655)
+stream = ExtResource("17_ue4or")
+volume_db = -2.367
+
+[node name="Wallclock" parent="models" unique_id=1020162297 instance=ExtResource("12_j1ydb")]
+transform = Transform3D(0.088670745, -4.9992137, 0, 4.9992137, 0.088670745, 0, 0, 0, 5, 11.237114, 6.931054, -0.2118001)
+script = ExtResource("12_wallclock_controller")
+
+[node name="light" parent="models" unique_id=1780392581 instance=ExtResource("13_jloce")]
+transform = Transform3D(4.9729, 0, -0.5198722, 0, 5, 0, 0.5198722, 0, 4.9729, -2.8372889, 12.966834, -8.635136)
+
+[node name="Wall" type="CSGBox3D" parent="models" unique_id=702493538]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.633514, 4.66564, -12.118917)
+size = Vector3(2, 20, 40)
+material = SubResource("StandardMaterial3D_5hxig")
+
+[node name="Wall2" type="CSGBox3D" parent="models/Wall" unique_id=465212702]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29.828241, 1.0438471, -0.61364555)
+size = Vector3(2, 20, 40)
+material = SubResource("StandardMaterial3D_j1ydb")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="models/Wall" unique_id=1798483654]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.5378475, 1.5530319, -21.849554)
+size = Vector3(120, 20, 50)
+material = SubResource("StandardMaterial3D_jloce")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="models/Wall" unique_id=1004151938]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.707004, 1.4050922, -20.711187)
+operation = 2
+size = Vector3(100, 18, 48)
+material = SubResource("StandardMaterial3D_3kkkj")
+metadata/_edit_group_ = true
+
+[node name="Roof" type="CSGBox3D" parent="models" unique_id=403116593]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.85289955, 15.458476, -12.590821)
+size = Vector3(40, 2, 40)
+material = SubResource("StandardMaterial3D_ldmme")
+
+[node name="Floor" type="CSGBox3D" parent="models" unique_id=350448394]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.800312, -3.96, -11.85965)
+size = Vector3(30, 2, 40)
+material = SubResource("StandardMaterial3D_ldmme")
+
 [node name="Lights" type="Node" parent="." unique_id=1123067539]
 
-[node name="OmniLight3D4" type="OmniLight3D" parent="Lights" unique_id=171112688]
-transform = Transform3D(0.999905, 0.013746126, 0.0010868422, -0.013758895, 0.99982375, 0.0127736535, -0.0009110624, -0.012787393, 0.99991786, -32.69966, 0.5002718, -15.439408)
-visible = false
-light_color = Color(1, 0.84966666, 0.78, 1)
-light_energy = 4.757
+[node name="OmniLight3D3" type="OmniLight3D" parent="Lights" unique_id=1985307974]
+transform = Transform3D(0.9999762, 0.006874963, 0.00052147126, -0.0068781553, 0.99995595, 0.0063888333, -0.00047752523, -0.006392268, 0.9999795, 32.62258, 3.1644402, -27.830126)
+light_color = Color(1, 0.87, 0.87, 1)
+light_energy = 1.065
 light_indirect_energy = 16.0
-light_volumetric_fog_energy = 5.38
-omni_range = 149.20726
+light_volumetric_fog_energy = 3.906
+omni_range = 54.55811
 
 [node name="OmniLight3D2" type="OmniLight3D" parent="Lights" unique_id=145564592]
 transform = Transform3D(1, 0, 0, 0, -0.520924, 0.85360307, 0, -0.85360307, -0.520924, -2.8914318, 13.010827, -8.211379)
@@ -110,10 +227,9 @@ shadow_transmittance_bias = -0.582
 shadow_opacity = 0.75
 omni_range = 35.586117
 
-[node name="Node3D" type="Node3D" parent="Lights" unique_id=704473823]
-visible = false
+[node name="base lights" type="Node3D" parent="Lights" unique_id=704473823]
 
-[node name="SpotLight3D2" type="SpotLight3D" parent="Lights/Node3D" unique_id=434221459]
+[node name="SpotLight3D2" type="SpotLight3D" parent="Lights/base lights" unique_id=434221459]
 transform = Transform3D(0.3972774, 0.6257363, -0.6712859, 0.10155303, 0.6970195, 0.70982444, 0.91206235, -0.35016832, 0.2133647, -9.111044, 4.618067, 0.11233735)
 light_color = Color(0.28046393, 0.379823, 0.42634302, 1)
 light_energy = 40.0
@@ -122,7 +238,7 @@ shadow_enabled = true
 spot_range = 6.0899944
 spot_angle = 89.99
 
-[node name="SpotLight3D" type="SpotLight3D" parent="Lights/Node3D" unique_id=1808260354]
+[node name="SpotLight3D" type="SpotLight3D" parent="Lights/base lights" unique_id=1808260354]
 transform = Transform3D(0.998379, 2.4878615e-09, -0.056915637, 0.056915637, -4.3640533e-08, 0.998379, 0, -1, -4.371139e-08, 0.71091366, 5.187361, 2.0646698)
 light_color = Color(0.28046393, 0.379823, 0.42634302, 1)
 light_energy = 40.0
@@ -131,13 +247,13 @@ shadow_enabled = true
 spot_range = 6.3599453
 spot_angle = 20.232937
 
-[node name="OmniLight3D" type="OmniLight3D" parent="Lights/Node3D" unique_id=62980994]
+[node name="OmniLight3D" type="OmniLight3D" parent="Lights/base lights" unique_id=62980994]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2802238, 3.4659672, 0)
 light_color = Color(1, 0.8126302, 0.72623205, 1)
 light_energy = 6.622
 omni_range = 8.721
 
-[node name="OmniLight3D5" type="OmniLight3D" parent="Lights/Node3D" unique_id=1233346839]
+[node name="OmniLight3D5" type="OmniLight3D" parent="Lights/base lights" unique_id=1233346839]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.666512, 7.306694, 0.72105026)
 light_color = Color(1, 0.89, 0.89, 1)
 light_energy = 0.368
@@ -146,20 +262,43 @@ light_volumetric_fog_energy = 13.0
 light_size = 0.555
 shadow_enabled = true
 
-[node name="OmniLight3D3" type="OmniLight3D" parent="Lights/Node3D" unique_id=1985307974]
-transform = Transform3D(0.9999762, 0.006874963, 0.00052147126, -0.0068781553, 0.99995595, 0.0063888333, -0.00047752523, -0.006392268, 0.9999795, 32.62258, 3.1644402, -27.830126)
-light_color = Color(1, 0.87, 0.87, 1)
-light_energy = 1.065
+[node name="OmniLight3D4" type="OmniLight3D" parent="Lights/base lights" unique_id=171112688]
+transform = Transform3D(0.999905, 0.013746126, 0.0010868422, -0.013758895, 0.99982375, 0.0127736535, -0.0009110624, -0.012787393, 0.99991786, -32.69966, 0.5002718, -15.439408)
+visible = false
+light_color = Color(1, 0.84966666, 0.78, 1)
+light_energy = 4.757
 light_indirect_energy = 16.0
-light_volumetric_fog_energy = 3.906
-omni_range = 54.55811
+light_volumetric_fog_energy = 5.38
+omni_range = 149.20726
 
-[node name="TutorialManager" parent="." unique_id=764230886 node_paths=PackedStringArray("camera", "phone_light", "logbook_light", "pc_light", "clock_light") instance=ExtResource("1_vnq4p")]
+[node name="WORLD DIMMER" type="CanvasLayer" parent="." unique_id=1988491465]
+visible = false
+
+[node name="Panel" type="Panel" parent="WORLD DIMMER" unique_id=1809994513]
+offset_left = -31.0
+offset_top = -50.0
+offset_right = 1174.0
+offset_bottom = 667.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_u8vdq")
+
+[node name="TutorialManager" parent="." unique_id=764230886 node_paths=PackedStringArray("encounterManager", "clock", "computahUi", "computah", "camera", "phone_light", "logbook_light", "pc_light", "clock_light", "logBook", "loggBookUi", "pointer", "phone", "normal_lights", "world_dimmer", "accept_reject_buttons", "dialogBox") instance=ExtResource("1_vnq4p")]
+encounterManager = NodePath("../Encounter Manager")
+clock = NodePath("../models/Wallclock")
+computahUi = NodePath("../CanvasLayer/RosterUI")
+computah = NodePath("../models/computah")
 camera = NodePath("../Camera3D")
 phone_light = NodePath("tutorial lights/phone light")
 logbook_light = NodePath("tutorial lights/logbook light")
 pc_light = NodePath("tutorial lights/pc light")
 clock_light = NodePath("tutorial lights/clock light")
+logBook = NodePath("../models/Logbook")
+loggBookUi = NodePath("../CanvasLayer/LogbookUI")
+pointer = NodePath("Pointer")
+phone = NodePath("../models/Telephone")
+normal_lights = NodePath("../Lights/base lights")
+world_dimmer = NodePath("../WORLD DIMMER")
+accept_reject_buttons = NodePath("../UI/accept_reject")
+dialogBox = NodePath("../UI/DialogBox")
 
 [node name="tutorial lights" type="Node3D" parent="TutorialManager" unique_id=274992819]
 
@@ -203,10 +342,90 @@ shadow_enabled = true
 spot_range = 8.487288
 spot_angle = 25.783873
 
+[node name="PanelTexts" parent="TutorialManager" unique_id=1698298257 instance=ExtResource("3_vw611")]
+process_mode = 3
+
+[node name="Pointer" type="Node3D" parent="TutorialManager" unique_id=399075682]
+process_mode = 3
+script = ExtResource("4_w5r7g")
+hand_model = ExtResource("5_75spv")
+hover_height = 0.75
+animation_speed = 5.315
+
+[node name="CanvasLayer for tesing" type="CanvasLayer" parent="TutorialManager" unique_id=574014767]
+layer = 2
+
+[node name="check tab" parent="TutorialManager/CanvasLayer for tesing" unique_id=2106677204 instance=ExtResource("6_rs52r")]
+visible = false
+
+[node name="pointer" parent="TutorialManager/CanvasLayer for tesing/check tab" index="0" unique_id=517012215]
+offset_left = 907.00006
+offset_top = 586.0
+offset_right = 913.21014
+offset_bottom = 802.3281
+rotation = 1.9670732
+
+[node name="PanelContainer" parent="TutorialManager/CanvasLayer for tesing/check tab/PanelTexts" parent_id_path=PackedInt32Array(2106677204, 1698298257) index="0" unique_id=975044402]
+offset_left = 254.0
+offset_top = 393.0
+offset_right = 692.0
+offset_bottom = 530.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_bgc5f")
+
+[node name="Label" parent="TutorialManager/CanvasLayer for tesing/check tab/PanelTexts/PanelContainer" index="1" unique_id=34167543]
+theme_override_font_sizes/font_size = 24
+text = "\"Press Tab to step into your desk i.e your logbook, computer screen telephone. Press it again to get back to your call system, where you'll actually manage the shift"
+
+[node name="box" parent="TutorialManager/CanvasLayer for tesing/check tab/PanelTexts" parent_id_path=PackedInt32Array(2106677204, 1698298257) index="1" unique_id=1463505934]
+offset_left = 901.0
+offset_top = 599.0
+offset_right = 1150.0
+offset_bottom = 658.0
+
+[node name="it matches" parent="TutorialManager/CanvasLayer for tesing" unique_id=1296116618 instance=ExtResource("6_rs52r")]
+visible = false
+
+[node name="pointer" parent="TutorialManager/CanvasLayer for tesing/it matches" index="0" unique_id=517012215]
+offset_left = 570.2553
+offset_top = 369.50256
+offset_right = 576.4654
+offset_bottom = 438.48962
+rotation = 3.0345302
+
+[node name="PanelContainer" parent="TutorialManager/CanvasLayer for tesing/it matches/PanelTexts" parent_id_path=PackedInt32Array(1296116618, 1698298257) index="0" unique_id=975044402]
+offset_left = 350.0
+offset_top = 375.0
+offset_right = 788.0
+offset_bottom = 587.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_bgc5f")
+
+[node name="Label" parent="TutorialManager/CanvasLayer for tesing/it matches/PanelTexts/PanelContainer" index="1" unique_id=34167543]
+theme_override_font_sizes/font_size = 24
+text = "It Matches! Good. You've got one question left in the bank if you want it: sometimes one clean answer should be enough, sometimes it isn't. Your call"
+
+[node name="box" parent="TutorialManager/CanvasLayer for tesing/it matches/PanelTexts" parent_id_path=PackedInt32Array(1296116618, 1698298257) index="1" unique_id=1463505934]
+offset_left = 409.0
+offset_top = 237.0
+offset_right = 658.0
+offset_bottom = 296.0
+
+[node name="clock tick" parent="TutorialManager/CanvasLayer for tesing" unique_id=735463084 instance=ExtResource("3_vw611")]
+
+[node name="PanelContainer" parent="TutorialManager/CanvasLayer for tesing/clock tick" index="0" unique_id=975044402]
+offset_left = 212.0
+offset_top = 488.0
+offset_right = 888.0
+offset_bottom = 595.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_bgc5f")
+
+[node name="Label" parent="TutorialManager/CanvasLayer for tesing/clock tick/PanelContainer" index="0" unique_id=34167543]
+text = "Nice! The moment you hang up, the clock starts moving again and get ready for the next ring anytime"
+
 [node name="UI" type="CanvasLayer" parent="." unique_id=1109577428]
 
-[node name="DialogBox" parent="UI" unique_id=2097814497 node_paths=PackedStringArray("accept_reject") instance=ExtResource("4_wnmts")]
+[node name="DialogBox" parent="UI" unique_id=2097814497 node_paths=PackedStringArray("accept_reject", "tutorial") instance=ExtResource("4_wnmts")]
 accept_reject = NodePath("../accept_reject")
+tutorial = NodePath("../../TutorialManager")
 
 [node name="continue_encounters" parent="UI" unique_id=823420143 instance=ExtResource("2_m1xol")]
 
@@ -235,69 +454,6 @@ script = ExtResource("11_hand")
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="." unique_id=923016706]
 visible = false
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=882528315]
-environment = SubResource("Environment_u8vdq")
-
-[node name="models" type="Node" parent="." unique_id=673787417]
-
-[node name="reception_table" parent="models" unique_id=1800046158 instance=ExtResource("1_15lvy")]
-transform = Transform3D(3.535534, 0, -3.535534, 0, 5, 0, 3.535534, 0, 3.535534, -1.6761309, 0, 3.9475596)
-
-[node name="Telephone" parent="models" unique_id=1621591714 instance=ExtResource("6_cm8yc")]
-transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 0.7720361, 2.0122602, 2.2082567)
-
-[node name="computah" parent="models" unique_id=1114786589 instance=ExtResource("7_i2uxr")]
-transform = Transform3D(7.9988327, -0.0007051654, -0.13666779, 0, 7.9998937, -0.041277084, 0.1366696, 0.04127106, 7.9987264, -2.1664891, 2.9574757, 1.562563)
-script = ExtResource("9_monitor")
-
-[node name="defaultMaterial" parent="models/computah/Sketchfab_model/Collada visual scene group/Mouse_Wheel_Low" parent_id_path=PackedInt32Array(1114786589, 2118286770) index="0" unique_id=1595207115]
-transform = Transform3D(0.39959186, 9.313323e-05, 0.018049983, -9.313345e-05, 0.3999994, -2.0982698e-06, -0.018049983, -2.1059532e-06, 0.39959213, -0.14093643, -0.030498207, 0.20731899)
-
-[node name="defaultMaterial2" parent="models/computah/Sketchfab_model/Collada visual scene group/Mouse_Low" parent_id_path=PackedInt32Array(1114786589, 1942999455) index="0" unique_id=1157853549]
-transform = Transform3D(0.39888582, 0.0001539214, 0.029831205, -0.00015392152, 0.3999998, -5.746493e-06, -0.029831205, -5.74952e-06, 0.39888588, -0.13918996, -0.030419528, 0.2191678)
-
-[node name="defaultMaterial3" parent="models/computah/Sketchfab_model/Collada visual scene group/Base_Low" parent_id_path=PackedInt32Array(1114786589, 267889555) index="0" unique_id=1313312222]
-transform = Transform3D(0.39999992, 3.637979e-12, -2.7939677e-09, 0, 0.39999992, 9.313226e-10, 3.7252903e-09, -1.1641532e-09, 0.39999992, 0.002469182, -0.019545555, 0.14461479)
-
-[node name="defaultMaterial4" parent="models/computah/Sketchfab_model/Collada visual scene group/Vert_Low" parent_id_path=PackedInt32Array(1114786589, 1347606264) index="0" unique_id=2076551684]
-transform = Transform3D(0.2999999, 7.275958e-12, -4.1909516e-09, -1.6370905e-11, 0.3, 2.2118911e-09, 2.7939677e-09, -1.7462298e-09, 0.3, 0.0084812045, -0.05689746, 0.1804916)
-
-[node name="defaultMaterial5" parent="models/computah/Sketchfab_model/Collada visual scene group/Computer_Low" parent_id_path=PackedInt32Array(1114786589, 404720958) index="0" unique_id=1984227514]
-transform = Transform3D(0.49997613, -0.0013246113, 0.004698918, 0.000566037, 0.49372703, 0.078952394, -0.004849129, -0.078943305, 0.49370477, 0.004231155, -0.00551641, 0.24766394)
-
-[node name="defaultMaterial6" parent="models/computah/Sketchfab_model/Collada visual scene group/Key_Board_Low" parent_id_path=PackedInt32Array(1114786589, 1985273049) index="0" unique_id=310325735]
-transform = Transform3D(0.3499632, 2.6129557e-05, 0.0050641145, -2.6129625e-05, 0.3500003, -1.8964056e-07, -0.0050641196, -1.9290019e-07, 0.34996325, -0.07371694, -0.058675766, 0.15438148)
-
-[node name="Logbook" parent="models" unique_id=2051017322 node_paths=PackedStringArray("logbook", "logUpdateAudio", "pageFlipAudio") instance=ExtResource("4_jmvtc")]
-transform = Transform3D(4.7995405, 3.783498e-10, -0.06642935, -1.6734703e-10, 4.7999973, 3.1664968e-08, 0.06642932, -3.5390258e-08, 4.7995377, -6.4314528, 1.8376517, 2.226637)
-script = ExtResource("13_logbook_controller")
-logbook = NodePath("../../CanvasLayer/LogbookUI")
-logUpdateAudio = NodePath("whencorniferbemapping")
-pageFlipAudio = NodePath("pageflip")
-
-[node name="defaultMaterial_001" parent="models/Logbook/Sketchfab_model/Collada visual scene group/notebook" parent_id_path=PackedInt32Array(2051017322, 1574708107) index="0" unique_id=2127795109]
-transform = Transform3D(-0.99800265, 0.14202243, 0.027653921, -0.056808602, -2.495963, 0.00078626315, 0.027653925, -0.0019657402, 0.99961776, 0.15295768, 0.022822142, -0.0021170676)
-surface_material_override/0 = ExtResource("12_u3pq5")
-
-[node name="defaultMaterial" parent="models/Logbook/Sketchfab_model/Collada visual scene group/penna" parent_id_path=PackedInt32Array(2051017322, 1929589950) index="0" unique_id=1308102405]
-transform = Transform3D(1, -2.0816682e-17, 2.7939677e-09, -1.3877788e-17, 1.0000001, -1.3322676e-15, 0, 1.7763568e-15, 1.0000002, 0.37629592, 0, -0.005208224)
-
-[node name="whencorniferbemapping" type="AudioStreamPlayer3D" parent="models/Logbook" unique_id=1175347376]
-transform = Transform3D(0.20833333, 1.2101339e-11, 3.0267984e-09, 1.7347235e-18, 0.20833348, 1.6176849e-10, -2.3283064e-10, 1.110223e-16, 0.20833345, 0.15418065, 0, -0.0021339655)
-stream = ExtResource("12_5hxig")
-
-[node name="pageflip" type="AudioStreamPlayer3D" parent="models/Logbook" unique_id=1925952393]
-transform = Transform3D(0.20833333, 1.2101339e-11, 3.0267984e-09, 1.7347235e-18, 0.20833348, 1.6176849e-10, -2.3283064e-10, 1.110223e-16, 0.20833345, 0.15418065, 0, -0.0021339655)
-stream = ExtResource("17_ue4or")
-volume_db = -2.367
-
-[node name="Wallclock" parent="models" unique_id=1020162297 instance=ExtResource("12_j1ydb")]
-transform = Transform3D(0.088670745, -4.9992137, 0, 4.9992137, 0.088670745, 0, 0, 0, 5, 11.237114, 6.931054, -0.2118001)
-script = ExtResource("12_wallclock_controller")
-
-[node name="light" parent="models" unique_id=1780392581 instance=ExtResource("13_jloce")]
-transform = Transform3D(4.9729, 0, -0.5198722, 0, 5, 0, 0.5198722, 0, 4.9729, -2.8372889, 12.966834, -8.635136)
-
 [node name="Encounter Manager" type="Node" parent="." unique_id=446126930 node_paths=PackedStringArray("logBookController", "phone", "encounter_button", "day_report_ui", "tutorial")]
 process_mode = 3
 script = ExtResource("1_lov0d")
@@ -318,37 +474,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.403927, -1.555706, -19.833
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="Audio" unique_id=1075569260]
 visible = false
 
-[node name="Wall" type="CSGBox3D" parent="." unique_id=702493538]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.633514, 4.66564, -12.118917)
-size = Vector3(2, 20, 40)
-material = SubResource("StandardMaterial3D_5hxig")
-
-[node name="Wall2" type="CSGBox3D" parent="Wall" unique_id=465212702]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29.828241, 1.0438471, -0.61364555)
-size = Vector3(2, 20, 40)
-material = SubResource("StandardMaterial3D_j1ydb")
-
-[node name="CSGBox3D" type="CSGBox3D" parent="Wall" unique_id=1798483654]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.5378475, 1.5530319, -21.849554)
-size = Vector3(120, 20, 50)
-material = SubResource("StandardMaterial3D_jloce")
-
-[node name="CSGBox3D2" type="CSGBox3D" parent="Wall" unique_id=1004151938]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.707004, 1.4050922, -20.711187)
-operation = 2
-size = Vector3(100, 18, 48)
-material = SubResource("StandardMaterial3D_3kkkj")
-metadata/_edit_group_ = true
-
-[node name="Roof" type="CSGBox3D" parent="." unique_id=403116593]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.85289955, 15.458476, -12.590821)
-size = Vector3(40, 2, 40)
-material = SubResource("StandardMaterial3D_ldmme")
-
-[node name="Floor" type="CSGBox3D" parent="." unique_id=350448394]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.800312, -3.96, -11.85965)
-size = Vector3(30, 2, 40)
-material = SubResource("StandardMaterial3D_ldmme")
-
 [editable path="models/computah"]
 [editable path="models/Logbook"]
+[editable path="TutorialManager/CanvasLayer for tesing/check tab"]
+[editable path="TutorialManager/CanvasLayer for tesing/check tab/PanelTexts"]
+[editable path="TutorialManager/CanvasLayer for tesing/it matches"]
+[editable path="TutorialManager/CanvasLayer for tesing/it matches/PanelTexts"]
+[editable path="TutorialManager/CanvasLayer for tesing/clock tick"]

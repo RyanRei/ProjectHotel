@@ -8,7 +8,7 @@ signal time_updated(hour: int, minute: int)
 signal shift_ended
 
 const SHIFT_DURATION := 43200.0  # 12 hours in seconds
-const SCALE_NORMAL := 600.0     # 10 in-game minutes per 1 real second
+const SCALE_NORMAL := 2000.0     # when 600  10 in-game minutes per 1 real second- 
 const SCALE_ENCOUNTER := 1.0    # Real-time during encounters
 const SCALE_PAUSED := 0.0       # Frozen
 

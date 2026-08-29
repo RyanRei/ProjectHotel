@@ -101,7 +101,11 @@ func start_encounter() -> void:
 		return
 	if not has_encounter():
 		return
-
+	if GameState.day==1:
+		tutorial.question_asked=1
+		if GameState.encounter==2:
+		
+			sendClockFinished.emit()
 	encounter_starting = true
 	var encounter := get_current_encounter()
 
@@ -114,7 +118,9 @@ func start_encounter() -> void:
 	if encounter.communication_type=="RESIDENT":
 		await wait_for_phone()
 	elif encounter.communication_type=="VISITOR":
-		await move_customer(_get_visitor_model(encounter), MovePosition.MOVE_IN)
+		await move_customer(encounter.model,MovePosition.MOVE_IN)
+		if GameState.day==1 and GameState.encounter==3:
+			await tutorial.mayaChenIntroduction(guestModel)
 	elif encounter.communication_type=="INFORMATIVE":
 		await wait_for_phone()
 
@@ -128,7 +134,8 @@ func start_encounter() -> void:
 	DialogueManager.start_dialogue(encounter.dialogue)
 
 	var choice:String=await DialogueManager.dialogue_finished
-
+	
+	
 	await finish_encounter(encounter, choice)
 
 
@@ -141,10 +148,11 @@ func finish_encounter(encounter: EncounterData, choice: String):
 		"status": encounter.status,
 		"consequence": _get_consequence(encounter, choice)
 	})
-
+	if GameState.encounter==1 and GameState.day==1:
+		tutorial.introduce_clock()
 	GameState.encounter += 1
 	encounterOngoing = false
-
+	
 	if GameState.encounter > days[GameState.day - 1].encounters.size():
 		# All encounters done for the day
 		if is_tutorial_day:
@@ -162,10 +170,12 @@ func finish_encounter(encounter: EncounterData, choice: String):
 				TimeManager.resume_normal()
 			else:
 				TimeManager.pause()
+				
+				
 		else:
 			TimeManager.resume_normal()
-
-
+#tutorialsignal:
+signal sendClockFinished
 func has_encounter() -> bool:
 	if GameState.day > days.size():
 		return false
@@ -298,6 +308,11 @@ func _get_visitor_model(encounter: EncounterData) -> PackedScene:
 
 func wait_for_phone():
 	phone.start_ringing()
+	if is_tutorial_day:
+		if GameState.encounter==1:
+			await tutorial.introduce_phone()
+			return
+	
 	await phone.call_answered
 
 
@@ -342,7 +357,7 @@ func end_day():
 
 	DayReportManager.add_report(finished_day, day_results)
 	day_results.clear()
-	print(DayReportManager.reports)
+	
 	await day_report_ui.show_report(
 	DayReportManager.get_report(finished_day)
 	)

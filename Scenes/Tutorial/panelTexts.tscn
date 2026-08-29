@@ -14,6 +14,7 @@ corner_radius_bottom_right = 33
 corner_radius_bottom_left = 33
 
 [node name="PanelTexts" type="Control" unique_id=1698298257]
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -23,12 +24,13 @@ grow_vertical = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=975044402]
 layout_mode = 0
-offset_left = 638.0
-offset_top = 199.0
-offset_right = 1119.0
-offset_bottom = 440.0
+offset_left = 256.0
+offset_top = 508.0
+offset_right = 932.0
+offset_bottom = 645.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_bgc5f")
 
 [node name="Label" type="Label" parent="PanelContainer" unique_id=34167543]
 layout_mode = 2
-theme_override_font_sizes/font_size = 41
+theme_override_font_sizes/font_size = 19
+autowrap_mode = 3

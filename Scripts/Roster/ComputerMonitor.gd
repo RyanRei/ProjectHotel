@@ -1,11 +1,11 @@
 class_name ComputerMonitor
 extends Node3D
-
+signal computer_clicked
 const SCREEN_BACKGROUND := Color("10171a")
 const SCREEN_PANEL := Color("182328")
 const SCREEN_AMBER := Color("b17b32")
 const SCREEN_TEXT := Color("ddd1b2")
-
+@export var clickable := true
 var screen_mesh: MeshInstance3D
 var click_area: Area3D
 var idle_viewport: SubViewport
@@ -203,9 +203,13 @@ func create_click_area() -> void:
 
 
 func interact() -> void:
+	if not clickable:
+		return
+	computer_clicked.emit()
 	var roster := get_tree().get_first_node_in_group("roster_ui") as RosterUI
 	if roster != null:
 		roster.open_roster()
+		
 
 
 func make_screen_label(text_value: String, font_size: int, color: Color) -> Label:

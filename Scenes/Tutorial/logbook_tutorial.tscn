@@ -1,0 +1,106 @@
+[gd_scene format=3 uid="uid://bedoiad2lpq77"]
+
+[ext_resource type="PackedScene" uid="uid://cubjoahd57ayy" path="res://Scenes/Tutorial/panelTexts.tscn" id="1_ku6t8"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8kjun"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(1, 0.056249976, 0.056249976, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_65lw4"]
+bg_color = Color(1, 1, 1, 1)
+
+[node name="Logbook Tutorial" type="Control" unique_id=653474391]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="right" type="Control" parent="." unique_id=1959016882]
+visible = false
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="logbook outline" type="Panel" parent="right" unique_id=117635293]
+z_index = 2
+layout_mode = 0
+offset_left = 587.0
+offset_top = 84.0
+offset_right = 913.0
+offset_bottom = 557.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_8kjun")
+
+[node name="Panel2" type="Panel" parent="right" unique_id=2075253813]
+z_index = 2
+layout_mode = 0
+offset_left = 483.0
+offset_top = 296.00003
+offset_right = 563.7483
+offset_bottom = 298.2812
+rotation = -0.11232093
+theme_override_styles/panel = SubResource("StyleBoxFlat_65lw4")
+
+[node name="PanelTexts2" parent="right" unique_id=1698298257 instance=ExtResource("1_ku6t8")]
+visible = true
+layout_mode = 1
+offset_right = 75.0
+offset_bottom = 155.0
+
+[node name="PanelContainer" parent="right/PanelTexts2" index="0" unique_id=975044402]
+offset_left = 68.0
+offset_top = 211.0
+offset_right = 474.0
+offset_bottom = 402.0
+
+[node name="Label" parent="right/PanelTexts2/PanelContainer" index="0" unique_id=34167543]
+theme_override_font_sizes/font_size = 21
+text = "This side's everything else. Special notes. Anything that broke down, residents with special needs, everything’s recorded here"
+
+[node name="left" type="Control" parent="." unique_id=1827958002]
+visible = false
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="logbook outline" type="Panel" parent="left" unique_id=2132646445]
+z_index = 2
+layout_mode = 0
+offset_left = 247.0
+offset_top = 82.0
+offset_right = 573.0
+offset_bottom = 555.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_8kjun")
+
+[node name="Panel2" type="Panel" parent="left" unique_id=1732787634]
+z_index = 2
+layout_mode = 0
+offset_left = 586.0
+offset_top = 293.0
+offset_right = 666.7483
+offset_bottom = 295.28116
+rotation = -0.11232093
+theme_override_styles/panel = SubResource("StyleBoxFlat_65lw4")
+
+[node name="PanelTexts2" parent="left" unique_id=1575788774 instance=ExtResource("1_ku6t8")]
+visible = true
+layout_mode = 1
+offset_right = 75.0
+offset_bottom = 155.0
+
+[node name="PanelContainer" parent="left/PanelTexts2" index="0" unique_id=975044402]
+offset_left = 687.0
+offset_top = 203.0
+offset_right = 1093.0
+offset_bottom = 363.0
+
+[node name="Label" parent="left/PanelTexts2/PanelContainer" index="0" unique_id=34167543]
+theme_override_font_sizes/font_size = 27
+text = "This side's the timeline. Who's expected as a visitor tonight, and when. "
+
+[editable path="right/PanelTexts2"]
+[editable path="left/PanelTexts2"]

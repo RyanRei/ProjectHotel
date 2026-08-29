@@ -14,4 +14,3 @@ func set_selected(selected: bool) -> void:
 	else:
 		modulate = Color.WHITE
 		text = choice.text
-
