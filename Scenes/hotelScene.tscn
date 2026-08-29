@@ -13,7 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://p5ev8eu8tcfi" path="res://Scenes/Telephone.tscn" id="6_cm8yc"]
 [ext_resource type="PackedScene" uid="uid://bb8bpfxy4igwf" path="res://Assets/3D Models/Computer/desktop_computer.glb" id="7_i2uxr"]
 [ext_resource type="Resource" uid="uid://borvgm7cvlbtd" path="res://Assets/ItemHolders/Encounters/Shift 1/encounter_2.tres" id="7_yrwa2"]
-[ext_resource type="PackedScene" path="res://Scenes/RosterUI.tscn" id="8_roster"]
+[ext_resource type="PackedScene" uid="uid://dneeofe0xoqcs" path="res://Scenes/RosterUI.tscn" id="8_roster"]
 [ext_resource type="Script" uid="uid://m6c7lfrjow88" path="res://Scripts/Roster/ComputerMonitor.gd" id="9_monitor"]
 [ext_resource type="Script" uid="uid://b7i3xkbxsn32n" path="res://Scripts/DeskCameraController.gd" id="10_camera"]
 [ext_resource type="Script" uid="uid://dop5fevvwspt4" path="res://Scripts/InteractionHand.gd" id="11_hand"]
@@ -24,7 +24,7 @@
 [ext_resource type="PackedScene" uid="uid://b51biclicg0bf" path="res://Assets/3D Models/Bulb/light.glb" id="13_jloce"]
 [ext_resource type="Script" uid="uid://ca5auu7qff8vv" path="res://Scripts/Logbook/LogbookController.gd" id="13_logbook_controller"]
 [ext_resource type="PackedScene" uid="uid://yqtwdwhowpt1" path="res://Scenes/day_report_ui.tscn" id="13_qnepm"]
-[ext_resource type="PackedScene" path="res://Scenes/LogbookUI.tscn" id="14_logbook_ui"]
+[ext_resource type="PackedScene" uid="uid://cw0yaw10bfhlc" path="res://Scenes/LogbookUI.tscn" id="14_logbook_ui"]
 [ext_resource type="AudioStream" uid="uid://cbaafyuvhebc2" path="res://Assets/Sound/sfx/pageFlip.mp3" id="17_ue4or"]
 [ext_resource type="Texture2D" uid="uid://uaaui4wtmpk7" path="res://Assets/Textures/alterwall.jpg" id="20_5hxig"]
 [ext_resource type="Resource" uid="uid://b0jqimso2xpsb" path="res://Assets/ItemHolders/Encounters/Shift 2/encounter_1.tres" id="24_c24b1"]
@@ -84,7 +84,124 @@ transform = Transform3D(1, 0, 0, 0, 0.99428475, 0.10676092, 0, -0.10676092, 0.99
 fov = 86.29041
 script = ExtResource("10_camera")
 
-[node name="TutorialManager" parent="." unique_id=764230886 instance=ExtResource("1_vnq4p")]
+[node name="Lights" type="Node" parent="." unique_id=1123067539]
+
+[node name="OmniLight3D4" type="OmniLight3D" parent="Lights" unique_id=171112688]
+transform = Transform3D(0.999905, 0.013746126, 0.0010868422, -0.013758895, 0.99982375, 0.0127736535, -0.0009110624, -0.012787393, 0.99991786, -32.69966, 0.5002718, -15.439408)
+visible = false
+light_color = Color(1, 0.84966666, 0.78, 1)
+light_energy = 4.757
+light_indirect_energy = 16.0
+light_volumetric_fog_energy = 5.38
+omni_range = 149.20726
+
+[node name="OmniLight3D2" type="OmniLight3D" parent="Lights" unique_id=145564592]
+transform = Transform3D(1, 0, 0, 0, -0.520924, 0.85360307, 0, -0.85360307, -0.520924, -2.8914318, 13.010827, -8.211379)
+light_color = Color(1, 0.889, 0.82, 1)
+light_energy = 1.107
+light_indirect_energy = 16.0
+light_volumetric_fog_energy = 16.0
+light_size = 0.493
+light_specular = 1.834
+shadow_enabled = true
+shadow_bias = 0.034
+shadow_normal_bias = 2.645
+shadow_transmittance_bias = -0.582
+shadow_opacity = 0.75
+omni_range = 35.586117
+
+[node name="Node3D" type="Node3D" parent="Lights" unique_id=704473823]
+visible = false
+
+[node name="SpotLight3D2" type="SpotLight3D" parent="Lights/Node3D" unique_id=434221459]
+transform = Transform3D(0.3972774, 0.6257363, -0.6712859, 0.10155303, 0.6970195, 0.70982444, 0.91206235, -0.35016832, 0.2133647, -9.111044, 4.618067, 0.11233735)
+light_color = Color(0.28046393, 0.379823, 0.42634302, 1)
+light_energy = 40.0
+light_specular = 2.258
+shadow_enabled = true
+spot_range = 6.0899944
+spot_angle = 89.99
+
+[node name="SpotLight3D" type="SpotLight3D" parent="Lights/Node3D" unique_id=1808260354]
+transform = Transform3D(0.998379, 2.4878615e-09, -0.056915637, 0.056915637, -4.3640533e-08, 0.998379, 0, -1, -4.371139e-08, 0.71091366, 5.187361, 2.0646698)
+light_color = Color(0.28046393, 0.379823, 0.42634302, 1)
+light_energy = 40.0
+light_specular = 2.258
+shadow_enabled = true
+spot_range = 6.3599453
+spot_angle = 20.232937
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Lights/Node3D" unique_id=62980994]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2802238, 3.4659672, 0)
+light_color = Color(1, 0.8126302, 0.72623205, 1)
+light_energy = 6.622
+omni_range = 8.721
+
+[node name="OmniLight3D5" type="OmniLight3D" parent="Lights/Node3D" unique_id=1233346839]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.666512, 7.306694, 0.72105026)
+light_color = Color(1, 0.89, 0.89, 1)
+light_energy = 0.368
+light_indirect_energy = 1.66
+light_volumetric_fog_energy = 13.0
+light_size = 0.555
+shadow_enabled = true
+
+[node name="OmniLight3D3" type="OmniLight3D" parent="Lights/Node3D" unique_id=1985307974]
+transform = Transform3D(0.9999762, 0.006874963, 0.00052147126, -0.0068781553, 0.99995595, 0.0063888333, -0.00047752523, -0.006392268, 0.9999795, 32.62258, 3.1644402, -27.830126)
+light_color = Color(1, 0.87, 0.87, 1)
+light_energy = 1.065
+light_indirect_energy = 16.0
+light_volumetric_fog_energy = 3.906
+omni_range = 54.55811
+
+[node name="TutorialManager" parent="." unique_id=764230886 node_paths=PackedStringArray("camera", "phone_light", "logbook_light", "pc_light", "clock_light") instance=ExtResource("1_vnq4p")]
+camera = NodePath("../Camera3D")
+phone_light = NodePath("tutorial lights/phone light")
+logbook_light = NodePath("tutorial lights/logbook light")
+pc_light = NodePath("tutorial lights/pc light")
+clock_light = NodePath("tutorial lights/clock light")
+
+[node name="tutorial lights" type="Node3D" parent="TutorialManager" unique_id=274992819]
+
+[node name="phone light" type="SpotLight3D" parent="TutorialManager/tutorial lights" unique_id=1048491641]
+transform = Transform3D(0.998379, 2.4878615e-09, -0.056915637, 0.056915637, -4.3640533e-08, 0.998379, 0, -1, -4.371139e-08, 0.71091366, 5.187361, 2.0646698)
+visible = false
+light_color = Color(0.28046393, 0.379823, 0.42634302, 1)
+light_energy = 80.0
+light_specular = 2.258
+shadow_enabled = true
+spot_range = 6.3599453
+spot_angle = 20.232937
+
+[node name="logbook light" type="SpotLight3D" parent="TutorialManager/tutorial lights" unique_id=1623264379]
+transform = Transform3D(0.998379, 2.4878615e-09, -0.056915637, 0.056915637, -4.3640533e-08, 0.998379, 0, -1, -4.371139e-08, -5.797222, 5.187361, 2.0646698)
+visible = false
+light_color = Color(0.28046393, 0.379823, 0.42634302, 1)
+light_energy = 200.0
+light_specular = 2.258
+shadow_enabled = true
+spot_range = 6.3599453
+spot_angle = 20.232937
+
+[node name="pc light" type="SpotLight3D" parent="TutorialManager/tutorial lights" unique_id=952946915]
+transform = Transform3D(0.998379, 2.4878615e-09, -0.056915637, 0.056915637, -4.3640533e-08, 0.998379, 0, -1, -4.371139e-08, -2.783178, 6.7510624, 2.097969)
+visible = false
+light_color = Color(0.28046393, 0.379823, 0.42634302, 1)
+light_energy = 200.0
+light_specular = 2.258
+shadow_enabled = true
+spot_range = 8.487288
+spot_angle = 25.783873
+
+[node name="clock light" type="SpotLight3D" parent="TutorialManager/tutorial lights" unique_id=816565320]
+transform = Transform3D(-0.33761066, 4.1144915e-08, -0.94128585, 0.94128585, 1.4757433e-08, -0.33761066, 0, -1, -4.3711392e-08, 6.0974464, 4.0630546, -0.37919044)
+visible = false
+light_color = Color(0.28046393, 0.379823, 0.42634302, 1)
+light_energy = 100.0
+light_specular = 2.258
+shadow_enabled = true
+spot_range = 8.487288
+spot_angle = 25.783873
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=1109577428]
 
@@ -133,22 +250,22 @@ transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 0.7720361, 2.0122602
 transform = Transform3D(7.9988327, -0.0007051654, -0.13666779, 0, 7.9998937, -0.041277084, 0.1366696, 0.04127106, 7.9987264, -2.1664891, 2.9574757, 1.562563)
 script = ExtResource("9_monitor")
 
-[node name="defaultMaterial" parent="models/computah/Sketchfab_model/Collada visual scene group/Mouse_Wheel_Low" parent_id_path=PackedInt32Array(1114786589, 1131302171) index="0" unique_id=999183091]
+[node name="defaultMaterial" parent="models/computah/Sketchfab_model/Collada visual scene group/Mouse_Wheel_Low" parent_id_path=PackedInt32Array(1114786589, 2118286770) index="0" unique_id=1595207115]
 transform = Transform3D(0.39959186, 9.313323e-05, 0.018049983, -9.313345e-05, 0.3999994, -2.0982698e-06, -0.018049983, -2.1059532e-06, 0.39959213, -0.14093643, -0.030498207, 0.20731899)
 
-[node name="defaultMaterial2" parent="models/computah/Sketchfab_model/Collada visual scene group/Mouse_Low" parent_id_path=PackedInt32Array(1114786589, 552149035) index="0" unique_id=211799687]
+[node name="defaultMaterial2" parent="models/computah/Sketchfab_model/Collada visual scene group/Mouse_Low" parent_id_path=PackedInt32Array(1114786589, 1942999455) index="0" unique_id=1157853549]
 transform = Transform3D(0.39888582, 0.0001539214, 0.029831205, -0.00015392152, 0.3999998, -5.746493e-06, -0.029831205, -5.74952e-06, 0.39888588, -0.13918996, -0.030419528, 0.2191678)
 
-[node name="defaultMaterial3" parent="models/computah/Sketchfab_model/Collada visual scene group/Base_Low" parent_id_path=PackedInt32Array(1114786589, 600102034) index="0" unique_id=1632585161]
+[node name="defaultMaterial3" parent="models/computah/Sketchfab_model/Collada visual scene group/Base_Low" parent_id_path=PackedInt32Array(1114786589, 267889555) index="0" unique_id=1313312222]
 transform = Transform3D(0.39999992, 3.637979e-12, -2.7939677e-09, 0, 0.39999992, 9.313226e-10, 3.7252903e-09, -1.1641532e-09, 0.39999992, 0.002469182, -0.019545555, 0.14461479)
 
-[node name="defaultMaterial4" parent="models/computah/Sketchfab_model/Collada visual scene group/Vert_Low" parent_id_path=PackedInt32Array(1114786589, 190110689) index="0" unique_id=915900434]
+[node name="defaultMaterial4" parent="models/computah/Sketchfab_model/Collada visual scene group/Vert_Low" parent_id_path=PackedInt32Array(1114786589, 1347606264) index="0" unique_id=2076551684]
 transform = Transform3D(0.2999999, 7.275958e-12, -4.1909516e-09, -1.6370905e-11, 0.3, 2.2118911e-09, 2.7939677e-09, -1.7462298e-09, 0.3, 0.0084812045, -0.05689746, 0.1804916)
 
-[node name="defaultMaterial5" parent="models/computah/Sketchfab_model/Collada visual scene group/Computer_Low" parent_id_path=PackedInt32Array(1114786589, 288841810) index="0" unique_id=1293543901]
+[node name="defaultMaterial5" parent="models/computah/Sketchfab_model/Collada visual scene group/Computer_Low" parent_id_path=PackedInt32Array(1114786589, 404720958) index="0" unique_id=1984227514]
 transform = Transform3D(0.49997613, -0.0013246113, 0.004698918, 0.000566037, 0.49372703, 0.078952394, -0.004849129, -0.078943305, 0.49370477, 0.004231155, -0.00551641, 0.24766394)
 
-[node name="defaultMaterial6" parent="models/computah/Sketchfab_model/Collada visual scene group/Key_Board_Low" parent_id_path=PackedInt32Array(1114786589, 1683541517) index="0" unique_id=622999514]
+[node name="defaultMaterial6" parent="models/computah/Sketchfab_model/Collada visual scene group/Key_Board_Low" parent_id_path=PackedInt32Array(1114786589, 1985273049) index="0" unique_id=310325735]
 transform = Transform3D(0.3499632, 2.6129557e-05, 0.0050641145, -2.6129625e-05, 0.3500003, -1.8964056e-07, -0.0050641196, -1.9290019e-07, 0.34996325, -0.07371694, -0.058675766, 0.15438148)
 
 [node name="Logbook" parent="models" unique_id=2051017322 node_paths=PackedStringArray("logbook", "logUpdateAudio", "pageFlipAudio") instance=ExtResource("4_jmvtc")]
@@ -158,11 +275,11 @@ logbook = NodePath("../../CanvasLayer/LogbookUI")
 logUpdateAudio = NodePath("whencorniferbemapping")
 pageFlipAudio = NodePath("pageflip")
 
-[node name="defaultMaterial_001" parent="models/Logbook/Sketchfab_model/Collada visual scene group/notebook" parent_id_path=PackedInt32Array(2051017322, 1298453669) index="0" unique_id=1044404364]
+[node name="defaultMaterial_001" parent="models/Logbook/Sketchfab_model/Collada visual scene group/notebook" parent_id_path=PackedInt32Array(2051017322, 1574708107) index="0" unique_id=2127795109]
 transform = Transform3D(-0.99800265, 0.14202243, 0.027653921, -0.056808602, -2.495963, 0.00078626315, 0.027653925, -0.0019657402, 0.99961776, 0.15295768, 0.022822142, -0.0021170676)
 surface_material_override/0 = ExtResource("12_u3pq5")
 
-[node name="defaultMaterial" parent="models/Logbook/Sketchfab_model/Collada visual scene group/penna" parent_id_path=PackedInt32Array(2051017322, 1969647053) index="0" unique_id=1910885735]
+[node name="defaultMaterial" parent="models/Logbook/Sketchfab_model/Collada visual scene group/penna" parent_id_path=PackedInt32Array(2051017322, 1929589950) index="0" unique_id=1308102405]
 transform = Transform3D(1, -2.0816682e-17, 2.7939677e-09, -1.3877788e-17, 1.0000001, -1.3322676e-15, 0, 1.7763568e-15, 1.0000002, 0.37629592, 0, -0.005208224)
 
 [node name="whencorniferbemapping" type="AudioStreamPlayer3D" parent="models/Logbook" unique_id=1175347376]
@@ -193,73 +310,6 @@ tutorial = NodePath("../TutorialManager")
 
 [node name="empty" type="Node3D" parent="." unique_id=84633623]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.403927, -1.555706, -19.83374)
-
-[node name="Lights" type="Node" parent="." unique_id=1123067539]
-
-[node name="OmniLight3D4" type="OmniLight3D" parent="Lights" unique_id=171112688]
-transform = Transform3D(0.999905, 0.013746126, 0.0010868423, -0.013758895, 0.99982375, 0.0127736535, -0.0009110624, -0.012787393, 0.99991786, -32.69966, 0.5002718, -15.439408)
-light_color = Color(1, 0.84966666, 0.78, 1)
-light_energy = 4.757
-light_indirect_energy = 16.0
-light_volumetric_fog_energy = 5.38
-omni_range = 149.20726
-
-[node name="SpotLight3D" type="SpotLight3D" parent="Lights" unique_id=1808260354]
-transform = Transform3D(0.998379, 2.4878615e-09, -0.056915637, 0.056915637, -4.3640533e-08, 0.998379, 0, -1, -4.371139e-08, 0.71091366, 5.187361, 2.0646698)
-light_color = Color(0.28046393, 0.379823, 0.42634302, 1)
-light_energy = 40.0
-light_specular = 2.258
-shadow_enabled = true
-spot_range = 6.3599453
-spot_angle = 20.232937
-
-[node name="SpotLight3D" type="SpotLight3D" parent="Lights/SpotLight3D" unique_id=434221459]
-transform = Transform3D(0.40241337, 0.6643933, -0.62979764, -0.91206235, 0.35016835, -0.21336469, 0.078777075, 0.66027546, 0.7468805, -9.838438, 1.9523325, -0.009347916)
-light_color = Color(0.28046393, 0.379823, 0.42634302, 1)
-light_energy = 40.0
-light_specular = 2.258
-shadow_enabled = true
-spot_range = 6.0899944
-spot_angle = 89.99
-
-[node name="OmniLight3D" type="OmniLight3D" parent="Lights" unique_id=62980994]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2802238, 3.4659672, 0)
-light_color = Color(1, 0.8126302, 0.72623205, 1)
-light_energy = 6.622
-omni_range = 8.721
-
-[node name="OmniLight3D" type="OmniLight3D" parent="Lights/OmniLight3D" unique_id=1233346839]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.946735, 3.8407269, 0.72105026)
-light_color = Color(1, 0.89, 0.89, 1)
-light_energy = 0.368
-light_indirect_energy = 1.66
-light_volumetric_fog_energy = 13.0
-light_size = 0.555
-shadow_enabled = true
-
-[node name="OmniLight3D2" type="OmniLight3D" parent="Lights" unique_id=145564592]
-transform = Transform3D(1, 0, 0, 0, -0.520924, 0.85360307, 0, -0.85360307, -0.520924, -2.8914318, 13.010827, -8.211379)
-visible = false
-light_color = Color(1, 0.889, 0.82, 1)
-light_energy = 1.107
-light_indirect_energy = 16.0
-light_volumetric_fog_energy = 16.0
-light_size = 0.493
-light_specular = 1.834
-shadow_enabled = true
-shadow_bias = 0.034
-shadow_normal_bias = 2.645
-shadow_transmittance_bias = -0.582
-shadow_opacity = 0.75
-omni_range = 35.586117
-
-[node name="OmniLight3D3" type="OmniLight3D" parent="Lights" unique_id=1985307974]
-transform = Transform3D(0.9999762, 0.006874963, 0.00052147126, -0.0068781553, 0.99995595, 0.0063888333, -0.00047752523, -0.006392268, 0.9999795, 32.62258, 3.1644402, -27.830126)
-light_color = Color(1, 0.87, 0.87, 1)
-light_energy = 1.065
-light_indirect_energy = 16.0
-light_volumetric_fog_energy = 3.906
-omni_range = 54.55811
 
 [node name="Audio" type="Node" parent="." unique_id=521623217]
 

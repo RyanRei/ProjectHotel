@@ -17,15 +17,16 @@ color = Color(0, 0, 0, 0.39607844)
 
 [node name="Panel" type="Panel" parent="." unique_id=555293616]
 layout_mode = 0
-offset_left = 196.0
-offset_top = 461.0
-offset_right = 1021.0
-offset_bottom = 627.0
+offset_left = 61.0
+offset_top = 391.0
+offset_right = 1109.0
+offset_bottom = 618.0
 
 [node name="Label" type="Label" parent="Panel" unique_id=1672422357]
 layout_mode = 0
-offset_left = 108.0
-offset_top = 44.0
-offset_right = 713.0
-offset_bottom = 165.0
+offset_left = 65.0
+offset_top = 30.0
+offset_right = 1004.0
+offset_bottom = 195.0
 theme_override_font_sizes/font_size = 26
+autowrap_mode = 3

@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://cubjoahd57ayy"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bgc5f"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 15
+border_width_top = 15
+border_width_right = 15
+border_width_bottom = 15
+border_color = Color(0, 0.43489882, 0.901637, 1)
+border_blend = true
+corner_radius_top_left = 33
+corner_radius_top_right = 33
+corner_radius_bottom_right = 33
+corner_radius_bottom_left = 33
+
+[node name="PanelTexts" type="Control" unique_id=1698298257]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=975044402]
+layout_mode = 0
+offset_left = 638.0
+offset_top = 199.0
+offset_right = 1119.0
+offset_bottom = 440.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_bgc5f")
+
+[node name="Label" type="Label" parent="PanelContainer" unique_id=34167543]
+layout_mode = 2
+theme_override_font_sizes/font_size = 41

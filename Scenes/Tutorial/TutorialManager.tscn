@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://corhltbkplr48"]
 
 [ext_resource type="Script" uid="uid://d0h4kw576c5j5" path="res://Scripts/Managers/TutorialManager.gd" id="1_uf7hf"]
+[ext_resource type="PackedScene" uid="uid://cubjoahd57ayy" path="res://Scenes/Tutorial/panelTexts.tscn" id="2_8kjun"]
 [ext_resource type="PackedScene" uid="uid://csgldlotwb6qk" path="res://Scenes/Tutorial/TutorialDialogs.tscn" id="2_cwvdc"]
 
 [node name="TutorialManager" type="Node" unique_id=764230886 node_paths=PackedStringArray("dialog_tutorial")]
@@ -9,6 +10,8 @@ script = ExtResource("1_uf7hf")
 dialog_tutorial = NodePath("CanvasLayer/TutorialDialogs")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1354935354]
+
+[node name="PanelTexts" parent="CanvasLayer" unique_id=1698298257 instance=ExtResource("2_8kjun")]
 
 [node name="TutorialDialogs" parent="CanvasLayer" unique_id=1808227615 instance=ExtResource("2_cwvdc")]
 visible = false
