@@ -1,15 +1,8 @@
 [gd_scene format=3 uid="uid://cu3jpjd8bf44a"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_layf5"]
-emission_enabled = true
-emission = Color(0.8093551, 0.4598425, 0.9083763, 1)
+[ext_resource type="PackedScene" uid="uid://bl0gmc40ot8cg" path="res://Assets/3D Models/Characters/Male/basic_human_male.glb" id="1_male"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_u8vdq"]
-size = Vector3(0.20092773, 2.925537, 0.24761963)
+[node name="MaleVisitor" type="Node3D" unique_id=866386994]
 
-[node name="Node3D" type="Node3D" unique_id=1912552935]
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=896465776]
-transform = Transform3D(3.23, 0, 0, 0, 3.23, 0, 0, 0, 3.23, 0, 4.7638035, 0)
-material_override = SubResource("StandardMaterial3D_layf5")
-mesh = SubResource("BoxMesh_u8vdq")
+[node name="CharacterModel" parent="." unique_id=540164427 instance=ExtResource("1_male")]
+transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 0, 0, 0)

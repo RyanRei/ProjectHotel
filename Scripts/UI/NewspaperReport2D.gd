@@ -2,8 +2,15 @@
 class_name NewspaperReport2D
 extends Node2D
 
+signal report_closed
+
+const NEUTRAL_SHIFT_IMAGE: Texture2D = preload("res://Assets/UI/Newspaper/neutral_safe_shift.png")
+const CRIME_OUTSIDE_IMAGE: Texture2D = preload("res://Assets/UI/Newspaper/crime_outside.jpg")
+const CRIME_INSIDE_IMAGE: Texture2D = preload("res://Assets/UI/Newspaper/crime_inside.png")
+
 @export var auto_fit_viewport := true
 @export var play_animation_on_start := true
+@export var standalone_mode := true
 @export var design_size := Vector2(1536.0, 1024.0)
 @export_range(0.25, 1.2, 0.05) var throw_duration := 0.42
 
@@ -12,6 +19,7 @@ extends Node2D
 @onready var instruction: Label = %Instruction
 
 var _animation: Tween
+var _can_close := false
 
 
 func _ready() -> void:
@@ -20,6 +28,7 @@ func _ready() -> void:
 	if auto_fit_viewport:
 		get_viewport().size_changed.connect(_fit_to_viewport)
 		_fit_to_viewport()
+	instruction.text = "CLICK / ENTER: REPLAY     ESC: CLOSE" if standalone_mode else "CLICK / ENTER: CONTINUE"
 	if play_animation_on_start:
 		play_report_animation()
 
@@ -27,12 +36,30 @@ func _ready() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if Engine.is_editor_hint():
 		return
-	if event.is_action_pressed("ui_cancel"):
-		get_tree().quit()
-	elif event.is_action_pressed("ui_accept"):
-		play_report_animation()
-	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-		play_report_animation()
+	if not visible:
+		return
+	var clicked: bool = event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed
+	if standalone_mode:
+		if event.is_action_pressed("ui_cancel"):
+			get_tree().quit()
+		elif event.is_action_pressed("ui_accept") or clicked:
+			play_report_animation()
+	elif _can_close and (event.is_action_pressed("ui_cancel") or event.is_action_pressed("ui_accept") or clicked):
+		_can_close = false
+		report_closed.emit()
+		get_viewport().set_input_as_handled()
+
+
+func show_report(report: Dictionary) -> void:
+	visible = true
+	_can_close = false
+	set_report(report)
+	play_report_animation()
+	if _animation and _animation.is_valid():
+		await _animation.finished
+	_can_close = true
+	await report_closed
+	visible = false
 
 
 func play_report_animation() -> void:
@@ -101,6 +128,55 @@ func set_report(report: Dictionary) -> void:
 	# Swap this with another pre-generated full-scene illustration for later shifts.
 	if report.has("outcome_image") and report.outcome_image is Texture2D:
 		%OutcomeImage.texture = report.outcome_image
+	if report.has("day"):
+		$Display/Paper/Edition.text = "MORNING REPORT\nSHIFT %d" % int(report.day)
+	if report.has("results"):
+		_apply_results(report.results)
+
+
+func _apply_results(results: Array) -> void:
+	var successes := 0
+	var has_outside_crime := false
+	var has_inside_crime := false
+	for index in range(4):
+		var card := paper.get_node_or_null("Outcome%d" % (index + 1))
+		if card == null:
+			continue
+		card.visible = index < results.size()
+		if index >= results.size():
+			continue
+		var result: Dictionary = results[index]
+		var succeeded := str(result.get("status", "FAIL")) == "SUCCESS"
+		var consequence := str(result.get("consequence", "NONE"))
+		has_inside_crime = has_inside_crime or consequence == "INSIDE"
+		has_outside_crime = has_outside_crime or consequence == "OUTSIDE"
+		if succeeded:
+			successes += 1
+		card.get_node("Name").text = str(result.get("name", "UNKNOWN")).to_upper()
+		card.get_node("Result").text = "CORRECT DECISION" if succeeded else "WRONG DECISION"
+		card.get_node("StatusBand").color = Color("71824b") if succeeded else Color("94382c")
+		card.get_node("Details").text = "The caller was handled safely using the available evidence." if succeeded else "The decision caused a serious consequence revealed in the morning report."
+
+	var total := results.size()
+	var failures := total - successes
+	%BreakdownTitle.text = "DECISION BREAKDOWN - %d OF %d CORRECT" % [successes, total]
+	if has_inside_crime:
+		%OutcomeImage.texture = CRIME_INSIDE_IMAGE
+		%PhotoCaption.text = "CRIME SCENE PHOTOGRAPH — INCIDENT INSIDE NIGHTHAVEN"
+	elif has_outside_crime:
+		%OutcomeImage.texture = CRIME_OUTSIDE_IMAGE
+		%PhotoCaption.text = "CRIME SCENE PHOTOGRAPH — STREET OUTSIDE NIGHTHAVEN"
+	else:
+		%OutcomeImage.texture = NEUTRAL_SHIFT_IMAGE
+		%PhotoCaption.text = "MORNING PHOTOGRAPH — NIGHTHAVEN REMAINED SECURE"
+	%Headline.text = "A CLEAN NIGHT AT NIGHTHAVEN" if failures == 0 else ("ONE BAD CALL ENDS A LIFE" if failures == 1 else "A NIGHT OF DEADLY MISTAKES")
+	%Subheadline.text = "%d of %d decisions were correct during the night shift" % [successes, total]
+	var reputation_change := float(successes * 2 - failures * 4)
+	var share_change := float(successes) * 1.25 - float(failures) * 3.25
+	%ReputationValue.text = "%d / 100" % clampi(80 + int(reputation_change), 0, 100)
+	%ShareValue.text = "$%.2f" % maxf(1.0, 42.0 + share_change)
+	_set_metric_change(%ReputationDelta, reputation_change, "")
+	_set_metric_change(%ShareDelta, share_change, "%")
 
 
 func set_metric_changes(reputation_change: float, share_change_percent: float) -> void:

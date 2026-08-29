@@ -6,6 +6,7 @@ extends Resource
 @export var dialogue: DialogueNode
 @export var model:PackedScene
 @export_enum("RESIDENT","VISITOR","INFORMATIVE") var communication_type:String
+@export_enum("MALE", "FEMALE") var visitor_gender: String = "MALE"
 @export_enum("SUCCESS","FAIL","TBD") var status:String="TBD"
 @export var time:String
 @export var LogbookEntry:String

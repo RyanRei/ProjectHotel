@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://bapeg4rrhmgxa"]
+
+[ext_resource type="PackedScene" uid="uid://cbmop2agos8in" path="res://Assets/3D Models/Characters/Female/basic_human_female.glb" id="1_female"]
+
+[node name="FemaleVisitor" type="Node3D" unique_id=1860295497]
+
+[node name="CharacterModel" parent="." unique_id=806980107 instance=ExtResource("1_female")]
+transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 0, 0, 0)
