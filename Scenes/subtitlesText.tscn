@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://ba3nri8t48jc6"]
+[gd_scene load_steps=7 format=3 uid="uid://ba3nri8t48jc6"]
 
 [ext_resource type="Script" uid="uid://dduj3ikfjpmta" path="res://Scripts/dialogBox.gd" id="1_iscj4"]
 [ext_resource type="Theme" path="res://UI/DialogueTheme.tres" id="2_theme"]
@@ -34,6 +34,30 @@ corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_history_icon"]
+content_margin_left = 10.0
+content_margin_top = 6.0
+content_margin_right = 10.0
+content_margin_bottom = 6.0
+bg_color = Color(0.015, 0.02, 0.024, 0.94)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.34, 0.42, 0.43, 0.9)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_history_window"]
+bg_color = Color(0.008, 0.011, 0.014, 0.985)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.34, 0.42, 0.43, 0.9)
 
 [node name="DialogBox" type="Control" unique_id=1159827636]
 layout_mode = 3
@@ -88,6 +112,51 @@ horizontal_alignment = 2
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1832244512]
 volume_db = -1.769
+
+[node name="HistoryIndicator" type="PanelContainer" parent="."]
+visible = false
+z_index = 21
+layout_mode = 1
+anchors_preset = 0
+offset_left = 32.0
+offset_top = 24.0
+offset_right = 132.0
+offset_bottom = 64.0
+mouse_filter = 2
+theme = ExtResource("2_theme")
+theme_override_styles/panel = SubResource("StyleBoxFlat_history_icon")
+
+[node name="Row" type="HBoxContainer" parent="HistoryIndicator"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ChatIcon" type="Label" parent="HistoryIndicator/Row"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.93, 0.61, 1)
+theme_override_font_sizes/font_size = 18
+text = "..."
+
+[node name="Key" type="Label" parent="HistoryIndicator/Row"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "[T]"
+
+[node name="HistoryOverlay" type="Panel" parent="."]
+visible = false
+z_index = 20
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+theme = ExtResource("2_theme")
+theme_override_styles/panel = SubResource("StyleBoxFlat_history_window")
 
 [node name="QuestionMenu" type="VBoxContainer" parent="."]
 visible = false

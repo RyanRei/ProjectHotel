@@ -6,6 +6,8 @@ extends Control
 @onready var question_menu: VBoxContainer = $QuestionMenu
 @onready var question_back: Button = $QuestionMenu/QuestionBack
 @onready var choices_container: VBoxContainer = $QuestionMenu/Choices
+@onready var history_indicator: Control = $HistoryIndicator
+@onready var history_overlay: Control = $HistoryOverlay
 @export var accept_reject: AcceptRejectButton
 @export_range(10.0, 120.0, 1.0) var characters_per_second := 48.0
 
@@ -22,6 +24,7 @@ var is_decision_pending := false
 var is_hud_visible := true
 var hint_label : Label
 var confirmation_text_generation := 0
+var history_open := false
 
 func _ready() -> void:
 	if not InputMap.has_action("toggle_hud"):
@@ -69,6 +72,9 @@ func _type_confirmation(message: String, generation: int) -> void:
 
 func hide_dialogue_ui() -> void:
 	confirmation_text_generation += 1
+	history_open = false
+	history_overlay.hide()
+	history_indicator.hide()
 	GameState.enter_desk_state()
 	visible = false
 	is_in_choices = false
@@ -248,6 +254,14 @@ func show_choices(choices: Array[DialogueChoice]):
 	tween.tween_property(question_menu, "modulate:a", 1.0, 0.18)
 
 func _input(event):
+	if event.is_action_pressed("History") and DialogueManager.active and not GameState.desk_state:
+		toggle_history()
+		get_viewport().set_input_as_handled()
+		return
+
+	if history_open:
+		return
+
 	if event.is_action_pressed("toggle_hud") and DialogueManager.active:
 		toggle_action_hud()
 		get_viewport().set_input_as_handled()
@@ -321,3 +335,16 @@ func _unhandled_input(event: InputEvent) -> void:
 		typing = false
 		text_label.text = reveal_text
 		get_viewport().set_input_as_handled()
+
+
+func _process(_delta: float) -> void:
+	history_indicator.visible = DialogueManager.active and not GameState.desk_state
+
+
+func toggle_history() -> void:
+	history_open = not history_open
+	history_overlay.visible = history_open
+	if history_open:
+		accept_reject.active = false
+	else:
+		accept_reject.active = is_decision_pending and not is_in_choices and accept_reject.visible
