@@ -1,7 +1,8 @@
 
 class_name LogbookUI
 extends Control
-
+signal logbook_closed_by_esc
+@export var logBookClosable:=true
 const PageCurlScript = preload("res://Scripts/Logbook/PageCurl2D.gd")
 const StickyTabScript = preload("res://Scripts/Logbook/StickyBookmarkButton.gd")
 const BINDER_TEXTURE = preload("res://Assets/UI/Logbook/logbook_open_binder.png")
@@ -66,6 +67,8 @@ func _ready() -> void:
 	show_page(0)
 
 	visible = false
+	#open_logbook()
+	
 
 
 func _input(event: InputEvent) -> void:
@@ -73,6 +76,9 @@ func _input(event: InputEvent) -> void:
 		return
 
 	if event.is_action_pressed("ui_cancel"):
+		if not logBookClosable:
+			return
+		logbook_closed_by_esc.emit()
 		close_logbook()
 		get_viewport().set_input_as_handled()
 
@@ -97,8 +103,9 @@ func open_logbook() -> void:
 	move_to_front()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
-
+signal logbookClosed
 func close_logbook() -> void:
+	logbookClosed.emit()
 	visible = false
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 

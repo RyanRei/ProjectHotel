@@ -61,6 +61,7 @@ func choose(choice: DialogueChoice):
 	play_current_node()
 	
 func end_dialogue(final_choice:String):
+	
 	active = false
 	current_active_choices.clear()
 	dialogue_finished.emit(final_choice)

@@ -1,0 +1,561 @@
+[gd_scene load_steps=14 format=3]
+
+[ext_resource type="Script" path="res://Scripts/UI/NewspaperReport2D.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://Assets/UI/Newspaper/shift1_combined_outcomes.png" id="2_outcome_image"]
+
+[sub_resource type="SystemFont" id="Font_headline"]
+font_names = PackedStringArray("Georgia", "Times New Roman")
+font_weight = 700
+
+[sub_resource type="SystemFont" id="Font_body"]
+font_names = PackedStringArray("Georgia", "Times New Roman")
+font_weight = 400
+
+[sub_resource type="SystemFont" id="Font_sans"]
+font_names = PackedStringArray("Arial Narrow", "Arial")
+font_weight = 700
+
+[sub_resource type="LabelSettings" id="Masthead"]
+font = SubResource("Font_headline")
+font_size = 54
+font_color = Color(0.105, 0.078, 0.055, 1)
+outline_size = 1
+outline_color = Color(0.105, 0.078, 0.055, 1)
+
+[sub_resource type="LabelSettings" id="Headline"]
+font = SubResource("Font_headline")
+font_size = 42
+font_color = Color(0.11, 0.075, 0.05, 1)
+
+[sub_resource type="LabelSettings" id="Section"]
+font = SubResource("Font_sans")
+font_size = 21
+font_color = Color(0.12, 0.085, 0.06, 1)
+
+[sub_resource type="LabelSettings" id="Value"]
+font = SubResource("Font_headline")
+font_size = 46
+font_color = Color(0.12, 0.07, 0.045, 1)
+
+[sub_resource type="LabelSettings" id="Body"]
+font = SubResource("Font_body")
+font_size = 17
+font_color = Color(0.135, 0.1, 0.072, 1)
+
+[sub_resource type="LabelSettings" id="Small"]
+font = SubResource("Font_sans")
+font_size = 14
+font_color = Color(0.135, 0.1, 0.072, 1)
+
+[sub_resource type="Shader" id="Shader_newsprint_photo"]
+code = "shader_type canvas_item;\n\nuniform float ink_strength : hint_range(0.0, 1.0) = 0.72;\nuniform float halftone_strength : hint_range(0.0, 0.3) = 0.10;\nuniform float grain_strength : hint_range(0.0, 0.2) = 0.045;\n\nfloat random_noise(vec2 position) {\n\treturn fract(sin(dot(position, vec2(12.9898, 78.233))) * 43758.5453);\n}\n\nvoid fragment() {\n\tvec4 source = texture(TEXTURE, UV);\n\tfloat gray = dot(source.rgb, vec3(0.299, 0.587, 0.114));\n\tvec3 sepia = vec3(gray * 1.08, gray * 0.94, gray * 0.74);\n\tvec2 print_position = floor(FRAGCOORD.xy * 0.55);\n\tfloat dots = sin(print_position.x * 3.14159) * sin(print_position.y * 3.14159);\n\tfloat grain = random_noise(floor(FRAGCOORD.xy));\n\tvec3 printed = mix(source.rgb, sepia, ink_strength);\n\tprinted *= 1.0 - halftone_strength * (0.5 + 0.5 * dots);\n\tprinted += (grain - 0.5) * grain_strength;\n\tfloat edge = 1.0 - smoothstep(0.20, 0.72, distance(UV, vec2(0.5)));\n\tprinted *= mix(0.82, 1.0, edge);\n\tCOLOR = vec4(printed, source.a);\n}\n"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_newsprint_photo"]
+shader = SubResource("Shader_newsprint_photo")
+
+[node name="NewspaperReport2D" type="Node2D"]
+script = ExtResource("1_script")
+
+[node name="Display" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="Desk" type="Polygon2D" parent="Display"]
+polygon = PackedVector2Array(0, 0, 1536, 0, 1536, 1024, 0, 1024)
+color = Color(0.055, 0.032, 0.022, 1)
+
+[node name="Paper" type="Node2D" parent="Display"]
+unique_name_in_owner = true
+
+[node name="Shadow" type="Polygon2D" parent="Display/Paper"]
+polygon = PackedVector2Array(55, 43, 1492, 43, 1492, 991, 55, 991)
+color = Color(0, 0, 0, 0.52)
+
+[node name="Base" type="Polygon2D" parent="Display/Paper"]
+polygon = PackedVector2Array(42, 28, 1478, 28, 1478, 976, 42, 976)
+color = Color(0.84, 0.73, 0.55, 1)
+
+[node name="Inset" type="Polygon2D" parent="Display/Paper"]
+polygon = PackedVector2Array(55, 41, 1465, 41, 1465, 963, 55, 963)
+color = Color(0.92, 0.84, 0.68, 1)
+
+[node name="InnerBorder" type="Line2D" parent="Display/Paper"]
+points = PackedVector2Array(61, 47, 1459, 47, 1459, 957, 61, 957, 61, 47)
+width = 2.0
+default_color = Color(0.36, 0.22, 0.13, 0.48)
+
+[node name="TopKicker" type="Label" parent="Display/Paper"]
+offset_left = 78.0
+offset_top = 42.0
+offset_right = 600.0
+offset_bottom = 62.0
+text = "THE SHELTER'S INDEPENDENT MORNING PAPER"
+label_settings = SubResource("Small")
+
+[node name="Price" type="Label" parent="Display/Paper"]
+offset_left = 1325.0
+offset_top = 42.0
+offset_right = 1438.0
+offset_bottom = 62.0
+text = "PRICE 25C"
+label_settings = SubResource("Small")
+horizontal_alignment = 2
+
+[node name="CenterFold" type="Line2D" parent="Display/Paper"]
+points = PackedVector2Array(768, 42, 768, 962)
+width = 1.5
+default_color = Color(0.31, 0.21, 0.14, 0.18)
+
+[node name="TopRule" type="Line2D" parent="Display/Paper"]
+points = PackedVector2Array(76, 145, 1444, 145)
+width = 6.0
+default_color = Color(0.46, 0.16, 0.11, 1)
+
+[node name="TopRuleThin" type="Line2D" parent="Display/Paper"]
+points = PackedVector2Array(76, 154, 1444, 154)
+width = 1.5
+default_color = Color(0.28, 0.16, 0.1, 0.75)
+
+[node name="Dateline" type="Label" parent="Display/Paper"]
+offset_left = 550.0
+offset_top = 128.0
+offset_right = 986.0
+offset_bottom = 148.0
+text = "07:00 AM  -  AUGUST 27  -  FINAL EDITION"
+label_settings = SubResource("Small")
+horizontal_alignment = 1
+
+[node name="IssueNumber" type="Label" parent="Display/Paper"]
+offset_left = 78.0
+offset_top = 128.0
+offset_right = 290.0
+offset_bottom = 148.0
+text = "VOL. 18  -  NO. 41"
+label_settings = SubResource("Small")
+
+[node name="Established" type="Label" parent="Display/Paper"]
+offset_left = 1240.0
+offset_top = 128.0
+offset_right = 1438.0
+offset_bottom = 148.0
+text = "ESTABLISHED 1987"
+label_settings = SubResource("Small")
+horizontal_alignment = 2
+
+[node name="Masthead" type="Label" parent="Display/Paper"]
+offset_left = 154.0
+offset_top = 55.0
+offset_right = 1120.0
+offset_bottom = 128.0
+text = "NIGHTHAVEN NIGHTLY"
+label_settings = SubResource("Masthead")
+
+[node name="ShelterMark" type="Node2D" parent="Display/Paper"]
+
+[node name="Seal" type="Polygon2D" parent="Display/Paper/ShelterMark"]
+polygon = PackedVector2Array(86, 64, 126, 64, 144, 82, 144, 115, 126, 133, 86, 133, 68, 115, 68, 82)
+color = Color(0.28, 0.12, 0.08, 1)
+
+[node name="SealInset" type="Polygon2D" parent="Display/Paper/ShelterMark"]
+polygon = PackedVector2Array(90, 72, 122, 72, 136, 86, 136, 111, 122, 125, 90, 125, 76, 111, 76, 86)
+color = Color(0.88, 0.75, 0.52, 1)
+
+[node name="Initials" type="Label" parent="Display/Paper/ShelterMark"]
+offset_left = 77.0
+offset_top = 81.0
+offset_right = 135.0
+offset_bottom = 119.0
+text = "NH"
+label_settings = SubResource("Section")
+horizontal_alignment = 1
+
+[node name="EditionBackground" type="Polygon2D" parent="Display/Paper"]
+polygon = PackedVector2Array(1170, 55, 1438, 55, 1438, 129, 1170, 129)
+color = Color(0.75, 0.59, 0.39, 1)
+
+[node name="Edition" type="Label" parent="Display/Paper"]
+offset_left = 1182.0
+offset_top = 67.0
+offset_right = 1426.0
+offset_bottom = 120.0
+text = "MORNING REPORT\nSHIFT 1"
+label_settings = SubResource("Section")
+horizontal_alignment = 1
+
+[node name="Headline" type="Label" parent="Display/Paper"]
+unique_name_in_owner = true
+offset_left = 78.0
+offset_top = 163.0
+offset_right = 1442.0
+offset_bottom = 219.0
+text = "ONE BAD CALL ENDS A LIFE"
+label_settings = SubResource("Headline")
+horizontal_alignment = 1
+
+[node name="Subheadline" type="Label" parent="Display/Paper"]
+unique_name_in_owner = true
+offset_left = 90.0
+offset_top = 221.0
+offset_right = 1430.0
+offset_bottom = 256.0
+text = "Three safe outcomes overshadowed by one fatal refusal"
+label_settings = SubResource("Section")
+horizontal_alignment = 1
+
+[node name="HeadlineRule" type="Line2D" parent="Display/Paper"]
+points = PackedVector2Array(180, 266, 1356, 266)
+width = 2.0
+default_color = Color(0.31, 0.18, 0.11, 0.65)
+
+[node name="OutcomeImage" type="TextureRect" parent="Display/Paper"]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_newsprint_photo")
+offset_left = 76.0
+offset_top = 278.0
+offset_right = 1018.0
+offset_bottom = 635.0
+mouse_filter = 2
+texture = ExtResource("2_outcome_image")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="OutcomeImageBorder" type="Line2D" parent="Display/Paper"]
+points = PackedVector2Array(76, 278, 1018, 278, 1018, 635, 76, 635, 76, 278)
+width = 2.0
+default_color = Color(0.36, 0.22, 0.13, 0.7)
+
+[node name="PhotoCaption" type="Label" parent="Display/Paper"]
+unique_name_in_owner = true
+offset_left = 78.0
+offset_top = 640.0
+offset_right = 1016.0
+offset_bottom = 666.0
+text = "MORNING PHOTOGRAPH — NIGHTHAVEN REMAINED SECURE"
+label_settings = SubResource("Small")
+horizontal_alignment = 1
+
+[node name="Stats" type="Node2D" parent="Display/Paper" groups=["stat_reveal"]]
+
+[node name="StatsBackground" type="Polygon2D" parent="Display/Paper/Stats"]
+polygon = PackedVector2Array(1038, 278, 1442, 278, 1442, 635, 1038, 635)
+color = Color(0.85, 0.74, 0.56, 1)
+
+[node name="StatsBorder" type="Line2D" parent="Display/Paper/Stats"]
+points = PackedVector2Array(1038, 278, 1442, 278, 1442, 635, 1038, 635, 1038, 278)
+width = 2.0
+default_color = Color(0.36, 0.22, 0.13, 0.7)
+
+[node name="StatsDivider" type="Line2D" parent="Display/Paper/Stats"]
+points = PackedVector2Array(1038, 456, 1442, 456)
+width = 4.0
+default_color = Color(0.32, 0.19, 0.11, 1)
+
+[node name="ReputationTitle" type="Label" parent="Display/Paper/Stats"]
+offset_left = 1145.0
+offset_top = 310.0
+offset_right = 1415.0
+offset_bottom = 347.0
+text = "HOTEL REPUTATION"
+label_settings = SubResource("Section")
+horizontal_alignment = 0
+
+[node name="ReputationMark" type="Node2D" parent="Display/Paper/Stats"]
+[node name="RibbonLeft" type="Polygon2D" parent="Display/Paper/Stats/ReputationMark"]
+polygon = PackedVector2Array(1070, 368, 1088, 374, 1077, 413, 1064, 399)
+color = Color(0.48, 0.21, 0.13, 1)
+[node name="RibbonRight" type="Polygon2D" parent="Display/Paper/Stats/ReputationMark"]
+polygon = PackedVector2Array(1097, 374, 1115, 368, 1121, 399, 1108, 413)
+color = Color(0.48, 0.21, 0.13, 1)
+[node name="Medallion" type="Polygon2D" parent="Display/Paper/Stats/ReputationMark"]
+polygon = PackedVector2Array(1092, 309, 1114, 315, 1129, 331, 1134, 353, 1128, 375, 1112, 390, 1090, 395, 1068, 389, 1053, 373, 1048, 351, 1054, 329, 1070, 314)
+color = Color(0.35, 0.17, 0.1, 1)
+[node name="MedallionInset" type="Polygon2D" parent="Display/Paper/Stats/ReputationMark"]
+polygon = PackedVector2Array(1091, 321, 1108, 326, 1118, 338, 1121, 353, 1116, 368, 1105, 379, 1090, 382, 1075, 377, 1065, 365, 1062, 350, 1067, 335, 1078, 325)
+color = Color(0.84, 0.67, 0.36, 1)
+[node name="Monogram" type="Label" parent="Display/Paper/Stats/ReputationMark"]
+offset_left = 1065.0
+offset_top = 337.0
+offset_right = 1118.0
+offset_bottom = 372.0
+text = "R"
+label_settings = SubResource("Section")
+horizontal_alignment = 1
+
+[node name="ReputationValue" type="Label" parent="Display/Paper/Stats"]
+unique_name_in_owner = true
+offset_left = 1138.0
+offset_top = 363.0
+offset_right = 1320.0
+offset_bottom = 425.0
+text = "76 / 100"
+label_settings = SubResource("Value")
+
+[node name="ReputationDelta" type="Label" parent="Display/Paper/Stats"]
+unique_name_in_owner = true
+offset_left = 1310.0
+offset_top = 372.0
+offset_right = 1418.0
+offset_bottom = 421.0
+text = "(-4)"
+theme_override_colors/font_color = Color(0.647, 0.184, 0.157, 1)
+theme_override_fonts/font = SubResource("Font_headline")
+theme_override_font_sizes/font_size = 34
+horizontal_alignment = 2
+
+[node name="ShareTitle" type="Label" parent="Display/Paper/Stats"]
+offset_left = 1130.0
+offset_top = 488.0
+offset_right = 1415.0
+offset_bottom = 525.0
+text = "SHARE PRICE"
+label_settings = SubResource("Section")
+horizontal_alignment = 0
+
+[node name="MarketMark" type="Node2D" parent="Display/Paper/Stats"]
+[node name="Axis" type="Line2D" parent="Display/Paper/Stats/MarketMark"]
+points = PackedVector2Array(1058, 594, 1058, 519, 1121, 519)
+width = 3.0
+default_color = Color(0.29, 0.16, 0.09, 1)
+[node name="Trend" type="Line2D" parent="Display/Paper/Stats/MarketMark"]
+points = PackedVector2Array(1063, 568, 1078, 546, 1091, 555, 1117, 527)
+width = 5.0
+default_color = Color(0.64, 0.18, 0.15, 1)
+[node name="Arrow" type="Polygon2D" parent="Display/Paper/Stats/MarketMark"]
+polygon = PackedVector2Array(1106, 527, 1121, 522, 1117, 539)
+color = Color(0.64, 0.18, 0.15, 1)
+
+[node name="ShareValue" type="Label" parent="Display/Paper/Stats"]
+unique_name_in_owner = true
+offset_left = 1130.0
+offset_top = 541.0
+offset_right = 1300.0
+offset_bottom = 603.0
+text = "$39.85"
+label_settings = SubResource("Value")
+
+[node name="ShareDelta" type="Label" parent="Display/Paper/Stats"]
+unique_name_in_owner = true
+offset_left = 1290.0
+offset_top = 550.0
+offset_right = 1418.0
+offset_bottom = 599.0
+text = "(-6.5%)"
+theme_override_colors/font_color = Color(0.647, 0.184, 0.157, 1)
+theme_override_fonts/font = SubResource("Font_headline")
+theme_override_font_sizes/font_size = 34
+horizontal_alignment = 2
+
+[node name="BreakdownTitle" type="Label" parent="Display/Paper"]
+unique_name_in_owner = true
+offset_left = 76.0
+offset_top = 654.0
+offset_right = 1442.0
+offset_bottom = 688.0
+text = "DECISION BREAKDOWN - 3 OF 4 CORRECT"
+label_settings = SubResource("Section")
+horizontal_alignment = 1
+
+[node name="BreakdownRuleLeft" type="Line2D" parent="Display/Paper"]
+points = PackedVector2Array(76, 671, 470, 671)
+width = 2.0
+default_color = Color(0.36, 0.22, 0.13, 0.7)
+
+[node name="BreakdownRuleRight" type="Line2D" parent="Display/Paper"]
+points = PackedVector2Array(1060, 671, 1442, 671)
+width = 2.0
+default_color = Color(0.36, 0.22, 0.13, 0.7)
+
+[node name="Outcome1" type="Node2D" parent="Display/Paper" groups=["outcome_reveal"]]
+[node name="Card" type="Polygon2D" parent="Display/Paper/Outcome1"]
+polygon = PackedVector2Array(76, 702, 405, 702, 405, 942, 76, 942)
+color = Color(0.88, 0.8, 0.65, 1)
+[node name="StatusBand" type="Polygon2D" parent="Display/Paper/Outcome1"]
+polygon = PackedVector2Array(76, 702, 405, 702, 405, 714, 76, 714)
+color = Color(0.38, 0.51, 0.28, 1)
+[node name="Border" type="Line2D" parent="Display/Paper/Outcome1"]
+points = PackedVector2Array(76, 702, 405, 702, 405, 942, 76, 942, 76, 702)
+width = 2.0
+default_color = Color(0.36, 0.22, 0.13, 0.65)
+[node name="Name" type="Label" parent="Display/Paper/Outcome1"]
+offset_left = 96.0
+offset_top = 721.0
+offset_right = 385.0
+offset_bottom = 755.0
+text = "TRACEY MORGAN"
+label_settings = SubResource("Section")
+horizontal_alignment = 1
+[node name="Result" type="Label" parent="Display/Paper/Outcome1"]
+offset_left = 96.0
+offset_top = 772.0
+offset_right = 385.0
+offset_bottom = 815.0
+text = "AUTHORIZED - SAFE"
+label_settings = SubResource("Section")
+horizontal_alignment = 1
+[node name="Details" type="Label" parent="Display/Paper/Outcome1"]
+offset_left = 101.0
+offset_top = 837.0
+offset_right = 380.0
+offset_bottom = 918.0
+text = "Room 104 access restored. The maintenance report supported her claim."
+label_settings = SubResource("Body")
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Outcome2" type="Node2D" parent="Display/Paper" groups=["outcome_reveal"]]
+[node name="Card" type="Polygon2D" parent="Display/Paper/Outcome2"]
+polygon = PackedVector2Array(420, 702, 749, 702, 749, 942, 420, 942)
+color = Color(0.88, 0.8, 0.65, 1)
+[node name="StatusBand" type="Polygon2D" parent="Display/Paper/Outcome2"]
+polygon = PackedVector2Array(420, 702, 749, 702, 749, 714, 420, 714)
+color = Color(0.38, 0.51, 0.28, 1)
+[node name="Border" type="Line2D" parent="Display/Paper/Outcome2"]
+points = PackedVector2Array(420, 702, 749, 702, 749, 942, 420, 942, 420, 702)
+width = 2.0
+default_color = Color(0.36, 0.22, 0.13, 0.65)
+[node name="Name" type="Label" parent="Display/Paper/Outcome2"]
+offset_left = 440.0
+offset_top = 721.0
+offset_right = 729.0
+offset_bottom = 755.0
+text = "FALSE DANIEL"
+label_settings = SubResource("Section")
+horizontal_alignment = 1
+[node name="Result" type="Label" parent="Display/Paper/Outcome2"]
+offset_left = 440.0
+offset_top = 772.0
+offset_right = 729.0
+offset_bottom = 815.0
+text = "DENIED - THREAT BLOCKED"
+label_settings = SubResource("Section")
+horizontal_alignment = 1
+[node name="Details" type="Label" parent="Display/Paper/Outcome2"]
+offset_left = 445.0
+offset_top = 837.0
+offset_right = 724.0
+offset_bottom = 918.0
+text = "Reservation maker, check-in time and registered occupant all contradicted him."
+label_settings = SubResource("Body")
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Outcome3" type="Node2D" parent="Display/Paper" groups=["outcome_reveal"]]
+[node name="Card" type="Polygon2D" parent="Display/Paper/Outcome3"]
+polygon = PackedVector2Array(764, 702, 1093, 702, 1093, 942, 764, 942)
+color = Color(0.88, 0.8, 0.65, 1)
+[node name="StatusBand" type="Polygon2D" parent="Display/Paper/Outcome3"]
+polygon = PackedVector2Array(764, 702, 1093, 702, 1093, 714, 764, 714)
+color = Color(0.38, 0.51, 0.28, 1)
+[node name="Border" type="Line2D" parent="Display/Paper/Outcome3"]
+points = PackedVector2Array(764, 702, 1093, 702, 1093, 942, 764, 942, 764, 702)
+width = 2.0
+default_color = Color(0.36, 0.22, 0.13, 0.65)
+[node name="Name" type="Label" parent="Display/Paper/Outcome3"]
+offset_left = 784.0
+offset_top = 721.0
+offset_right = 1073.0
+offset_bottom = 755.0
+text = "MAYA CHEN"
+label_settings = SubResource("Section")
+horizontal_alignment = 1
+[node name="Result" type="Label" parent="Display/Paper/Outcome3"]
+offset_left = 784.0
+offset_top = 772.0
+offset_right = 1073.0
+offset_bottom = 815.0
+text = "AUTHORIZED - SAFE VISIT"
+label_settings = SubResource("Section")
+horizontal_alignment = 1
+[node name="Details" type="Label" parent="Display/Paper/Outcome3"]
+offset_left = 789.0
+offset_top = 837.0
+offset_right = 1068.0
+offset_bottom = 918.0
+text = "Relationship, purpose, arrival window and desk ID were verified."
+label_settings = SubResource("Body")
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Outcome4" type="Node2D" parent="Display/Paper" groups=["outcome_reveal"]]
+[node name="Card" type="Polygon2D" parent="Display/Paper/Outcome4"]
+polygon = PackedVector2Array(1108, 702, 1442, 702, 1442, 942, 1108, 942)
+color = Color(0.88, 0.8, 0.65, 1)
+[node name="StatusBand" type="Polygon2D" parent="Display/Paper/Outcome4"]
+polygon = PackedVector2Array(1108, 702, 1442, 702, 1442, 714, 1108, 714)
+color = Color(0.58, 0.22, 0.17, 1)
+[node name="Border" type="Line2D" parent="Display/Paper/Outcome4"]
+points = PackedVector2Array(1108, 702, 1442, 702, 1442, 942, 1108, 942, 1108, 702)
+width = 2.0
+default_color = Color(0.36, 0.22, 0.13, 0.65)
+[node name="Name" type="Label" parent="Display/Paper/Outcome4"]
+offset_left = 1128.0
+offset_top = 721.0
+offset_right = 1422.0
+offset_bottom = 755.0
+text = "ARTHUR WILLIAMS"
+label_settings = SubResource("Section")
+horizontal_alignment = 1
+[node name="Result" type="Label" parent="Display/Paper/Outcome4"]
+offset_left = 1128.0
+offset_top = 772.0
+offset_right = 1422.0
+offset_bottom = 815.0
+text = "DENIED - FATAL REFUSAL"
+label_settings = SubResource("Section")
+horizontal_alignment = 1
+[node name="Details" type="Label" parent="Display/Paper/Outcome4"]
+offset_left = 1133.0
+offset_top = 830.0
+offset_right = 1417.0
+offset_bottom = 925.0
+text = "MISSED CLUE: Hearing-loss note and the 11:48 PM radiator call matched his story."
+label_settings = SubResource("Body")
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="TapeTopLeft" type="Polygon2D" parent="Display/Paper" groups=["stick_detail"]]
+polygon = PackedVector2Array(48, 22, 214, 35, 205, 74, 42, 60)
+color = Color(0.79, 0.69, 0.48, 0.9)
+
+[node name="TapeTopRight" type="Polygon2D" parent="Display/Paper" groups=["stick_detail"]]
+polygon = PackedVector2Array(1320, 34, 1487, 20, 1492, 60, 1326, 74)
+color = Color(0.79, 0.69, 0.48, 0.9)
+
+[node name="TapeBottomLeft" type="Polygon2D" parent="Display/Paper" groups=["stick_detail"]]
+polygon = PackedVector2Array(44, 938, 205, 948, 212, 986, 50, 976)
+color = Color(0.79, 0.69, 0.48, 0.82)
+
+[node name="TapeBottomRight" type="Polygon2D" parent="Display/Paper" groups=["stick_detail"]]
+polygon = PackedVector2Array(1328, 948, 1488, 938, 1493, 976, 1334, 986)
+color = Color(0.79, 0.69, 0.48, 0.82)
+
+[node name="FooterRule" type="Line2D" parent="Display/Paper"]
+points = PackedVector2Array(76, 950, 1442, 950)
+width = 2.0
+default_color = Color(0.36, 0.22, 0.13, 0.72)
+
+[node name="FooterLeft" type="Label" parent="Display/Paper"]
+offset_left = 78.0
+offset_top = 947.0
+offset_right = 500.0
+offset_bottom = 968.0
+text = "NIGHTHAVEN MARKET & SECURITY DESK"
+label_settings = SubResource("Small")
+
+[node name="FooterRight" type="Label" parent="Display/Paper"]
+offset_left = 1200.0
+offset_top = 947.0
+offset_right = 1438.0
+offset_bottom = 968.0
+text = "PAGE 1 OF 1"
+label_settings = SubResource("Small")
+horizontal_alignment = 2
+
+[node name="Instruction" type="Label" parent="Display"]
+unique_name_in_owner = true
+offset_left = 558.0
+offset_top = 987.0
+offset_right = 978.0
+offset_bottom = 1017.0
+text = "CLICK / ENTER: REPLAY     ESC: CLOSE"
+label_settings = SubResource("Small")
+horizontal_alignment = 1

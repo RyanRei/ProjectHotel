@@ -10,6 +10,7 @@ const COLOR_AMBER := Color("a87329")
 const COLOR_GREEN := Color("758e55")
 const COLOR_YELLOW := Color("b18b37")
 const COLOR_GRAY := Color("747b7a")
+signal computah_closed
 
 var database := RosterDatabase.new()
 var current_tab := "RESIDENTS"
@@ -46,6 +47,7 @@ func open_roster() -> void:
 
 
 func close_roster() -> void:
+	computah_closed.emit()
 	visible = false
 	search_field.release_focus()
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -95,7 +97,7 @@ func build_header() -> Control:
 func build_tabs() -> Control:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 8)
-	for tab_name in ["RESIDENTS", "VISITORS", "ROOMS", "ACCESS LOG"]:
+	for tab_name in ["RESIDENTS", "VISITORS", "ROOMS"]:#, "ACCESS LOG"]:
 		var button := Button.new()
 		button.text = tab_name
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL

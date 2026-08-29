@@ -4,6 +4,8 @@ extends Node3D
 @export var logbook:LogbookUI
 @export var logUpdateAudio:AudioStreamPlayer3D
 @export var pageFlipAudio:AudioStreamPlayer3D
+@export var isLogbookClikable:bool=true
+signal logbook_clicked
 var click_area: Area3D
 var clickable_center := Vector3.ZERO
 var clickable_size := Vector3.ZERO
@@ -190,9 +192,12 @@ func collect_meshes(node: Node, output: Array[MeshInstance3D]) -> void:
 		collect_meshes(child, output)
 
 func interact() -> void:
+	if not isLogbookClikable:
+		return
 	var ui := get_tree().get_first_node_in_group("logbook_ui")
 	if ui != null and ui.has_method("open_logbook"):
 		ui.call("open_logbook")
+		logbook_clicked.emit()
 		
 		
 func updateLogbook(encounter:EncounterData) -> void:

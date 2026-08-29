@@ -4,6 +4,16 @@ extends Control
 signal choiceMade(choice: String)
 signal confirmation_requested(message: String)
 signal confirmation_cancelled
+var accept_locked := false
+var reject_locked := false
+var question_locked := false
+var canceled_locked := false
+#for tutorial
+signal sendqn
+signal sendaccept
+signal sendreject
+signal sendcancel
+
 
 enum DecisionState {
 	CHOOSING,
@@ -32,26 +42,36 @@ func _input(event: InputEvent) -> void:
 		return
 
 	if event.is_action_pressed("Cancel Decision"):
+		if canceled_locked:
+			return
 		if decision_state != DecisionState.CHOOSING:
 			_cancel_confirmation()
 			get_viewport().set_input_as_handled()
 		return
 
 	if event.is_action_pressed("Question"):
+		if question_locked:
+			return
 		if decision_state == DecisionState.CHOOSING and questionActive:
+			sendqn.emit()
 			choiceMade.emit("QUESTION")
+			
+			
 			get_viewport().set_input_as_handled()
 		return
 
 	if event.is_action_pressed("Accept"):
+		if accept_locked:
+			return
 		_handle_accept()
 		get_viewport().set_input_as_handled()
 		return
 
 	if event.is_action_pressed("Reject"):
+		if reject_locked:
+			return
 		_handle_reject()
 		get_viewport().set_input_as_handled()
-
 
 func _handle_accept() -> void:
 	if decision_state == DecisionState.CHOOSING:
@@ -60,6 +80,7 @@ func _handle_accept() -> void:
 		confirmation_requested.emit("Are you sure you want to let them in?\n[A] Confirm    [X] Go back")
 	elif decision_state == DecisionState.CONFIRMING_ACCEPT:
 		choiceMade.emit("ACCEPT")
+	sendaccept.emit()
 
 
 func _handle_reject() -> void:
@@ -69,6 +90,7 @@ func _handle_reject() -> void:
 		confirmation_requested.emit("Are you sure you want to keep them out?\n[R] Confirm    [X] Go back")
 	elif decision_state == DecisionState.CONFIRMING_REJECT:
 		choiceMade.emit("REJECT")
+	sendreject.emit()
 
 
 func _cancel_confirmation() -> void:
@@ -76,6 +98,7 @@ func _cancel_confirmation() -> void:
 	accept.release_focus()
 	reject.release_focus()
 	confirmation_cancelled.emit()
+	sendcancel.emit()
 
 
 func turnOff() -> void:
@@ -121,3 +144,31 @@ func _on_reject_pressed() -> void:
 func _on_question_pressed() -> void:
 	if decision_state == DecisionState.CHOOSING and questionActive:
 		choiceMade.emit("QUESTION")
+		
+
+
+
+#for tutorial
+func lock_accept() -> void:
+	accept_locked = true
+
+func unlock_accept() -> void:
+	accept_locked = false
+
+func lock_reject() -> void:
+	reject_locked = true
+
+func unlock_reject() -> void:
+	reject_locked = false
+
+func lock_question() -> void:
+	question_locked = true
+
+func unlock_question() -> void:
+	question_locked = false
+
+func lock_cancel() -> void:
+	canceled_locked = true
+
+func unlock_cancel() -> void:
+	canceled_locked = false

@@ -1,0 +1,526 @@
+[gd_scene format=3 uid="uid://bfk68mcntgxm4"]
+
+[ext_resource type="PackedScene" uid="uid://baabtnhguem4d" path="res://Scenes/Tutorial/box_pointing_to_text.tscn" id="1_vunqc"]
+[ext_resource type="PackedScene" uid="uid://cubjoahd57ayy" path="res://Scenes/Tutorial/panelTexts.tscn" id="2_nkdpq"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7ops2"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 15
+border_width_top = 15
+border_width_right = 15
+border_width_bottom = 15
+border_color = Color(0, 0.43489882, 0.901637, 1)
+border_blend = true
+corner_radius_top_left = 33
+corner_radius_top_right = 33
+corner_radius_bottom_right = 33
+corner_radius_bottom_left = 33
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vunqc"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 15
+border_width_top = 15
+border_width_right = 15
+border_width_bottom = 15
+border_color = Color(0, 0.43489882, 0.901637, 1)
+border_blend = true
+corner_radius_top_left = 33
+corner_radius_top_right = 33
+corner_radius_bottom_right = 33
+corner_radius_bottom_left = 33
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nkdpq"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 15
+border_width_top = 15
+border_width_right = 15
+border_width_bottom = 15
+border_color = Color(0, 0.43489882, 0.901637, 1)
+border_blend = true
+corner_radius_top_left = 33
+corner_radius_top_right = 33
+corner_radius_bottom_right = 33
+corner_radius_bottom_left = 33
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fsw2u"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 15
+border_width_top = 15
+border_width_right = 15
+border_width_bottom = 15
+border_color = Color(0, 0.43489882, 0.901637, 1)
+border_blend = true
+corner_radius_top_left = 33
+corner_radius_top_right = 33
+corner_radius_bottom_right = 33
+corner_radius_bottom_left = 33
+
+[node name="DialogBoxExplanations" type="Control" unique_id=497498605]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="opening" parent="." unique_id=1698298257 instance=ExtResource("2_nkdpq")]
+layout_mode = 1
+
+[node name="PanelContainer" parent="opening" index="0" unique_id=975044402]
+offset_left = 50.0
+offset_top = 495.0
+offset_right = 1107.0
+offset_bottom = 636.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_7ops2")
+
+[node name="introduceLogbook" parent="." unique_id=270904107 instance=ExtResource("2_nkdpq")]
+layout_mode = 1
+
+[node name="PanelContainer" parent="introduceLogbook" index="0" unique_id=975044402]
+offset_left = 50.0
+offset_top = 495.0
+offset_right = 1107.0
+offset_bottom = 636.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_7ops2")
+
+[node name="Label" parent="introduceLogbook/PanelContainer" index="0" unique_id=34167543]
+text = "Click to open the logbook ah"
+
+[node name="logbookleft" parent="." unique_id=69050541 instance=ExtResource("1_vunqc")]
+visible = false
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+grow_horizontal = 1
+grow_vertical = 1
+
+[node name="pointer" parent="logbookleft" index="0" unique_id=517012215]
+offset_left = 686.4
+offset_top = 341.0
+offset_right = 692.6101
+offset_bottom = 453.32813
+rotation = 1.5707964
+
+[node name="PanelContainer" parent="logbookleft/PanelTexts" parent_id_path=PackedInt32Array(69050541, 1698298257) index="0" unique_id=975044402]
+offset_left = 686.0
+offset_top = 268.0
+offset_right = 1092.0
+offset_bottom = 408.0
+
+[node name="Label" parent="logbookleft/PanelTexts/PanelContainer" index="1" unique_id=34167543]
+theme_override_font_sizes/font_size = 17
+text = "This side's the timeline. Who's expected a visitor or caller  tonight, and when. "
+
+[node name="box" parent="logbookleft/PanelTexts" parent_id_path=PackedInt32Array(69050541, 1698298257) index="1" unique_id=1463505934]
+offset_left = 247.0
+offset_top = 82.0
+offset_right = 573.0
+offset_bottom = 555.0
+
+[node name="logbookright" parent="." unique_id=1227073167 instance=ExtResource("1_vunqc")]
+visible = false
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+grow_horizontal = 1
+grow_vertical = 1
+
+[node name="pointer" parent="logbookright" index="0" unique_id=517012215]
+offset_left = 588.2547
+offset_top = 341.0
+offset_right = 594.4648
+offset_bottom = 489.39124
+rotation = 1.5707964
+
+[node name="PanelContainer" parent="logbookright/PanelTexts" parent_id_path=PackedInt32Array(1227073167, 1698298257) index="0" unique_id=975044402]
+propagate_maximum_size = false
+layout_mode = 1
+offset_left = 178.0
+offset_top = 182.0
+offset_right = 442.0
+offset_bottom = 479.0
+
+[node name="Label" parent="logbookright/PanelTexts/PanelContainer" index="1" unique_id=34167543]
+theme_override_font_sizes/font_size = 17
+text = "This side's everything else. Special notes. Anything that broke down, residents with special needs, everything’s recorded here"
+
+[node name="box" parent="logbookright/PanelTexts" parent_id_path=PackedInt32Array(1227073167, 1698298257) index="1" unique_id=1463505934]
+propagate_maximum_size = false
+offset_left = 587.0
+offset_top = 84.0
+offset_right = 913.0
+offset_bottom = 557.0
+
+[node name="acceptReject" parent="." unique_id=1116728026 instance=ExtResource("1_vunqc")]
+visible = false
+layout_mode = 1
+
+[node name="pointer" parent="acceptReject" index="0" unique_id=517012215]
+offset_left = 903.0
+offset_top = 347.0
+offset_right = 909.2101
+offset_bottom = 563.3281
+rotation = 1.5707964
+
+[node name="PanelContainer" parent="acceptReject/PanelTexts" parent_id_path=PackedInt32Array(1116728026, 1698298257) index="0" unique_id=975044402]
+offset_left = 243.0
+offset_top = 264.0
+offset_right = 684.0
+offset_bottom = 429.0
+
+[node name="Label" parent="acceptReject/PanelTexts/PanelContainer" index="1" unique_id=34167543]
+theme_override_font_sizes/font_size = 17
+text = "Two buttons, always available. Accept lets them in. Reject hangs up and keeps them outside. You don't have to decide yet, though, not until you've actually verified their true identity"
+
+[node name="box" parent="acceptReject/PanelTexts" parent_id_path=PackedInt32Array(1116728026, 1698298257) index="1" unique_id=1463505934]
+offset_left = 905.0
+offset_top = 263.0
+offset_right = 1125.0
+offset_bottom = 422.0
+
+[node name="question" parent="." unique_id=596087657 instance=ExtResource("1_vunqc")]
+visible = false
+layout_mode = 1
+
+[node name="pointer" parent="question" index="0" unique_id=517012215]
+offset_left = 509.0
+offset_top = 347.0
+offset_right = 515.2101
+offset_bottom = 563.3281
+rotation = 1.5707964
+
+[node name="PanelContainer" parent="question/PanelTexts" parent_id_path=PackedInt32Array(596087657, 1698298257) index="0" unique_id=975044402]
+offset_left = 518.0
+offset_top = 267.0
+offset_right = 959.0
+offset_bottom = 432.0
+
+[node name="Label" parent="question/PanelTexts/PanelContainer" index="1" unique_id=34167543]
+theme_override_font_sizes/font_size = 17
+text = "Right now you have all night to ask the questions.Select the option button to ask questions."
+
+[node name="box" parent="question/PanelTexts" parent_id_path=PackedInt32Array(596087657, 1698298257) index="1" unique_id=1463505934]
+offset_left = 21.0
+offset_top = 271.0
+offset_right = 289.0
+offset_bottom = 430.0
+
+[node name="q1tracey" parent="." unique_id=875832526 instance=ExtResource("1_vunqc")]
+visible = false
+layout_mode = 1
+
+[node name="pointer" parent="q1tracey" index="0" unique_id=517012215]
+offset_left = 503.00012
+offset_top = 219.00002
+offset_right = 509.2102
+offset_bottom = 435.32813
+rotation = 1.107168
+
+[node name="PanelContainer" parent="q1tracey/PanelTexts" parent_id_path=PackedInt32Array(875832526, 1698298257) index="0" unique_id=975044402]
+offset_left = 505.0
+offset_top = 125.0
+offset_right = 943.0
+offset_bottom = 262.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_vunqc")
+
+[node name="Label" parent="q1tracey/PanelTexts/PanelContainer" index="1" unique_id=34167543]
+theme_override_font_sizes/font_size = 24
+text = "Let's start simple. Ask her about the room reservation. "
+
+[node name="box" parent="q1tracey/PanelTexts" parent_id_path=PackedInt32Array(875832526, 1698298257) index="1" unique_id=1463505934]
+offset_left = 55.0
+offset_top = 319.0
+offset_right = 622.0
+offset_bottom = 416.0
+
+[node name="checktab" parent="." unique_id=1075765468 instance=ExtResource("1_vunqc")]
+visible = false
+layout_mode = 1
+
+[node name="pointer" parent="checktab" index="0" unique_id=517012215]
+offset_left = 907.00006
+offset_top = 586.0
+offset_right = 913.21014
+offset_bottom = 802.3281
+rotation = 1.9670732
+
+[node name="PanelContainer" parent="checktab/PanelTexts" parent_id_path=PackedInt32Array(1075765468, 1698298257) index="0" unique_id=975044402]
+offset_left = 254.0
+offset_top = 393.0
+offset_right = 692.0
+offset_bottom = 530.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_nkdpq")
+
+[node name="Label" parent="checktab/PanelTexts/PanelContainer" index="1" unique_id=34167543]
+theme_override_font_sizes/font_size = 24
+text = "\"Press Tab to step into your desk i.e your logbook, computer screen telephone. Press it again to get back to your call system, where you'll actually manage the shift"
+
+[node name="box" parent="checktab/PanelTexts" parent_id_path=PackedInt32Array(1075765468, 1698298257) index="1" unique_id=1463505934]
+offset_left = 901.0
+offset_top = 599.0
+offset_right = 1150.0
+offset_bottom = 658.0
+
+[node name="itmatches" parent="." unique_id=1954684313 instance=ExtResource("1_vunqc")]
+visible = false
+layout_mode = 1
+
+[node name="pointer" parent="itmatches" index="0" unique_id=517012215]
+offset_left = 570.2553
+offset_top = 369.50256
+offset_right = 576.4654
+offset_bottom = 438.48962
+rotation = 3.0345302
+
+[node name="PanelContainer" parent="itmatches/PanelTexts" parent_id_path=PackedInt32Array(1954684313, 1698298257) index="0" unique_id=975044402]
+offset_left = 350.0
+offset_top = 375.0
+offset_right = 788.0
+offset_bottom = 587.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_fsw2u")
+
+[node name="Label" parent="itmatches/PanelTexts/PanelContainer" index="1" unique_id=34167543]
+theme_override_font_sizes/font_size = 24
+text = "It Matches! Good. You've got one question left in the bank if you want it: sometimes one clean answer should be enough, sometimes it isn't. Your call"
+
+[node name="box" parent="itmatches/PanelTexts" parent_id_path=PackedInt32Array(1954684313, 1698298257) index="1" unique_id=1463505934]
+offset_left = 225.0
+offset_top = 136.0
+offset_right = 910.0
+offset_bottom = 296.0
+
+[node name="clockticks" parent="." unique_id=1459238890 instance=ExtResource("2_nkdpq")]
+layout_mode = 1
+
+[node name="PanelContainer" parent="clockticks" index="0" unique_id=975044402]
+offset_left = 212.0
+offset_top = 488.0
+offset_right = 888.0
+offset_bottom = 595.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_7ops2")
+
+[node name="Label" parent="clockticks/PanelContainer" index="0" unique_id=34167543]
+text = "Nice! The moment you hang up, the clock starts moving again and get ready for the next ring anytime
+click again and look right at the clock"
+
+[node name="ENC2" type="Control" parent="." unique_id=1743496007]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="questionPointer" parent="ENC2" unique_id=763931297 instance=ExtResource("1_vunqc")]
+visible = false
+layout_mode = 1
+
+[node name="pointer" parent="ENC2/questionPointer" index="0" unique_id=517012215]
+offset_left = 509.0
+offset_top = 347.0
+offset_right = 515.2101
+offset_bottom = 563.3281
+rotation = 1.5707964
+
+[node name="PanelContainer" parent="ENC2/questionPointer/PanelTexts" parent_id_path=PackedInt32Array(763931297, 1698298257) index="0" unique_id=975044402]
+offset_left = 518.0
+offset_top = 267.0
+offset_right = 959.0
+offset_bottom = 432.0
+
+[node name="Label" parent="ENC2/questionPointer/PanelTexts/PanelContainer" index="1" unique_id=34167543]
+theme_override_font_sizes/font_size = 17
+text = "Ask a Question"
+
+[node name="box" parent="ENC2/questionPointer/PanelTexts" parent_id_path=PackedInt32Array(763931297, 1698298257) index="1" unique_id=1463505934]
+offset_left = 21.0
+offset_top = 271.0
+offset_right = 289.0
+offset_bottom = 430.0
+
+[node name="q1daniel" parent="ENC2" unique_id=1443910453 instance=ExtResource("1_vunqc")]
+visible = false
+layout_mode = 1
+
+[node name="pointer" parent="ENC2/q1daniel" index="0" unique_id=517012215]
+visible = false
+offset_left = 503.00012
+offset_top = 219.00002
+offset_right = 509.2102
+offset_bottom = 435.32813
+rotation = 1.107168
+
+[node name="PanelContainer" parent="ENC2/q1daniel/PanelTexts" parent_id_path=PackedInt32Array(1443910453, 1698298257) index="0" unique_id=975044402]
+visible = false
+offset_left = 505.0
+offset_top = 125.0
+offset_right = 943.0
+offset_bottom = 262.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_vunqc")
+
+[node name="Label" parent="ENC2/q1daniel/PanelTexts/PanelContainer" index="1" unique_id=34167543]
+theme_override_font_sizes/font_size = 24
+text = "Let's start simple. Ask her about the room reservation. "
+
+[node name="box" parent="ENC2/q1daniel/PanelTexts" parent_id_path=PackedInt32Array(1443910453, 1698298257) index="1" unique_id=1463505934]
+offset_left = 16.0
+offset_top = 414.0
+offset_right = 583.0
+offset_bottom = 481.0
+
+[node name="checktab" parent="ENC2" unique_id=631226815 instance=ExtResource("1_vunqc")]
+visible = false
+layout_mode = 1
+
+[node name="pointer" parent="ENC2/checktab" index="0" unique_id=517012215]
+offset_left = 907.00006
+offset_top = 586.0
+offset_right = 913.21014
+offset_bottom = 802.3281
+rotation = 1.9670732
+
+[node name="PanelContainer" parent="ENC2/checktab/PanelTexts" parent_id_path=PackedInt32Array(631226815, 1698298257) index="0" unique_id=975044402]
+offset_left = 254.0
+offset_top = 393.0
+offset_right = 692.0
+offset_bottom = 530.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_nkdpq")
+
+[node name="Label" parent="ENC2/checktab/PanelTexts/PanelContainer" index="1" unique_id=34167543]
+theme_override_font_sizes/font_size = 24
+text = "Go  and Cross Check Information with logbook"
+
+[node name="box" parent="ENC2/checktab/PanelTexts" parent_id_path=PackedInt32Array(631226815, 1698298257) index="1" unique_id=1463505934]
+offset_left = 901.0
+offset_top = 599.0
+offset_right = 1150.0
+offset_bottom = 658.0
+
+[node name="becareful" parent="ENC2" unique_id=1956420997 instance=ExtResource("1_vunqc")]
+visible = false
+layout_mode = 1
+
+[node name="pointer" parent="ENC2/becareful" index="0" unique_id=517012215]
+offset_left = 589.62555
+offset_top = 429.26523
+offset_right = 595.6214
+offset_bottom = 523.9694
+rotation = 3.0345302
+
+[node name="PanelContainer" parent="ENC2/becareful/PanelTexts" parent_id_path=PackedInt32Array(1956420997, 1698298257) index="0" unique_id=975044402]
+offset_left = 355.0
+offset_top = 429.0
+offset_right = 793.0
+offset_bottom = 641.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_fsw2u")
+
+[node name="Label" parent="ENC2/becareful/PanelTexts/PanelContainer" index="1" unique_id=34167543]
+theme_override_font_sizes/font_size = 24
+text = "That's not what the log  says. Tread carefully. Records are harder to fake"
+
+[node name="box" parent="ENC2/becareful/PanelTexts" parent_id_path=PackedInt32Array(1956420997, 1698298257) index="1" unique_id=1463505934]
+offset_left = 225.0
+offset_top = 251.0
+offset_right = 910.0
+offset_bottom = 336.0
+
+[node name="ENC3" type="Control" parent="." unique_id=1363471140]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="mayaChenIntro" parent="ENC3" unique_id=1059886204 instance=ExtResource("2_nkdpq")]
+layout_mode = 1
+
+[node name="PanelContainer" parent="ENC3/mayaChenIntro" index="0" unique_id=975044402]
+offset_left = 50.0
+offset_top = 495.0
+offset_right = 1107.0
+offset_bottom = 636.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_7ops2")
+
+[node name="Label" parent="ENC3/mayaChenIntro/PanelContainer" index="0" unique_id=34167543]
+text = "Not every call is a resident locked out of their own room. Sometimes it's someone asking to be let in to see someone else. Check the logbook first. Expected visitors get written down."
+
+[node name="questionPointer" parent="ENC3" unique_id=1812717857 instance=ExtResource("1_vunqc")]
+visible = false
+layout_mode = 1
+
+[node name="pointer" parent="ENC3/questionPointer" index="0" unique_id=517012215]
+offset_left = 509.0
+offset_top = 347.0
+offset_right = 515.2101
+offset_bottom = 563.3281
+rotation = 1.5707964
+
+[node name="PanelContainer" parent="ENC3/questionPointer/PanelTexts" parent_id_path=PackedInt32Array(1812717857, 1698298257) index="0" unique_id=975044402]
+offset_left = 518.0
+offset_top = 267.0
+offset_right = 959.0
+offset_bottom = 432.0
+
+[node name="Label" parent="ENC3/questionPointer/PanelTexts/PanelContainer" index="1" unique_id=34167543]
+theme_override_font_sizes/font_size = 17
+text = "Ask a Question"
+
+[node name="box" parent="ENC3/questionPointer/PanelTexts" parent_id_path=PackedInt32Array(1812717857, 1698298257) index="1" unique_id=1463505934]
+offset_left = 21.0
+offset_top = 271.0
+offset_right = 289.0
+offset_bottom = 430.0
+
+[node name="q1maya" parent="ENC3" unique_id=2062390538 instance=ExtResource("1_vunqc")]
+visible = false
+layout_mode = 1
+
+[node name="pointer" parent="ENC3/q1maya" index="0" unique_id=517012215]
+offset_left = 503.00012
+offset_top = 219.00002
+offset_right = 509.2102
+offset_bottom = 435.32813
+rotation = 1.107168
+
+[node name="PanelContainer" parent="ENC3/q1maya/PanelTexts" parent_id_path=PackedInt32Array(2062390538, 1698298257) index="0" unique_id=975044402]
+offset_left = 505.0
+offset_top = 125.0
+offset_right = 943.0
+offset_bottom = 262.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_vunqc")
+
+[node name="Label" parent="ENC3/q1maya/PanelTexts/PanelContainer" index="1" unique_id=34167543]
+theme_override_font_sizes/font_size = 24
+text = "Two of your questions are dead ends for this.You'll Notice how she already answered these questions in her introduction. from Next time try picking from the two that actively provide more value."
+
+[node name="box" parent="ENC3/q1maya/PanelTexts" parent_id_path=PackedInt32Array(2062390538, 1698298257) index="1" unique_id=1463505934]
+offset_left = 16.0
+offset_top = 319.0
+offset_right = 670.0
+offset_bottom = 489.0
+
+[editable path="opening"]
+[editable path="introduceLogbook"]
+[editable path="logbookleft"]
+[editable path="logbookleft/PanelTexts"]
+[editable path="logbookright"]
+[editable path="logbookright/PanelTexts"]
+[editable path="acceptReject"]
+[editable path="acceptReject/PanelTexts"]
+[editable path="question"]
+[editable path="question/PanelTexts"]
+[editable path="q1tracey"]
+[editable path="q1tracey/PanelTexts"]
+[editable path="checktab"]
+[editable path="checktab/PanelTexts"]
+[editable path="itmatches"]
+[editable path="itmatches/PanelTexts"]
+[editable path="clockticks"]
+[editable path="ENC2/questionPointer"]
+[editable path="ENC2/questionPointer/PanelTexts"]
+[editable path="ENC2/q1daniel"]
+[editable path="ENC2/q1daniel/PanelTexts"]
+[editable path="ENC2/checktab"]
+[editable path="ENC2/checktab/PanelTexts"]
+[editable path="ENC2/becareful"]
+[editable path="ENC2/becareful/PanelTexts"]
+[editable path="ENC3/mayaChenIntro"]
+[editable path="ENC3/questionPointer"]
+[editable path="ENC3/questionPointer/PanelTexts"]
+[editable path="ENC3/q1maya"]
+[editable path="ENC3/q1maya/PanelTexts"]

@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://crxxqkqkuemx"]
+
+[ext_resource type="PackedScene" uid="uid://cubjoahd57ayy" path="res://Scenes/Tutorial/panelTexts.tscn" id="1_b3xwx"]
+
+[node name="phoneTutorial" type="Control" unique_id=198299386]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="intro1" parent="." unique_id=1698298257 instance=ExtResource("1_b3xwx")]
+visible = true
+layout_mode = 1
+
+[node name="PanelContainer" parent="intro1" index="0" unique_id=975044402]
+offset_left = 250.0
+offset_top = 468.0
+offset_right = 722.0
+offset_bottom = 639.0
+
+[node name="Label" parent="intro1/PanelContainer" index="0" unique_id=34167543]
+theme_override_font_sizes/font_size = 32
+text = "(Phone rings)
+\"There it is. Pick up.\"
+"
+
+[editable path="intro1"]

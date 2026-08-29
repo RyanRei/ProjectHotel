@@ -1,15 +1,28 @@
 [gd_scene format=3 uid="uid://corhltbkplr48"]
 
 [ext_resource type="Script" uid="uid://d0h4kw576c5j5" path="res://Scripts/Managers/TutorialManager.gd" id="1_uf7hf"]
+[ext_resource type="PackedScene" uid="uid://cubjoahd57ayy" path="res://Scenes/Tutorial/panelTexts.tscn" id="2_8kjun"]
 [ext_resource type="PackedScene" uid="uid://csgldlotwb6qk" path="res://Scenes/Tutorial/TutorialDialogs.tscn" id="2_cwvdc"]
+[ext_resource type="PackedScene" uid="uid://crxxqkqkuemx" path="res://Scenes/Tutorial/phone_tutorial.tscn" id="5_obrjl"]
+[ext_resource type="PackedScene" uid="uid://bfk68mcntgxm4" path="res://Scenes/Tutorial/dialog_box_explanations.tscn" id="6_7da8a"]
 
-[node name="TutorialManager" type="Node" unique_id=764230886 node_paths=PackedStringArray("dialog_tutorial")]
+[node name="TutorialManager" type="Node" unique_id=764230886 node_paths=PackedStringArray("dialog_tutorial", "panelTexts", "phone_tutorial", "tab_explanation")]
 process_mode = 3
 script = ExtResource("1_uf7hf")
 dialog_tutorial = NodePath("CanvasLayer/TutorialDialogs")
+panelTexts = NodePath("CanvasLayer/PanelTexts")
+phone_tutorial = NodePath("CanvasLayer/phoneTutorial")
+tab_explanation = NodePath("CanvasLayer/DialogBoxExplanations")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1354935354]
+layer = 2
+
+[node name="PanelTexts" parent="CanvasLayer" unique_id=1698298257 instance=ExtResource("2_8kjun")]
 
 [node name="TutorialDialogs" parent="CanvasLayer" unique_id=1808227615 instance=ExtResource("2_cwvdc")]
 visible = false
 z_index = 2
+
+[node name="phoneTutorial" parent="CanvasLayer" unique_id=198299386 instance=ExtResource("5_obrjl")]
+
+[node name="DialogBoxExplanations" parent="CanvasLayer" unique_id=497498605 instance=ExtResource("6_7da8a")]
