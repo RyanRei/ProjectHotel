@@ -1,115 +1,123 @@
 class_name AcceptRejectButton
 extends Control
-signal choiceMade(choice:String)
-var current_node:DialogueNode
-var active:bool=false
-var questionActive:bool=true
-@export var accept:Button
-@export var reject:Button
 
-@export var question:Button
-var previous_focus
+signal choiceMade(choice: String)
+signal confirmation_requested(message: String)
+signal confirmation_cancelled
+
+enum DecisionState {
+	CHOOSING,
+	CONFIRMING_ACCEPT,
+	CONFIRMING_REJECT,
+}
+
+@export var accept: Button
+@export var reject: Button
+@export var question: Button
+@export var questions_remaining: Label
+
+var active := false
+var questionActive := true
+var decision_state := DecisionState.CHOOSING
 
 
-
-
-
-
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	self.modulate=Color(1,1,1,0)
-	get_viewport().gui_focus_changed.connect(_on_focus_changed)
-	
-	if accept and not "[E]" in accept.text: accept.text += " [E]"
-	if reject and not "[R]" in reject.text: reject.text += " [R]"
-	if question and not "[Q]" in question.text: question.text += " [Q]"
-	
-func _on_focus_changed(control):
-	if control==accept or control==reject or control==question:
-		if previous_focus:
-			previous_focus.scale=Vector2.ONE
-		control.scale=Vector2(1.5,1.5)
-		previous_focus=control
-	
-	
+	modulate.a = 0.0
+	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_set_buttons_disabled(true)
+
+
 func _input(event: InputEvent) -> void:
-	
-	if event.is_action_pressed("ui_left") or event.is_action_pressed("ui_right") or event.is_action_pressed("ui_up") or event.is_action_pressed("ui_down"):
-		get_viewport().set_input_as_handled()
-	if  not active:
+	if not active or not visible or not event.is_pressed() or event.is_echo():
 		return
-	if event.is_action_pressed("Question"):
-		
-		if not questionActive:
-			return
-		question.grab_focus()
-		
-		
-	if event.is_action_pressed("Accept"):
-		
-		accept.grab_focus()
-		#choiceMade.emit("ACCEPT")
-		pass
-	elif event.is_action("Reject"):
-		reject.grab_focus()
-		
-		pass
-		
-	if event.is_action_pressed("Confirm"):
-		var focused_button = get_viewport().gui_get_focus_owner()
-		if focused_button!=null:
-			if focused_button==accept:
-				choiceMade.emit("ACCEPT")
-			elif focused_button==reject:
-				choiceMade.emit("REJECT")
-			elif focused_button==question:
-				choiceMade.emit("QUESTION")
+
+	if event.is_action_pressed("Cancel Decision"):
+		if decision_state != DecisionState.CHOOSING:
+			_cancel_confirmation()
 			get_viewport().set_input_as_handled()
-				
-				
-				
+		return
+
+	if event.is_action_pressed("Question"):
+		if decision_state == DecisionState.CHOOSING and questionActive:
+			choiceMade.emit("QUESTION")
+			get_viewport().set_input_as_handled()
+		return
+
+	if event.is_action_pressed("Accept"):
+		_handle_accept()
+		get_viewport().set_input_as_handled()
+		return
+
+	if event.is_action_pressed("Reject"):
+		_handle_reject()
+		get_viewport().set_input_as_handled()
 
 
+func _handle_accept() -> void:
+	if decision_state == DecisionState.CHOOSING:
+		decision_state = DecisionState.CONFIRMING_ACCEPT
+		accept.grab_focus()
+		confirmation_requested.emit("Are you sure you want to let them in?\n[A] Confirm    [X] Go back")
+	elif decision_state == DecisionState.CONFIRMING_ACCEPT:
+		choiceMade.emit("ACCEPT")
 
-	
 
-func turnOff():
-	active=false
-	var tween=create_tween()
-	tween.tween_property(self,"modulate:a",0.0,0.5)
+func _handle_reject() -> void:
+	if decision_state == DecisionState.CHOOSING:
+		decision_state = DecisionState.CONFIRMING_REJECT
+		reject.grab_focus()
+		confirmation_requested.emit("Are you sure you want to keep them out?\n[R] Confirm    [X] Go back")
+	elif decision_state == DecisionState.CONFIRMING_REJECT:
+		choiceMade.emit("REJECT")
+
+
+func _cancel_confirmation() -> void:
+	decision_state = DecisionState.CHOOSING
+	accept.release_focus()
+	reject.release_focus()
+	confirmation_cancelled.emit()
+
+
+func turnOff() -> void:
+	active = false
+	decision_state = DecisionState.CHOOSING
+	_set_buttons_disabled(true)
+	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	accept.release_focus()
+	reject.release_focus()
+	var tween := create_tween()
+	tween.tween_property(self, "modulate:a", 0.0, 0.2)
 	await tween.finished
-	
-	
-func turnOn(question_node_visibility:bool):
-	
-	if question_node_visibility:
-		$question.visible=true
-		questionActive=true
-	else:
-		$question.visible=false
-		questionActive=false
-	var tween=create_tween()
-	tween.tween_property(self,"modulate:a",1.0,0.5)
+
+
+func turnOn(remaining_question_count: int) -> void:
+	questionActive = remaining_question_count > 0
+	question.get_parent().visible = questionActive
+	questions_remaining.text = "(%d/2 remaining)" % remaining_question_count
+	decision_state = DecisionState.CHOOSING
+	visible = true
+	active = true
+	_set_buttons_disabled(false)
+	mouse_filter = Control.MOUSE_FILTER_STOP
+	var tween := create_tween()
+	tween.tween_property(self, "modulate:a", 1.0, 0.2)
 	await tween.finished
-	active=true
-	
-	
 
 
+func _set_buttons_disabled(disabled: bool) -> void:
+	accept.disabled = disabled
+	reject.disabled = disabled
+	question.disabled = disabled
 
 
-	#await Signal.any(accept,reject)
-	
-#func _on_accept_pressed() -> void:
-	#
-	#choiceMade.emit("ACCEPT")
-#
-#
-#
-#func _on_reject_pressed() -> void:
-	#choiceMade.emit("REJECT")
-	#
-#
-#
-#func _on_question_pressed() -> void:
-	#choiceMade.emit("QUESTION")
+func _on_accept_pressed() -> void:
+	_handle_accept()
+
+
+func _on_reject_pressed() -> void:
+	_handle_reject()
+
+
+func _on_question_pressed() -> void:
+	if decision_state == DecisionState.CHOOSING and questionActive:
+		choiceMade.emit("QUESTION")

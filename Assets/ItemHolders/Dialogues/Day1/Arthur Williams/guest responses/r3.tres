@@ -7,6 +7,6 @@
 [resource]
 script = ExtResource("2_p446u")
 voiceline = ExtResource("3_f6tmd")
-text = "Just me. My daughter only made the booking. "
+text = "Just me and my daughter. She's the one who booked it "
 wait_for_prompt = true
 metadata/_custom_type_script = "uid://cwgrdj7ntjmds"

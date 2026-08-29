@@ -20,8 +20,8 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
 	var was_hovering := is_hovering
-	is_hovering = find_interactable() != null
-	visible = not is_desk_ui_open()
+	is_hovering = GameState.desk_state and find_interactable() != null
+	visible = GameState.desk_state and not is_desk_ui_open()
 	if was_hovering != is_hovering:
 		queue_redraw()
 	elif Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
@@ -34,7 +34,7 @@ func _input(event: InputEvent) -> void:
 		queue_redraw()
 		# An open desk interface owns the mouse. Never ray-cast through it into
 		# the monitor, telephone, or logbook sitting in the 3D scene behind it.
-		if is_desk_ui_open():
+		if not GameState.desk_state or is_desk_ui_open():
 			return
 		if event.pressed:
 			var pointer_position := get_pointer_position(event.position)

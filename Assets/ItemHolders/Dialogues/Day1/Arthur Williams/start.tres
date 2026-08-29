@@ -12,8 +12,7 @@
 [resource]
 script = ExtResource("2_078v1")
 voiceline = ExtResource("3_hvlif")
-text = "Hello. I'm Tracey Morgan from Room 104. I left my access card in my room when I came downstairs.
-Could you unlock the door for me?"
+text = "I..uh..am Williams from Room One Fourteen. This stupid card is not working at all."
 duration = 5.0
 next_node = ExtResource("6_vhim0")
 choices = Array[ExtResource("1_mq5x0")]([ExtResource("2_cdrxj"), ExtResource("3_3wqew"), ExtResource("4_hnnkm"), ExtResource("5_tuelr")])

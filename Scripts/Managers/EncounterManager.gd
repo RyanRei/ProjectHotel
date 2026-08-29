@@ -14,58 +14,113 @@ enum MovePosition {
 	MOVE_OUT
 }
 
+## Whether this day uses automatic time-based triggering or manual clock jumps (tutorial).
+var is_tutorial_day := false
+## Whether all encounters for the current day are finished and we're waiting for End Shift.
+var waiting_for_end_shift := false
+## Prevents the schedule watcher from starting the same encounter more than once
+## while start_encounter() is awaiting its startup animation.
+var encounter_starting := false
+
+
 func _ready() -> void:
-	#start_encounter()
-	#encounter_button.startEncounter.connect(start_encounter)
-	start_encounter()
-	
+	encounter_button.startEncounter.connect(_on_end_shift_pressed)
+	begin_day()
 
 
-#@export var visitor_container: Node3D
-func get_current_encounter() -> EncounterData:
-	return days[GameState.day - 1].encounters[GameState.encounter - 1]
-	
-	
-	
-	
+func begin_day() -> void:
+	waiting_for_end_shift = false
+	encounterOngoing = false
+	encounter_starting = false
+	is_tutorial_day = (GameState.day == 1)
+	TimeManager.set_time(18, 0)
+	encounter_button.set_hidden_immediately()
 
-	
+	if is_tutorial_day:
+		TimeManager.pause()
+		# The placeholder tutorial releases call one when its welcome is complete.
+		# Future tutorial steps can call trigger_next_encounter() directly.
+		await tutorial.welcome()
+		trigger_next_encounter()
+	else:
+		TimeManager.resume_normal()
 
-func start_encounter():
-	if encounterOngoing:
+
+func _process(_delta: float) -> void:
+	# Only auto-trigger on non-tutorial days when no encounter is active
+	if is_tutorial_day:
+		return
+	if encounterOngoing or encounter_starting or waiting_for_end_shift:
 		return
 	if not has_encounter():
 		return
-	#await encounter_startup_props()
-	#encounterOngoing=true
-	if GameState.day==1 and GameState.encounter==1:
-		tutorial.welcome()
-		
-		
-	var encounter = get_current_encounter()
-	
+
+	var encounter := get_current_encounter()
+	if TimeManager.in_game_seconds >= encounter.get_trigger_seconds():
+		start_encounter()
+
+
+# ── Tutorial day: sequential encounter firing ───────────────────────
+
+## Tutorial integration point. Jumps to the current encounter's authored time and
+## starts it without resuming the fast clock. Safe to call more than once.
+func trigger_next_encounter() -> void:
+	if not is_tutorial_day or encounterOngoing or encounter_starting:
+		return
+	if not has_encounter():
+		show_end_shift()
+		return
+
+	var encounter := get_current_encounter()
+	# Jump the clock to this encounter's scheduled time
+	TimeManager.set_time(encounter.trigger_hour, encounter.trigger_minute)
+	start_encounter()
+
+
+# ── Core encounter flow (shared by both modes) ─────────────────────
+
+func get_current_encounter() -> EncounterData:
+	return days[GameState.day - 1].encounters[GameState.encounter - 1]
+
+
+func start_encounter() -> void:
+	if encounterOngoing or encounter_starting:
+		return
+	if not has_encounter():
+		return
+
+	encounter_starting = true
+	var encounter := get_current_encounter()
+
 	await encounter_startup_props(encounter)
-	encounterOngoing=true
-	
+	encounter_starting = false
+	encounterOngoing = true
+	# Once an encounter is active, the clock advances at real-world speed.
+	TimeManager.resume_encounter()
+
 	if encounter.communication_type=="RESIDENT":
 		await wait_for_phone()
 	elif encounter.communication_type=="VISITOR":
 		await move_customer(encounter.model,MovePosition.MOVE_IN)
-		pass
 	elif encounter.communication_type=="INFORMATIVE":
 		await wait_for_phone()
-		
+
 		logBookController.updateLogbook(encounter)
-		await encounter_button.turnOn()
+		# For informative encounters, no dialogue — just show info and move on
+		await finish_encounter(encounter, "NORMAL")
 		return
-		
+
 	logBookController.updateLogbook(encounter)
-	
+
 	DialogueManager.start_dialogue(encounter.dialogue)
-	
-	
+
 	var choice:String=await DialogueManager.dialogue_finished
-	
+
+	await finish_encounter(encounter, choice)
+
+
+## Shared cleanup after an encounter resolves.
+func finish_encounter(encounter: EncounterData, choice: String):
 	await encounter_end_props(encounter, choice)
 
 	day_results.append({
@@ -74,45 +129,54 @@ func start_encounter():
 	})
 
 	GameState.encounter += 1
-
-	if GameState.encounter > days[GameState.day - 1].encounters.size():
-		await end_day()
-
 	encounterOngoing = false
 
+	if GameState.encounter > days[GameState.day - 1].encounters.size():
+		# All encounters done for the day
+		if is_tutorial_day:
+			show_end_shift()
+		else:
+			TimeManager.resume_normal()
+			show_end_shift()
+	else:
+		# More encounters remain
+		if is_tutorial_day:
+			if GameState.encounter == 2:
+				# The temporary tutorial ends after encounter one. From this point,
+				# Shift 1 uses the same clock-driven scheduling as every other shift.
+				is_tutorial_day = false
+				TimeManager.resume_normal()
+			else:
+				TimeManager.pause()
+		else:
+			TimeManager.resume_normal()
 
-#func has_encounter() -> bool:
-	#while GameState.day <= days.size():
-		#var day = days[GameState.day - 1]
-		#print(day.encounters.size())
-	#
-		#if GameState.encounter <= day.encounters.size():
-			#
-			#return true
-#
-		#if GameState.day == days.size():
-		#
-			#return false
-#
-		#GameState.day += 1
-		#GameState.encounter = 1
-	#
-	#return false
-	
-	
+
 func has_encounter() -> bool:
-	while GameState.day <= days.size():
-		var day = days[GameState.day - 1]
-
-		if GameState.encounter <= day.encounters.size():
-			return true
-
+	if GameState.day > days.size():
 		return false
+	var day = days[GameState.day - 1]
+	return GameState.encounter <= day.encounters.size()
 
-	return false
-	
-	
-	
+
+# ── End Shift ───────────────────────────────────────────────────────
+
+func show_end_shift() -> void:
+	waiting_for_end_shift = true
+	TimeManager.pause()
+	await encounter_button.turnOnEndShift()
+
+func _on_end_shift_pressed() -> void:
+	if not waiting_for_end_shift:
+		return
+	waiting_for_end_shift = false
+	await encounter_button.turnOff()
+	TimeManager.set_time(6, 0)  # jump to 6 AM
+	TimeManager.pause()
+	await end_day()
+
+
+# ── Encounter props (unchanged logic) ──────────────────────────────
 
 func move_customer(model:PackedScene,move_where:MovePosition):
 	if move_where==MovePosition.MOVE_IN:
@@ -130,18 +194,15 @@ func move_customer(model:PackedScene,move_where:MovePosition):
 		tween.tween_property(guestModel, "position", Vector3(35.404, -1.556, -19.834), 2.0)
 		await tween.finished
 		guestModel.queue_free()
-	
+
 func wait_for_phone():
 	phone.start_ringing()
-	await phone.call_answered 
-
+	await phone.call_answered
 
 
 #to control whatever we wanna do at start of encounter
-func encounter_startup_props(encounter:EncounterData):
-	#logBookController.updateLogbook(encounter)
+func encounter_startup_props(_encounter: EncounterData) -> void:
 	await encounter_button.turnOff()
-	pass
 
 
 func encounter_end_props(encounter:EncounterData,choice:String):
@@ -160,17 +221,11 @@ func encounter_end_props(encounter:EncounterData,choice:String):
 					encounter.status="SUCCESS"
 				"REJECT":
 					encounter.status="FAIL"
-	await encounter_button.turnOn()
-	pass
-	
 
-	
-	
-	
-	
+
 func end_day():
 	var finished_day :int= GameState.day
-	
+
 	DayReportManager.add_report(finished_day, day_results)
 	day_results.clear()
 	print(DayReportManager.reports)
@@ -182,4 +237,7 @@ func end_day():
 	GameState.encounter = 1
 	logBookController.add_page()
 
-	
+	if GameState.day <= days.size():
+		begin_day()
+	else:
+		TimeManager.pause()

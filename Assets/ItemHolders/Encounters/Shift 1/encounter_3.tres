@@ -13,3 +13,5 @@ model = ExtResource("2_ids8x")
 communication_type = "VISITOR"
 time = "10:32 PM"
 LogbookEntry = "9:55 PM - Tracey Morgan called reception: Maya Chen is a former coworker bringing a blue document folder. Admit between 10:15 PM and 10:45 PM."
+trigger_hour = 22
+trigger_minute = 32

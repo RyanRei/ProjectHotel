@@ -7,6 +7,6 @@
 [resource]
 script = ExtResource("2_0j3av")
 voiceline = ExtResource("3_ixumo")
-text = "What was that? Reservation? I cannot hear over that machine. "
+text = "...What was that? I can't hear a thing over this damn machine. Hold on... This damn radiator"
 wait_for_prompt = true
 metadata/_custom_type_script = "uid://cwgrdj7ntjmds"

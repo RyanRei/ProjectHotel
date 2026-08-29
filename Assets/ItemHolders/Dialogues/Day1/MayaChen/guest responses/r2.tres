@@ -7,6 +7,6 @@
 [resource]
 script = ExtResource("2_lstjr")
 voiceline = ExtResource("3_lh6qf")
-text = "Room 104 - I mentioned that already. "
+text = "Room 104. I did mention that already. "
 wait_for_prompt = true
 metadata/_custom_type_script = "uid://cwgrdj7ntjmds"

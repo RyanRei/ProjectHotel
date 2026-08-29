@@ -7,6 +7,6 @@
 [resource]
 script = ExtResource("2_yyn07")
 voiceline = ExtResource("3_bd02n")
-text = "I have the card. It will not work - and that radiator is humming again"
+text = "I have the card, it's right here. But it simply won't work"
 wait_for_prompt = true
 metadata/_custom_type_script = "uid://cwgrdj7ntjmds"

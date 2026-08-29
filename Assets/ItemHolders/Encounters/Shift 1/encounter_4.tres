@@ -11,3 +11,5 @@ dialogue = ExtResource("1_nmqnq")
 communication_type = "RESIDENT"
 time = "12:24 AM"
 LogbookEntry = "Standing note - Arthur Williams has severe hearing loss; hearing aid unreliable. 11:48 PM - Arthur called reception from Room 112 about the radiator humming again. Maintenance deferred untilmorning."
+trigger_hour = 0
+trigger_minute = 24

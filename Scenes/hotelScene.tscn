@@ -20,6 +20,7 @@
 [ext_resource type="AudioStream" uid="uid://tgcgotc1u82e" path="res://Assets/Sound/sfx/updateLogbook.mp3" id="12_5hxig"]
 [ext_resource type="PackedScene" uid="uid://cb8st5elly0kt" path="res://Assets/3D Models/WallClock/Wallclock.glb" id="12_j1ydb"]
 [ext_resource type="Material" uid="uid://cwh8rslkxmpov" path="res://Assets/3D Models/Book/notebook.tres" id="12_u3pq5"]
+[ext_resource type="Script" uid="uid://cu7c6hnxurru4" path="res://Scripts/WallClockController.gd" id="12_wallclock_controller"]
 [ext_resource type="PackedScene" uid="uid://b51biclicg0bf" path="res://Assets/3D Models/Bulb/light.glb" id="13_jloce"]
 [ext_resource type="Script" uid="uid://ca5auu7qff8vv" path="res://Scripts/Logbook/LogbookController.gd" id="13_logbook_controller"]
 [ext_resource type="PackedScene" uid="uid://yqtwdwhowpt1" path="res://Scenes/day_report_ui.tscn" id="13_qnepm"]
@@ -175,6 +176,7 @@ volume_db = -2.367
 
 [node name="Wallclock" parent="models" unique_id=1020162297 instance=ExtResource("12_j1ydb")]
 transform = Transform3D(0.088670745, -4.9992137, 0, 4.9992137, 0.088670745, 0, 0, 0, 5, 11.237114, 6.931054, -0.2118001)
+script = ExtResource("12_wallclock_controller")
 
 [node name="light" parent="models" unique_id=1780392581 instance=ExtResource("13_jloce")]
 transform = Transform3D(4.9729, 0, -0.5198722, 0, 5, 0, 0.5198722, 0, 4.9729, -2.8372889, 12.966834, -8.635136)

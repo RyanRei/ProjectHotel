@@ -68,7 +68,7 @@ func _process(delta: float) -> void:
 
 	var input_dir := Vector2.ZERO
 
-	if movement_enabled and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+	if movement_enabled and GameState.desk_state and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		if Input.is_physical_key_pressed(KEY_W):
 			input_dir.y += 1.0
 		if Input.is_physical_key_pressed(KEY_S):

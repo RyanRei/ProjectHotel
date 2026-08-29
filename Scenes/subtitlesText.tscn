@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://ba3nri8t48jc6"]
+[gd_scene load_steps=5 format=3 uid="uid://ba3nri8t48jc6"]
 
 [ext_resource type="Script" uid="uid://dduj3ikfjpmta" path="res://Scripts/dialogBox.gd" id="1_iscj4"]
 [ext_resource type="Theme" path="res://UI/DialogueTheme.tres" id="2_theme"]
@@ -18,6 +18,22 @@ content_margin_left = 28.0
 content_margin_top = 20.0
 content_margin_right = 28.0
 content_margin_bottom = 20.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_back"]
+content_margin_left = 14.0
+content_margin_top = 8.0
+content_margin_right = 14.0
+content_margin_bottom = 8.0
+bg_color = Color(0.015, 0.02, 0.024, 0.94)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.34, 0.42, 0.43, 0.9)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [node name="DialogBox" type="Control" unique_id=1159827636]
 layout_mode = 3
@@ -73,18 +89,36 @@ horizontal_alignment = 2
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1832244512]
 volume_db = -1.769
 
-[node name="Choices" type="VBoxContainer" parent="." unique_id=1442718126]
+[node name="QuestionMenu" type="VBoxContainer" parent="."]
+visible = false
 layout_mode = 1
-anchors_preset = 7
+anchors_preset = 2
 anchor_left = 0.0
 anchor_top = 1.0
 anchor_right = 0.0
 anchor_bottom = 1.0
 offset_left = 48.0
-offset_top = -240.0
+offset_top = -360.0
 offset_right = 640.0
 offset_bottom = -40.0
-grow_horizontal = 1
 grow_vertical = 0
 theme = ExtResource("2_theme")
 theme_override_constants/separation = 8
+
+[node name="QuestionBack" type="Button" parent="QuestionMenu"]
+custom_minimum_size = Vector2(212, 48)
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 2
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("StyleBoxFlat_back")
+theme_override_styles/hover = SubResource("StyleBoxFlat_back")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_back")
+theme_override_styles/focus = SubResource("StyleBoxFlat_back")
+text = "[X] Go Back"
+
+[node name="Choices" type="VBoxContainer" parent="QuestionMenu" unique_id=1442718126]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[connection signal="pressed" from="QuestionMenu/QuestionBack" to="." method="_on_question_back_pressed"]

@@ -12,7 +12,7 @@
 [resource]
 script = ExtResource("2_wp1q0")
 voiceline = ExtResource("3_87447")
-text = "Hi, I am Maya Chen. I am here to see Tracey Morgan in Room 104."
+text = "Hi.  I'm Maya Chen. I'm here to see Tracey Morgan, Room 104."
 duration = 5.0
 next_node = ExtResource("6_b3bq8")
 choices = Array[ExtResource("1_cnddt")]([ExtResource("2_axdpd"), ExtResource("3_w4ku2"), ExtResource("4_yk5u1"), ExtResource("5_61778")])

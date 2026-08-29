@@ -7,6 +7,6 @@
 [resource]
 script = ExtResource("2_3hidf")
 voiceline = ExtResource("3_8o6yo")
-text = "We used to work together. I brought the folder she asked for. "
+text = "We used to work together, actually. I've got a folder she asked me to bring. She's been waiting on it."
 wait_for_prompt = true
 metadata/_custom_type_script = "uid://cwgrdj7ntjmds"

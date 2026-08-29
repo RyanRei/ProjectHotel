@@ -23,6 +23,10 @@ func play_current_node():
 func has_active_choices() -> bool:
 	return not current_active_choices.is_empty()
 
+
+func get_remaining_question_count() -> int:
+	return mini(2 - current_chosen, current_active_choices.size())
+
 func advance(choice_made: String = ""):
 	var action = choice_made
 	if action == "":

@@ -7,6 +7,6 @@
 [resource]
 script = ExtResource("2_k4syd")
 voiceline = ExtResource("3_whpyr")
-text = "Before supper. Four-something. "
+text = "Maybe Four-something."
 wait_for_prompt = true
 metadata/_custom_type_script = "uid://cwgrdj7ntjmds"

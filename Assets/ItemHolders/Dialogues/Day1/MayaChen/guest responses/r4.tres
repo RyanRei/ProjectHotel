@@ -7,6 +7,6 @@
 [resource]
 script = ExtResource("2_1k0nh")
 voiceline = ExtResource("3_nbt6v")
-text = "Between 10:15 and 10:45. I am here at 10:32."
+text = "Between 10:15 and 10:45. It's...what, 10:32 now? So, right on time."
 wait_for_prompt = true
 metadata/_custom_type_script = "uid://cwgrdj7ntjmds"

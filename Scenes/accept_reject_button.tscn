@@ -1,144 +1,126 @@
-[gd_scene format=3 uid="uid://c2na11fytckj2"]
+[gd_scene load_steps=5 format=3 uid="uid://c2na11fytckj2"]
 
-[ext_resource type="Script" uid="uid://d3opdfc2i5xsb" path="res://Scripts/accept_reject_button.gd" id="1_3fcpu"]
+[ext_resource type="Script" uid="uid://d3opdfc2i5xsb" path="res://Scripts/accept_reject_button.gd" id="1_script"]
 [ext_resource type="Theme" path="res://UI/DialogueTheme.tres" id="2_theme"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3fcpu"]
-bg_color = Color(0.19941728, 0.62100786, 0.2530923, 1)
-corner_radius_bottom_left = 37
+[sub_resource type="StyleBoxFlat" id="StyleBox_action_normal"]
+content_margin_left = 14.0
+content_margin_top = 8.0
+content_margin_right = 14.0
+content_margin_bottom = 8.0
+bg_color = Color(0.015, 0.02, 0.024, 0.94)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.34, 0.42, 0.43, 0.9)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bledy"]
-bg_color = Color(0.042296216, 0.32111877, 0.07877771, 1)
-corner_radius_bottom_left = 37
+[sub_resource type="StyleBoxFlat" id="StyleBox_action_focus"]
+content_margin_left = 14.0
+content_margin_top = 8.0
+content_margin_right = 14.0
+content_margin_bottom = 8.0
+bg_color = Color(0.035, 0.045, 0.048, 0.98)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0.93, 0.61, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color(1, 0.93, 0.61, 0.25)
+shadow_size = 8
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0ws6i"]
-bg_color = Color(0.06322697, 0.5, 0.11859253, 1)
-corner_radius_bottom_left = 37
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_evsuv"]
-bg_color = Color(0.042296216, 0.32111877, 0.07877771, 1)
-corner_radius_bottom_left = 37
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e86vy"]
-bg_color = Color(0.63679147, 0.24133897, 0.24133897, 1)
-corner_radius_top_left = 37
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xddgt"]
-bg_color = Color(0.20011091, 0.028463297, 0.028463297, 1)
-border_color = Color(0.8, 0.8, 0.8, 0)
-corner_radius_top_left = 37
-shadow_color = Color(0.09019608, 0.05882353, 0.05882353, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mcyd0"]
-bg_color = Color(0.49473882, 0.114620194, 0.114620194, 1)
-corner_radius_top_left = 37
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bmnh5"]
-bg_color = Color(0.41055942, 0.41055942, 0.41055942, 1)
-corner_radius_top_right = 223
-corner_radius_bottom_left = 223
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ln3j4"]
-bg_color = Color(0.15276003, 0.15276003, 0.15276003, 1)
-border_color = Color(0.8, 0.8, 0.8, 0)
-corner_radius_top_right = 223
-corner_radius_bottom_left = 223
-shadow_color = Color(0.09019608, 0.05882353, 0.05882353, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yhabc"]
-bg_color = Color(0.1663743, 0.1663743, 0.16637424, 1)
-corner_radius_top_right = 223
-corner_radius_bottom_left = 223
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1kgp6"]
-bg_color = Color(0.1663743, 0.1663743, 0.16637424, 1)
-corner_radius_top_right = 223
-corner_radius_bottom_left = 223
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xgi3m"]
-bg_color = Color(0.26324546, 0.26324546, 0.26324546, 1)
-corner_radius_top_right = 223
-corner_radius_bottom_left = 223
-
-[node name="accept_reject" type="Control" unique_id=823420143 node_paths=PackedStringArray("accept", "reject", "question")]
+[node name="accept_reject" type="Control" node_paths=PackedStringArray("accept", "reject", "question", "questions_remaining")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 849.0
-offset_top = 436.0
-offset_right = -11.0
-offset_bottom = -23.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_3fcpu")
+mouse_filter = 2
+script = ExtResource("1_script")
 theme = ExtResource("2_theme")
-accept = NodePath("accept")
-reject = NodePath("reject")
-question = NodePath("question")
+accept = NodePath("DecisionActions/accept")
+reject = NodePath("DecisionActions/reject")
+question = NodePath("QuestionAction/question")
+questions_remaining = NodePath("QuestionAction/remaining")
 
-[node name="accept" type="Button" parent="." unique_id=1182447274]
-layout_mode = 0
-offset_left = 113.65854
-offset_top = -309.0
-offset_right = 283.65854
-offset_bottom = -261.0
-pivot_offset = Vector2(85.04, 49.01)
+[node name="QuestionAction" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_left = 0.0
+anchor_top = 1.0
+anchor_right = 0.0
+anchor_bottom = 1.0
+offset_left = 32.0
+offset_top = -316.0
+offset_right = 244.0
+offset_bottom = -250.0
+grow_vertical = 0
+theme_override_constants/separation = 2
+
+[node name="question" type="Button" parent="QuestionAction"]
+custom_minimum_size = Vector2(212, 48)
+layout_mode = 2
 mouse_filter = 2
-theme_override_colors/icon_normal_color = Color(0.4413427, 0.9208969, 0.28602722, 1)
-theme_override_font_sizes/font_size = 28
-theme_override_styles/normal = SubResource("StyleBoxFlat_3fcpu")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_bledy")
-theme_override_styles/hover = SubResource("StyleBoxFlat_0ws6i")
-theme_override_styles/focus = SubResource("StyleBoxFlat_evsuv")
-text = "E- Accept
-"
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("StyleBox_action_normal")
+theme_override_styles/hover = SubResource("StyleBox_action_focus")
+theme_override_styles/pressed = SubResource("StyleBox_action_focus")
+theme_override_styles/focus = SubResource("StyleBox_action_focus")
+text = "[Q] Ask Question"
 
-[node name="reject" type="Button" parent="." unique_id=1154483956]
-layout_mode = 0
-offset_left = 117.00003
-offset_top = -256.0
-offset_right = 287.00003
-offset_bottom = -208.0
-scale = Vector2(1.06, 1.06)
-pivot_offset = Vector2(87.365, 0)
+[node name="remaining" type="Label" parent="QuestionAction"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.93, 0.61, 0.92)
+theme_override_font_sizes/font_size = 14
+text = "(2/2 remaining)"
+horizontal_alignment = 1
+
+[node name="DecisionActions" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -244.0
+offset_top = -354.0
+offset_right = -32.0
+offset_bottom = -250.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_constants/separation = 8
+
+[node name="accept" type="Button" parent="DecisionActions"]
+custom_minimum_size = Vector2(212, 48)
+layout_mode = 2
 mouse_filter = 2
-theme_override_font_sizes/font_size = 28
-theme_override_styles/normal = SubResource("StyleBoxFlat_e86vy")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_xddgt")
-theme_override_styles/hover = SubResource("StyleBoxFlat_mcyd0")
-theme_override_styles/focus = SubResource("StyleBoxFlat_mcyd0")
-text = "R-Reject"
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("StyleBox_action_normal")
+theme_override_styles/hover = SubResource("StyleBox_action_focus")
+theme_override_styles/pressed = SubResource("StyleBox_action_focus")
+theme_override_styles/focus = SubResource("StyleBox_action_focus")
+text = "[A] Let In"
 
-[node name="question" type="Button" parent="." unique_id=286654111]
-layout_mode = 0
-offset_left = -818.0
-offset_top = -376.0
-offset_right = -569.0
-offset_bottom = -305.0
-pivot_offset = Vector2(121.395, 34.8)
+[node name="reject" type="Button" parent="DecisionActions"]
+custom_minimum_size = Vector2(212, 48)
+layout_mode = 2
 mouse_filter = 2
-theme_override_font_sizes/font_size = 28
-theme_override_styles/normal = SubResource("StyleBoxFlat_bmnh5")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_ln3j4")
-theme_override_styles/hover = SubResource("StyleBoxFlat_yhabc")
-theme_override_styles/focus = SubResource("StyleBoxFlat_1kgp6")
-text = "Q- Ask Question"
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("StyleBox_action_normal")
+theme_override_styles/hover = SubResource("StyleBox_action_focus")
+theme_override_styles/pressed = SubResource("StyleBox_action_focus")
+theme_override_styles/focus = SubResource("StyleBox_action_focus")
+text = "[R] Keep Out"
 
-[node name="question2" type="Button" parent="." unique_id=1152446814]
-visible = false
-layout_mode = 0
-offset_left = -830.0
-offset_top = -203.0
-offset_right = -603.0
-offset_bottom = -136.0
-theme_override_font_sizes/font_size = 23
-theme_override_styles/normal = SubResource("StyleBoxFlat_bmnh5")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_ln3j4")
-theme_override_styles/hover = SubResource("StyleBoxFlat_xgi3m")
-text = "Ask Question"
-
-[connection signal="pressed" from="accept" to="." method="_on_accept_pressed"]
-[connection signal="pressed" from="reject" to="." method="_on_reject_pressed"]
-[connection signal="pressed" from="question" to="." method="_on_question_pressed"]
-[connection signal="pressed" from="question2" to="." method="_on_question_pressed"]
+[connection signal="pressed" from="QuestionAction/question" to="." method="_on_question_pressed"]
+[connection signal="pressed" from="DecisionActions/accept" to="." method="_on_accept_pressed"]
+[connection signal="pressed" from="DecisionActions/reject" to="." method="_on_reject_pressed"]
