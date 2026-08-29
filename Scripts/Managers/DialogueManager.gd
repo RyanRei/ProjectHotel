@@ -5,12 +5,14 @@ signal choices_requested(choices: Array[DialogueChoice])
 var current_chosen:int
 var current_node: DialogueNode
 var active := false
+var current_speaker_name := ""
 
 var current_active_choices: Array[DialogueChoice] = []
 
-func start_dialogue(start_node: DialogueNode):
+func start_dialogue(start_node: DialogueNode, speaker_name: String = ""):
 	current_chosen=0
 	current_node = start_node
+	current_speaker_name = speaker_name
 	active = true
 	current_active_choices = current_node.choices.duplicate()
 	play_current_node()

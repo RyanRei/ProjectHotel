@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://ba3nri8t48jc6"]
+[gd_scene load_steps=8 format=3 uid="uid://ba3nri8t48jc6"]
 
 [ext_resource type="Script" uid="uid://dduj3ikfjpmta" path="res://Scripts/dialogBox.gd" id="1_iscj4"]
 [ext_resource type="Theme" path="res://UI/DialogueTheme.tres" id="2_theme"]
+[ext_resource type="Script" path="res://Scripts/dialogue_history.gd" id="3_history"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dialogue"]
 bg_color = Color(0.015, 0.02, 0.024, 0.88)
@@ -141,7 +142,7 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "[T]"
 
-[node name="HistoryOverlay" type="Panel" parent="."]
+[node name="HistoryOverlay" type="PanelContainer" parent="."]
 visible = false
 z_index = 20
 layout_mode = 1
@@ -157,6 +158,69 @@ grow_vertical = 2
 mouse_filter = 0
 theme = ExtResource("2_theme")
 theme_override_styles/panel = SubResource("StyleBoxFlat_history_window")
+script = ExtResource("3_history")
+
+[node name="Margin" type="MarginContainer" parent="HistoryOverlay"]
+layout_mode = 2
+theme_override_constants/margin_left = 44
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 44
+theme_override_constants/margin_bottom = 26
+
+[node name="Layout" type="VBoxContainer" parent="HistoryOverlay/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Header" type="HBoxContainer" parent="HistoryOverlay/Margin/Layout"]
+layout_mode = 2
+
+[node name="ShiftLabel" type="Label" parent="HistoryOverlay/Margin/Layout/Header"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.93, 0.61, 1)
+theme_override_font_sizes/font_size = 25
+text = "SHIFT 1"
+
+[node name="HeaderSpacer" type="Control" parent="HistoryOverlay/Margin/Layout/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Title" type="Label" parent="HistoryOverlay/Margin/Layout/Header"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.72, 0.72, 1)
+theme_override_font_sizes/font_size = 18
+text = "COMMUNICATION HISTORY"
+
+[node name="Rule" type="ColorRect" parent="HistoryOverlay/Margin/Layout"]
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 2
+color = Color(0.34, 0.42, 0.43, 0.72)
+mouse_filter = 2
+
+[node name="Scroll" type="ScrollContainer" parent="HistoryOverlay/Margin/Layout"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Entries" type="VBoxContainer" parent="HistoryOverlay/Margin/Layout/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 22
+
+[node name="EmptyLabel" type="Label" parent="HistoryOverlay/Margin/Layout/Scroll/Entries"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.46, 0.53, 0.54, 1)
+theme_override_font_sizes/font_size = 20
+text = "No communications recorded yet."
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Footer" type="Label" parent="HistoryOverlay/Margin/Layout"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.56, 0.64, 0.65, 1)
+theme_override_font_sizes/font_size = 17
+text = "[T] CLOSE HISTORY"
+horizontal_alignment = 2
 
 [node name="QuestionMenu" type="VBoxContainer" parent="."]
 visible = false

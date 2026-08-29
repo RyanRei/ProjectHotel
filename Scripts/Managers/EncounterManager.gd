@@ -112,7 +112,7 @@ func start_encounter() -> void:
 
 	logBookController.updateLogbook(encounter)
 
-	DialogueManager.start_dialogue(encounter.dialogue)
+	DialogueManager.start_dialogue(encounter.dialogue, encounter.name)
 
 	var choice:String=await DialogueManager.dialogue_finished
 

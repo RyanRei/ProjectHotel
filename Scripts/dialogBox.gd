@@ -7,7 +7,7 @@ extends Control
 @onready var question_back: Button = $QuestionMenu/QuestionBack
 @onready var choices_container: VBoxContainer = $QuestionMenu/Choices
 @onready var history_indicator: Control = $HistoryIndicator
-@onready var history_overlay: Control = $HistoryOverlay
+@onready var history_overlay: DialogueHistory = $HistoryOverlay
 @export var accept_reject: AcceptRejectButton
 @export_range(10.0, 120.0, 1.0) var characters_per_second := 48.0
 
@@ -105,6 +105,7 @@ func run_dialogue(current_node: DialogueNode):
 		line_duration = maxf(line_duration, current_node.voiceline.get_length())
 
 	await show_line(current_node.text)
+	history_overlay.add_guest_message(DialogueManager.current_speaker_name, current_node.text)
 	var remaining_time := line_duration - (Time.get_ticks_msec() - line_started_at) / 1000.0
 	
 	if typing_skipped:
@@ -149,6 +150,8 @@ func present_action_prompt() -> void:
 	accept_reject.turnOn(DialogueManager.get_remaining_question_count())
 
 	var choice_made: String = await accept_reject.choiceMade
+	if choice_made == "ACCEPT" or choice_made == "REJECT":
+		history_overlay.add_decision(choice_made)
 	is_decision_pending = false
 	hint_label.hide()
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -304,6 +307,7 @@ func _input(event):
 		if dialogue_choices.is_empty():
 			return
 		var choice = dialogue_choices[selected_choice]
+		history_overlay.add_player_message(choice.text)
 		
 		is_decision_pending = false
 		is_in_choices = false
@@ -338,7 +342,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _process(_delta: float) -> void:
-	history_indicator.visible = DialogueManager.active and not GameState.desk_state
+	history_indicator.visible = DialogueManager.active and not GameState.desk_state and not history_open
 
 
 func toggle_history() -> void:
@@ -346,5 +350,6 @@ func toggle_history() -> void:
 	history_overlay.visible = history_open
 	if history_open:
 		accept_reject.active = false
+		history_overlay.scroll_to_latest()
 	else:
 		accept_reject.active = is_decision_pending and not is_in_choices and accept_reject.visible
