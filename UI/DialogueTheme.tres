@@ -1,0 +1,30 @@
+[gd_resource type="Theme" format=3 uid="uid://d2puj27qoh6lq"]
+
+[ext_resource type="FontFile" uid="uid://b8r5q5dy5yob7" path="res://Assets/Fonts/ShareTechMono-Regular.ttf" id="1_font"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+content_margin_left = 28.0
+content_margin_top = 20.0
+content_margin_right = 28.0
+content_margin_bottom = 20.0
+bg_color = Color(0.015, 0.02, 0.024, 0.88)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.34, 0.42, 0.43, 0.85)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[resource]
+default_font = ExtResource("1_font")
+default_font_size = 24
+Button/colors/font_color = Color(0.88, 0.94, 0.91, 1)
+Button/colors/font_focus_color = Color(1, 0.93, 0.61, 1)
+Button/colors/font_hover_color = Color(1, 0.93, 0.61, 1)
+Button/colors/font_pressed_color = Color(1, 0.93, 0.61, 1)
+Button/font_sizes/font_size = 22
+Label/colors/font_color = Color(0.88, 0.94, 0.91, 1)
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_panel")

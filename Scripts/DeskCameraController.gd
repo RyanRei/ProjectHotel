@@ -38,7 +38,7 @@ func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 
-func _unhandled_input(event: InputEvent) -> void:
+func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and mouse_look_enabled and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		target_yaw -= deg_to_rad(event.relative.x * mouse_sensitivity)
 		target_pitch -= deg_to_rad(event.relative.y * mouse_sensitivity)
@@ -49,7 +49,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 	elif event is InputEventMouseButton and event.pressed and Input.mouse_mode == Input.MOUSE_MODE_VISIBLE:
-		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+		if not DialogueManager.active:
+			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 
 func _process(delta: float) -> void:

@@ -19,7 +19,10 @@ var previous_focus
 func _ready() -> void:
 	self.modulate=Color(1,1,1,0)
 	get_viewport().gui_focus_changed.connect(_on_focus_changed)
-	pass # Replace with function body.
+	
+	if accept and not "[E]" in accept.text: accept.text += " [E]"
+	if reject and not "[R]" in reject.text: reject.text += " [R]"
+	if question and not "[Q]" in question.text: question.text += " [Q]"
 	
 func _on_focus_changed(control):
 	if control==accept or control==reject or control==question:
