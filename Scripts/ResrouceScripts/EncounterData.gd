@@ -10,6 +10,9 @@ extends Resource
 @export_enum("SUCCESS","FAIL","TBD") var status:String="TBD"
 @export var time:String
 @export var LogbookEntry:String
+@export_group("Logbook")
+@export var room_number: String
+@export_enum("CALL", "VIS", "IN", "OUT") var logbook_type: String = "CALL"
 
 @export_group("Schedule")
 ## Hour in 24h format when this encounter triggers (18-23 for PM, 0-6 for AM).

@@ -16,6 +16,7 @@ var book_bounds := AABB()
 var turning_page_mesh: MeshInstance3D
 var page_material: StandardMaterial3D
 var turn_direction := 1.0
+var released_schedule_entries: Dictionary = {}
 const PAGE_WIDTH_SEGMENTS := 24
 const PAGE_LENGTH_SEGMENTS := 6
 # The animated GLB reports a very large skinned AABB (roughly the whole desk).
@@ -30,6 +31,9 @@ func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
 	add_to_group("logbook_controller")
+	if not TimeManager.time_updated.is_connected(_on_time_updated):
+		TimeManager.time_updated.connect(_on_time_updated)
+	_sync_scheduled_entries.call_deferred()
 	animation_player = find_animation_player(self)
 	click_area = Area3D.new()
 	click_area.name = "LogbookClickArea"
@@ -201,16 +205,44 @@ func interact() -> void:
 		
 		
 func updateLogbook(encounter:EncounterData) -> void:
-	if logbook:
-		
-		var index=GameState.day-1
-		
-		logbook.pages[index]["rows"].append([encounter.time,encounter.name])
-		logbook.pages[index]["notes"]=logbook.pages[index]["notes"]+"\n"+encounter.LogbookEntry
-		
-		logbook.show_page(GameState.day-1)
+	if not logbook:
+		push_warning("LogbookController has no LogbookUI assigned; entry was not recorded.")
+		return
+	if GameState.day == 1:
+		_sync_scheduled_entries()
+		return
+	var index := GameState.day - 1
+	logbook.append_log_entry(index, [
+		encounter.time,
+		encounter.name,
+		encounter.room_number,
+		encounter.logbook_type,
+	], encounter.LogbookEntry)
+	if logUpdateAudio:
 		logUpdateAudio.play()
-		pass
+
+
+func _on_time_updated(_hour: int, _minute: int) -> void:
+	_sync_scheduled_entries()
+
+
+func _sync_scheduled_entries() -> void:
+	if Engine.is_editor_hint() or GameState.day != 1 or not logbook:
+		return
+	var added_any := false
+	var schedule := Shift1Data.logbook_schedule()
+	for index in schedule.size():
+		if released_schedule_entries.has(index):
+			continue
+		var item: Dictionary = schedule[index]
+		var release_time := TimeManager.get_total_seconds_for(int(item.hour), int(item.minute))
+		if TimeManager.in_game_seconds < release_time:
+			continue
+		logbook.append_log_entry(0, item.row, str(item.note))
+		released_schedule_entries[index] = true
+		added_any = true
+	if added_any and logUpdateAudio:
+		logUpdateAudio.play()
 		
 		
 func add_page():
@@ -220,7 +252,7 @@ func add_page():
 		"title":"LOGBOOK",
 		"subtitle":"Day %d"%GameState.day,
 
-		"columns":["TIME","VISITOR"],
+		"columns":["TIME", "NAME", "ROOM", "TYPE"],
 		"rows":[
 		],
 		"notes":""

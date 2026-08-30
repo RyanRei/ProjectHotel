@@ -11,5 +11,7 @@ dialogue = ExtResource("1_ohncl")
 communication_type = "RESIDENT"
 time = "9:15 PM"
 LogbookEntry = "8:55 PM - Michael Turner requested fresh towels for Room 207. No card fault was reported for Daniel Reeves."
+room_number = "207"
+logbook_type = "CALL"
 trigger_hour = 21
 trigger_minute = 15

@@ -6,6 +6,7 @@ signal logbook_closed_by_esc
 const PageCurlScript = preload("res://Scripts/Logbook/PageCurl2D.gd")
 const StickyTabScript = preload("res://Scripts/Logbook/StickyBookmarkButton.gd")
 const BINDER_TEXTURE = preload("res://Assets/UI/Logbook/logbook_open_binder.png")
+const TABLE_FONT = preload("res://Assets/Fonts/ShareTechMono-Regular.ttf")
 
 const INK := Color("332b23")
 const MUTED_INK := Color("6f6354")
@@ -24,9 +25,8 @@ var pages: Array[Dictionary] = [
 		"title":"LOGBOOK",
 		"subtitle":"Day 1",
 
-		"columns":["TIME","VISITOR"],
-		"rows":[
-		],
+		"columns":["TIME", "NAME", "ROOM", "TYPE"],
+		"rows":Shift1Data.logbook_rows(),
 
 		#"details":"Only visitors recorded by a resident may enter. A matching name by itself is not proof.",
 
@@ -99,6 +99,7 @@ func is_point_over_book(screen_position: Vector2) -> bool:
 
 
 func open_logbook() -> void:
+	show_page(current_page)
 	visible = true
 	move_to_front()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -196,6 +197,7 @@ func build_interface() -> void:
 	left_layout.add_child(HSeparator.new())
 
 	left_entries = VBoxContainer.new()
+	left_entries.custom_minimum_size = Vector2(0.0, 300.0)
 	left_entries.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	left_entries.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	left_entries.add_theme_constant_override("separation", 10)
@@ -350,6 +352,7 @@ func show_page(index: int) -> void:
 
 	for container in [left_entries, right_entries]:
 		for child in container.get_children():
+			container.remove_child(child)
 			child.queue_free()
 
 	if page.has("columns") and page.has("rows"):
@@ -372,47 +375,57 @@ func show_page(index: int) -> void:
 	rebuild_tabs()
 
 
+func append_log_entry(page_index: int, entry: Array, note: String = "") -> void:
+	if page_index < 0 or page_index >= pages.size():
+		push_warning("Cannot update logbook page %d; only %d page(s) exist." % [page_index, pages.size()])
+		return
+	var page := pages[page_index]
+	var rows: Array = page.get("rows", [])
+	rows.append(entry)
+	page["rows"] = rows
+	if not note.is_empty():
+		var existing_notes := str(page.get("notes", ""))
+		page["notes"] = note if existing_notes.is_empty() else existing_notes + "\n" + note
+	pages[page_index] = page
+	if current_page == page_index and is_node_ready() and left_entries != null:
+		show_page(page_index)
+
+
 func add_table(page: Dictionary) -> void:
 	var columns: Array = page["columns"]
 	var rows: Array = page["rows"]
 
-	if columns.size() >= 2:
-		var header := HBoxContainer.new()
-		header.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		header.add_theme_constant_override("separation", 12)
+	if columns.is_empty():
+		return
 
-		var first_header := make_label(str(columns[0]), 11, MUTED_INK)
-		first_header.custom_minimum_size.x = 80
-		header.add_child(first_header)
+	var header := make_label(_format_table_line(columns), 10, MUTED_INK)
+	header.add_theme_font_override("font", TABLE_FONT)
+	header.autowrap_mode = TextServer.AUTOWRAP_OFF
+	header.custom_minimum_size.y = 22.0
+	left_entries.add_child(header)
+	left_entries.add_child(HSeparator.new())
 
-		var second_header := make_label(str(columns[1]), 11, MUTED_INK)
-		second_header.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		header.add_child(second_header)
-
-		left_entries.add_child(header)
-		left_entries.add_child(HSeparator.new())
-
+	var row_lines := PackedStringArray()
 	for row_data in rows:
-		if row_data.size() < 2:
-			continue
+		if not row_data.is_empty():
+			row_lines.append(_format_table_line(row_data))
+	if row_lines.is_empty():
+		return
 
-		var row := HBoxContainer.new()
-		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		row.add_theme_constant_override("separation", 12)
+	var table_body := make_label("\n".join(row_lines), 11, INK)
+	table_body.add_theme_font_override("font", TABLE_FONT)
+	table_body.autowrap_mode = TextServer.AUTOWRAP_OFF
+	table_body.custom_minimum_size.y = float(row_lines.size() * 28)
+	table_body.vertical_alignment = VERTICAL_ALIGNMENT_TOP
+	left_entries.add_child(table_body)
 
-		var first_value := make_label(str(row_data[0]), 11, INK)
-		first_value.custom_minimum_size.x = 80
-		first_value.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-		first_value.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		row.add_child(first_value)
 
-		var second_value := make_label(str(row_data[1]), 11, INK)
-		second_value.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		second_value.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		second_value.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		row.add_child(second_value)
-
-		left_entries.add_child(row)
+func _format_table_line(values: Array) -> String:
+	var time_value := str(values[0] if values.size() > 0 else "").left(9).rpad(9)
+	var name_value := str(values[1] if values.size() > 1 else "").left(17).rpad(17)
+	var room_value := str(values[2] if values.size() > 2 else "").left(5).rpad(5)
+	var type_value := str(values[3] if values.size() > 3 else "").left(5)
+	return "%s %s %s %s" % [time_value, name_value, room_value, type_value]
 
 func add_details(page: Dictionary) -> void:
 	left_entries.add_child(make_section_heading("SECTION DETAILS"))

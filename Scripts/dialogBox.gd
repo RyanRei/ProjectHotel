@@ -34,8 +34,10 @@ var is_hud_visible := true
 var hint_label : Label
 var confirmation_text_generation := 0
 var history_open := false
+var history_previous_mouse_mode := Input.MOUSE_MODE_CAPTURED
 
 func _ready() -> void:
+	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if not InputMap.has_action("toggle_hud"):
 		InputMap.add_action("toggle_hud")
 		var evt = InputEventKey.new()
@@ -81,11 +83,8 @@ func _type_confirmation(message: String, generation: int) -> void:
 
 func hide_dialogue_ui() -> void:
 	confirmation_text_generation += 1
-	history_open = false
-	history_overlay.hide()
-	history_indicator.hide()
 	GameState.enter_desk_state()
-	visible = false
+	visible = true
 	is_in_choices = false
 	$DialoguePanel.hide()
 	question_menu.hide()
@@ -327,7 +326,10 @@ func show_choices(choices: Array[DialogueChoice]):
 	tween.tween_property(question_menu, "modulate:a", 1.0, 0.18)
 
 func _input(event):
-	if event.is_action_pressed("History") and DialogueManager.active and not GameState.desk_state:
+	if event.is_action_pressed("History"):
+		if tutorial != null and tutorial.is_tutorial_prompt_active():
+			get_viewport().set_input_as_handled()
+			return
 		toggle_history()
 		get_viewport().set_input_as_handled()
 		return
@@ -452,7 +454,8 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _process(_delta: float) -> void:
-	history_indicator.visible = DialogueManager.active and not GameState.desk_state and not history_open
+	var tutorial_prompt_active := tutorial != null and tutorial.is_tutorial_prompt_active()
+	history_indicator.visible = not history_open and not tutorial_prompt_active
 
 
 
@@ -464,7 +467,10 @@ func toggle_history() -> void:
 	history_open = not history_open
 	history_overlay.visible = history_open
 	if history_open:
+		history_previous_mouse_mode = Input.mouse_mode
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 		accept_reject.active = false
 		history_overlay.scroll_to_latest()
 	else:
+		Input.mouse_mode = history_previous_mouse_mode
 		accept_reject.active = is_decision_pending and not is_in_choices and accept_reject.visible

@@ -149,7 +149,9 @@ func finish_encounter(encounter: EncounterData, choice: String):
 		"consequence": _get_consequence(encounter, choice)
 	})
 	if GameState.encounter==1 and GameState.day==1:
-		tutorial.introduce_clock()
+		await tutorial.introduce_clock()
+	if GameState.encounter == 4 and GameState.day == 1:
+		await tutorial.show_final_shift_tutorial()
 	GameState.encounter += 1
 	encounterOngoing = false
 	

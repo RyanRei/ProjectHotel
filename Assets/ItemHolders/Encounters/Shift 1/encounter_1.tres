@@ -13,4 +13,6 @@ model = ExtResource("2_ykowu")
 communication_type = "RESIDENT"
 time = "6:50 PM"
 LogbookEntry = "6:35 PM - Tracey Morgan called from the lobby phone and reported that her card may be inside Room 104."
+room_number = "104"
+logbook_type = "CALL"
 trigger_minute = 50

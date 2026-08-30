@@ -6,7 +6,7 @@
 
 [resource]
 script = ExtResource("2_1imvv")
-name = " Maya Chen"
+name = "Maya Chen"
 caller_type = "INNOCENT"
 dialogue = ExtResource("1_pc78f")
 model = ExtResource("2_ids8x")
@@ -14,5 +14,7 @@ communication_type = "VISITOR"
 visitor_gender = "FEMALE"
 time = "10:32 PM"
 LogbookEntry = "9:55 PM - Tracey Morgan called reception: Maya Chen is a former coworker bringing a blue document folder. Admit between 10:15 PM and 10:45 PM."
+room_number = "104"
+logbook_type = "VIS"
 trigger_hour = 22
 trigger_minute = 32

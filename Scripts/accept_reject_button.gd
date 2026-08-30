@@ -42,10 +42,11 @@ func _input(event: InputEvent) -> void:
 		return
 
 	if event.is_action_pressed("Cancel Decision"):
-		if canceled_locked:
-			return
 		if decision_state != DecisionState.CHOOSING:
 			_cancel_confirmation()
+			get_viewport().set_input_as_handled()
+			return
+		if canceled_locked:
 			get_viewport().set_input_as_handled()
 		return
 
@@ -99,6 +100,10 @@ func _cancel_confirmation() -> void:
 	reject.release_focus()
 	confirmation_cancelled.emit()
 	sendcancel.emit()
+
+
+func is_confirming_decision() -> bool:
+	return decision_state != DecisionState.CHOOSING
 
 
 func turnOff() -> void:

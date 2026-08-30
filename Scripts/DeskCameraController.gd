@@ -49,8 +49,15 @@ func _input(event: InputEvent) -> void:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 	elif event is InputEventMouseButton and event.pressed and Input.mouse_mode == Input.MOUSE_MODE_VISIBLE:
-		if not DialogueManager.active:
+		if not DialogueManager.active and not is_desk_ui_open():
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+
+func is_desk_ui_open() -> bool:
+	for node in get_tree().get_nodes_in_group("desk_ui"):
+		if node is CanvasItem and (node as CanvasItem).visible:
+			return true
+	return false
 
 
 func _process(delta: float) -> void:

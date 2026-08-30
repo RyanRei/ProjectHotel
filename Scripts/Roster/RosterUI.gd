@@ -22,6 +22,7 @@ var roster_list: ItemList
 var record_title: Label
 var record_details: RichTextLabel
 var status_label: Label
+var sync_window_active := false
 
 
 func _ready() -> void:
@@ -31,6 +32,17 @@ func _ready() -> void:
 	build_interface()
 	refresh_records("")
 	visible = false
+	sync_window_active = database.is_sync_window()
+	TimeManager.time_updated.connect(_on_time_updated)
+
+
+func _on_time_updated(_hour: int, _minute: int) -> void:
+	var is_now_syncing := database.is_sync_window()
+	if is_now_syncing == sync_window_active:
+		return
+	sync_window_active = is_now_syncing
+	if visible and (current_tab == "ROOMS" or current_tab == "RESIDENTS"):
+		refresh_records(search_field.text)
 
 
 func _input(event: InputEvent) -> void:
@@ -44,6 +56,7 @@ func open_roster() -> void:
 	move_to_front()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	search_field.grab_focus()
+	refresh_records(search_field.text)
 
 
 func close_roster() -> void:
@@ -232,7 +245,7 @@ func status_color(status: String) -> Color:
 	match status.to_lower():
 		"occupied", "approved", "granted", "recorded":
 			return COLOR_GREEN
-		"away", "pending":
+		"away", "pending", "expected", "in sync":
 			return COLOR_YELLOW
 		_:
 			return COLOR_GRAY

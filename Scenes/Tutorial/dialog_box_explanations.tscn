@@ -72,6 +72,7 @@ offset_bottom = 636.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_7ops2")
 
 [node name="introduceLogbook" parent="." unique_id=270904107 instance=ExtResource("2_nkdpq")]
+visible = false
 layout_mode = 1
 
 [node name="PanelContainer" parent="introduceLogbook" index="0" unique_id=975044402]
@@ -82,7 +83,7 @@ offset_bottom = 636.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_7ops2")
 
 [node name="Label" parent="introduceLogbook/PanelContainer" index="0" unique_id=34167543]
-text = "Click to open the logbook ah"
+text = "Open the logbook to review the shift record."
 
 [node name="logbookleft" parent="." unique_id=69050541 instance=ExtResource("1_vunqc")]
 visible = false
@@ -266,6 +267,7 @@ visible = false
 layout_mode = 1
 
 [node name="pointer" parent="itmatches" index="0" unique_id=517012215]
+visible = false
 offset_left = 570.2553
 offset_top = 369.50256
 offset_right = 576.4654
@@ -281,15 +283,17 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_fsw2u")
 
 [node name="Label" parent="itmatches/PanelTexts/PanelContainer" index="1" unique_id=34167543]
 theme_override_font_sizes/font_size = 24
-text = "It Matches! Good. You've got one question left in the bank if you want it: sometimes one clean answer should be enough, sometimes it isn't. Your call"
+text = "Tracey Morgan is in the resident records. Find her entry, or use the search bar to look up her name."
 
 [node name="box" parent="itmatches/PanelTexts" parent_id_path=PackedInt32Array(1954684313, 1698298257) index="1" unique_id=1463505934]
+visible = false
 offset_left = 225.0
 offset_top = 136.0
 offset_right = 910.0
 offset_bottom = 296.0
 
 [node name="clockticks" parent="." unique_id=1459238890 instance=ExtResource("2_nkdpq")]
+visible = false
 layout_mode = 1
 
 [node name="PanelContainer" parent="clockticks" index="0" unique_id=975044402]
