@@ -231,6 +231,7 @@ func _sync_scheduled_entries() -> void:
 		return
 	var added_any := false
 	var schedule := Shift1Data.logbook_schedule() if GameState.day == 1 else Shift2Data.logbook_schedule()
+	var page_index := GameState.day - 1
 	for index in schedule.size():
 		if released_schedule_entries.has(index):
 			continue
@@ -238,7 +239,7 @@ func _sync_scheduled_entries() -> void:
 		var release_time := TimeManager.get_total_seconds_for(int(item.hour), int(item.minute))
 		if TimeManager.in_game_seconds < release_time:
 			continue
-		logbook.append_log_entry(0, item.row, str(item.note))
+		logbook.append_log_entry(page_index, item.row, str(item.note))
 		released_schedule_entries[index] = true
 		added_any = true
 	if added_any and logUpdateAudio:

@@ -146,7 +146,7 @@ offset_left = 154.0
 offset_top = 55.0
 offset_right = 1120.0
 offset_bottom = 128.0
-text = "NIGHTHAVEN NIGHTLY"
+text = "THE DAILY TIMES"
 label_settings = SubResource("Masthead")
 
 [node name="ShelterMark" type="Node2D" parent="Display/Paper"]

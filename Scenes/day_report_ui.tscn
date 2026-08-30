@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://yqtwdwhowpt1"]
+[gd_scene format=3 uid="uid://yqtwdwhowpt1"]
 
 [ext_resource type="Script" uid="uid://b2vl5vubbfnjf" path="res://Scripts/DayReportUI.gd" id="1_hbn3v"]
 [ext_resource type="PackedScene" path="res://Scenes/newspaper_report_2d.tscn" id="2_newspaper"]

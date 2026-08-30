@@ -1,16 +1,86 @@
-[gd_scene format=3 uid="uid://ynqdo42m44m7"]
+[gd_scene load_steps=9 format=3 uid="uid://ynqdo42m44m7"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_layf5"]
+[ext_resource type="FontFile" path="res://Assets/Fonts/ShareTechMono-Regular.ttf" id="1_pointer_font"]
+
+[sub_resource type="StandardMaterial3D" id="Material_amber"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 0.54, 0.08, 0.92)
 emission_enabled = true
-emission = Color(0.8093551, 0.4598425, 0.9083763, 1)
+emission = Color(1, 0.28, 0.015, 1)
+emission_energy_multiplier = 4.0
+no_depth_test = true
 
-[sub_resource type="BoxMesh" id="BoxMesh_u8vdq"]
-size = Vector3(0.20092773, 2.925537, 0.24761963)
+[sub_resource type="StandardMaterial3D" id="Material_gold_soft"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 0.78, 0.3, 0.58)
+emission_enabled = true
+emission = Color(1, 0.46, 0.08, 1)
+emission_energy_multiplier = 2.2
+no_depth_test = true
 
-[node name="handmodel" type="Node3D" unique_id=1912552935]
-transform = Transform3D(0.255, 0, 0, 0, 0.162, 0, 0, 0, 0.255, 0, 0, 0)
+[sub_resource type="TorusMesh" id="Torus_target"]
+inner_radius = 0.19
+outer_radius = 0.245
+rings = 20
+ring_segments = 8
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=896465776]
-transform = Transform3D(3.23, 0, 0, 0, 3.23, 0, 0, 0, 3.23, 0, 4.7638035, 0)
-material_override = SubResource("StandardMaterial3D_layf5")
-mesh = SubResource("BoxMesh_u8vdq")
+[sub_resource type="CylinderMesh" id="Cone_arrow"]
+top_radius = 0.0
+bottom_radius = 0.16
+height = 0.26
+radial_segments = 12
+
+[sub_resource type="BoxMesh" id="Box_chevron_left"]
+size = Vector3(0.24, 0.055, 0.065)
+
+[sub_resource type="BoxMesh" id="Box_chevron_right"]
+size = Vector3(0.24, 0.055, 0.065)
+
+[sub_resource type="QuadMesh" id="Quad_glow"]
+size = Vector2(0.5, 0.5)
+orientation = 1
+
+[node name="GuidedPointer" type="Node3D"]
+
+[node name="RotatingTarget" type="Node3D" parent="."]
+
+[node name="Ring" type="MeshInstance3D" parent="RotatingTarget"]
+material_override = SubResource("Material_gold_soft")
+mesh = SubResource("Torus_target")
+
+[node name="CrossLeft" type="MeshInstance3D" parent="RotatingTarget"]
+position = Vector3(-0.31, 0, 0)
+material_override = SubResource("Material_amber")
+mesh = SubResource("Box_chevron_left")
+
+[node name="CrossRight" type="MeshInstance3D" parent="RotatingTarget"]
+position = Vector3(0.31, 0, 0)
+material_override = SubResource("Material_amber")
+mesh = SubResource("Box_chevron_right")
+
+[node name="ArrowHead" type="MeshInstance3D" parent="."]
+position = Vector3(0, -0.27, 0)
+rotation = Vector3(0, 0, 3.1415927)
+material_override = SubResource("Material_amber")
+mesh = SubResource("Cone_arrow")
+
+[node name="GlowDisc" type="MeshInstance3D" parent="."]
+position = Vector3(0, -0.02, 0)
+material_override = SubResource("Material_gold_soft")
+mesh = SubResource("Quad_glow")
+
+[node name="InteractLabel" type="Label3D" parent="."]
+position = Vector3(0, 0.42, 0)
+modulate = Color(1, 0.74, 0.3, 1)
+outline_modulate = Color(0.08, 0.035, 0.01, 0.95)
+text = "INTERACT"
+font = ExtResource("1_pointer_font")
+font_size = 18
+outline_size = 7
+pixel_size = 0.003
+horizontal_alignment = 1
+billboard = 1
+no_depth_test = true
+fixed_size = true

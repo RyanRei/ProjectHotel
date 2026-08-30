@@ -39,6 +39,8 @@
 [ext_resource type="Resource" uid="uid://mkikpkc1f71v" path="res://Assets/ItemHolders/Encounters/Shift 2/encounter_4.tres" id="28_shift2_4"]
 [ext_resource type="PackedScene" path="res://Scenes/shift_transition_ui.tscn" id="30_shift_transition"]
 [ext_resource type="PackedScene" path="res://Scenes/Environment/reception_lobby.tscn" id="31_lobby"]
+[ext_resource type="PackedScene" path="res://Scenes/pause_menu.tscn" id="32_pause_menu"]
+[ext_resource type="Script" path="res://Scripts/Managers/ThreatAtmosphere.gd" id="33_threat_atmosphere"]
 
 [sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_cm8yc"]
 ground_color = Color(0.89985204, 0.4907532, 0.21794471, 1)
@@ -102,6 +104,11 @@ encounters = Array[ExtResource("3_wnmts")]([ExtResource("24_c24b1"), ExtResource
 metadata/_custom_type_script = "uid://8570ain8w4hx"
 
 [node name="Node3D" type="Node3D" unique_id=1681156658]
+
+[node name="ThreatAtmosphere" type="Node" parent="." node_paths=PackedStringArray("lights_root", "telephone_threat_light")]
+script = ExtResource("33_threat_atmosphere")
+lights_root = NodePath("../Lights")
+telephone_threat_light = NodePath("../Lights/ThreatTelephoneLight")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=882528315]
 environment = SubResource("Environment_u8vdq")
@@ -212,6 +219,17 @@ size = Vector3(30, 2, 40)
 material = SubResource("StandardMaterial3D_ldmme")
 
 [node name="Lights" type="Node" parent="." unique_id=1123067539]
+
+[node name="ThreatTelephoneLight" type="SpotLight3D" parent="Lights"]
+position = Vector3(0.77, 5.5, 2.2)
+rotation_degrees = Vector3(-90, 0, 0)
+visible = false
+light_color = Color(1, 0.45, 0.12, 1)
+light_energy = 7.5
+light_specular = 1.4
+shadow_enabled = true
+spot_range = 5.5
+spot_angle = 31.0
 
 [node name="OmniLight3D3" type="OmniLight3D" parent="Lights" unique_id=1985307974]
 transform = Transform3D(0.9999762, 0.006874963, 0.00052147126, -0.0068781553, 0.99995595, 0.0063888333, -0.00047752523, -0.006392268, 0.9999795, 32.62258, 3.1644402, -27.830126)
@@ -428,7 +446,7 @@ offset_bottom = 595.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_bgc5f")
 
 [node name="Label" parent="TutorialManager/CanvasLayer for tesing/clock tick/PanelContainer" index="0" unique_id=34167543]
-text = "Nice! The moment you hang up, the clock starts moving again and get ready for the next ring anytime"
+text = "Nice! The moment you hang up, the clock starts moving again and get ready for the next ring anytime."
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=1109577428]
 layer = 5
@@ -460,6 +478,8 @@ script = ExtResource("11_hand")
 [node name="DayReportUI" parent="CanvasLayer" unique_id=86161530 instance=ExtResource("13_qnepm")]
 
 [node name="ShiftTransitionUI" parent="CanvasLayer" unique_id=1068896443 instance=ExtResource("30_shift_transition")]
+
+[node name="PauseMenu" parent="CanvasLayer" instance=ExtResource("32_pause_menu")]
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=436142256]
 

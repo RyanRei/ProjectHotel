@@ -13,6 +13,9 @@ const DESIGN_SIZE := Vector2(1280.0, 720.0)
 @onready var volume_slider: HSlider = %VolumeSlider
 @onready var fullscreen_toggle: CheckButton = %FullscreenToggle
 @onready var back_button: Button = %BackButton
+@onready var trust_label: Label = %Subtitle
+@onready var title_rule_left: ColorRect = %TitleRuleLeft
+@onready var title_rule_right: ColorRect = %TitleRuleRight
 
 
 func _ready() -> void:
@@ -38,6 +41,38 @@ func _ready() -> void:
 		volume_slider.value = db_to_linear(AudioServer.get_bus_volume_db(master_bus)) * 100.0
 	fullscreen_toggle.button_pressed = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN
 	begin_button.grab_focus()
+	_run_trust_neon_cycle()
+
+
+func _run_trust_neon_cycle() -> void:
+	while is_inside_tree():
+		_set_trust_neon(true)
+		await get_tree().create_timer(3.6).timeout
+		for delay in [0.08, 0.14, 0.06, 0.19, 0.09, 0.12]:
+			_set_trust_neon(not _trust_neon_is_on())
+			await get_tree().create_timer(float(delay)).timeout
+		_set_trust_neon(true)
+		await get_tree().create_timer(3.4).timeout
+		_set_trust_neon(false)
+		await get_tree().create_timer(1.7).timeout
+
+
+func _trust_neon_is_on() -> bool:
+	return trust_label.get_theme_color("font_color") == Color("ff2a24")
+
+
+func _set_trust_neon(enabled: bool) -> void:
+	var text_color := Color("ff2a24") if enabled else Color("7b3b32")
+	var glow_color := Color(1.0, 0.02, 0.01, 0.92) if enabled else Color(0.22, 0.035, 0.025, 0.35)
+	var rule_color := Color(1.0, 0.04, 0.02, 0.96) if enabled else Color(0.34, 0.08, 0.045, 0.52)
+	trust_label.add_theme_color_override("font_color", text_color)
+	trust_label.add_theme_color_override("font_outline_color", glow_color)
+	trust_label.add_theme_color_override("font_shadow_color", glow_color)
+	trust_label.add_theme_constant_override("outline_size", 3 if enabled else 1)
+	trust_label.add_theme_constant_override("shadow_offset_x", 0)
+	trust_label.add_theme_constant_override("shadow_offset_y", 0)
+	title_rule_left.color = rule_color
+	title_rule_right.color = rule_color
 
 
 func _fit_design_canvas() -> void:

@@ -3,9 +3,15 @@
 [ext_resource type="Script" uid="uid://b5vh1alvaioay" path="res://Scripts/ResrouceScripts/EncounterData.gd" id="1_enc"]
 [ext_resource type="Script" uid="uid://cwgrdj7ntjmds" path="res://Scripts/ResrouceScripts/DialougeNode.gd" id="2_node"]
 [ext_resource type="Script" uid="uid://vwswsn27uvpe" path="res://Scripts/ResrouceScripts/DialougeChoice.gd" id="3_choice"]
+[ext_resource type="AudioStream" path="res://Assets/Sound/voicelines/Shift 2/Ethan/intro.wav" id="4_intro"]
+[ext_resource type="AudioStream" path="res://Assets/Sound/voicelines/Shift 2/Ethan/q1.wav" id="5_q1"]
+[ext_resource type="AudioStream" path="res://Assets/Sound/voicelines/Shift 2/Ethan/q2.wav" id="6_q2"]
+[ext_resource type="AudioStream" path="res://Assets/Sound/voicelines/Shift 2/Ethan/q3.wav" id="7_q3"]
+[ext_resource type="AudioStream" path="res://Assets/Sound/voicelines/Shift 2/Ethan/q4.wav" id="8_q4"]
 
 [sub_resource type="Resource" id="r1"]
 script = ExtResource("2_node")
+voiceline = ExtResource("5_q1")
 text = "Yeah, March 9th, '91."
 wait_for_prompt = true
 
@@ -16,6 +22,7 @@ next_node = SubResource("r1")
 
 [sub_resource type="Resource" id="r2"]
 script = ExtResource("2_node")
+voiceline = ExtResource("6_q2")
 text = "Uh, five-five-one-two, I think? Let me just make sure... yeah, five-five-one-two."
 wait_for_prompt = true
 
@@ -26,6 +33,7 @@ next_node = SubResource("r2")
 
 [sub_resource type="Resource" id="r3"]
 script = ExtResource("2_node")
+voiceline = ExtResource("7_q3")
 text = "The 19th. Around five-ish, maybe a little after. We got stuck in traffic so it was later than we planned."
 wait_for_prompt = true
 
@@ -36,6 +44,7 @@ next_node = SubResource("r3")
 
 [sub_resource type="Resource" id="r4"]
 script = ExtResource("2_node")
+voiceline = ExtResource("8_q4")
 text = "Oh — yeah, it's, um... Dana? Dana Well. Sorry, it's been a weird night, my brain's not really... yeah, Dana."
 wait_for_prompt = true
 
@@ -46,6 +55,7 @@ next_node = SubResource("r4")
 
 [sub_resource type="Resource" id="start"]
 script = ExtResource("2_node")
+voiceline = ExtResource("4_intro")
 text = "Hey, it's Ethan. Room 103. Sorry to bother you this late. My card's not working for some reason, not really sure why. Whenever you get a chance, could you let me back in?"
 choices = Array[ExtResource("3_choice")]([SubResource("q1"), SubResource("q2"), SubResource("q3"), SubResource("q4")])
 wait_for_prompt = true

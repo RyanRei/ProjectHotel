@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://dl5f5ftvq363h"]
+[gd_scene format=3 uid="uid://dl5f5ftvq363h"]
 
 [ext_resource type="Script" uid="uid://cmja0tvyt618m" path="res://Scripts/encounter_proceed_button.gd" id="1_script"]
 [ext_resource type="Theme" path="res://UI/DialogueTheme.tres" id="2_theme"]

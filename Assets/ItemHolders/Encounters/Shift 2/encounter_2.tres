@@ -3,13 +3,21 @@
 [ext_resource type="Script" uid="uid://b5vh1alvaioay" path="res://Scripts/ResrouceScripts/EncounterData.gd" id="1_enc"]
 [ext_resource type="Script" uid="uid://cwgrdj7ntjmds" path="res://Scripts/ResrouceScripts/DialougeNode.gd" id="2_node"]
 [ext_resource type="Script" uid="uid://vwswsn27uvpe" path="res://Scripts/ResrouceScripts/DialougeChoice.gd" id="3_choice"]
+[ext_resource type="AudioStream" path="res://Assets/Sound/voicelines/Shift 2/Ven/intro.wav" id="4_intro"]
+[ext_resource type="AudioStream" path="res://Assets/Sound/voicelines/Shift 2/Ven/q1.wav" id="5_q1"]
+[ext_resource type="AudioStream" path="res://Assets/Sound/voicelines/Shift 2/Ven/q2.wav" id="6_q2"]
+[ext_resource type="AudioStream" path="res://Assets/Sound/voicelines/Shift 2/Ven/q3.wav" id="7_q3"]
+[ext_resource type="AudioStream" path="res://Assets/Sound/voicelines/Shift 2/Ven/q4.wav" id="8_q4"]
+[ext_resource type="AudioStream" path="res://Assets/Sound/voicelines/Shift 2/Ven/closing.wav" id="9_closing"]
 
 [sub_resource type="Resource" id="aside"]
 script = ExtResource("2_node")
+voiceline = ExtResource("9_closing")
 text = "Oh, and one more thing before I leave. My brother Caleb is driving up tonight from Albany. He should be here around one-thirty. He doesn't have a room, just visiting. If he calls, could you point him this way?"
 
 [sub_resource type="Resource" id="r1"]
 script = ExtResource("2_node")
+voiceline = ExtResource("5_q1")
 text = "Single, I think? Pretty sure. Honestly I don't read the paperwork, I just show up and hope for the best."
 wait_for_prompt = true
 
@@ -20,6 +28,7 @@ next_node = SubResource("r1")
 
 [sub_resource type="Resource" id="r2"]
 script = ExtResource("2_node")
+voiceline = ExtResource("6_q2")
 text = "Sunday, as far as I know. Might extend it if I like this place quiet enough."
 wait_for_prompt = true
 
@@ -30,6 +39,7 @@ next_node = SubResource("r2")
 
 [sub_resource type="Resource" id="r3"]
 script = ExtResource("2_node")
+voiceline = ExtResource("7_q3")
 text = "Little before midnight. Fifteen, twenty minutes ago, tops."
 wait_for_prompt = true
 
@@ -40,6 +50,7 @@ next_node = SubResource("r3")
 
 [sub_resource type="Resource" id="r4"]
 script = ExtResource("2_node")
+voiceline = ExtResource("8_q4")
 text = "Probably says something about keeping it quiet that I'm here. If you could sit on that, I'd genuinely owe you one."
 wait_for_prompt = true
 
@@ -50,6 +61,7 @@ next_node = SubResource("r4")
 
 [sub_resource type="Resource" id="start"]
 script = ExtResource("2_node")
+voiceline = ExtResource("4_intro")
 text = "Hey, it's me, Ven. Room 412. I promise I'm not usually this much of a disaster, but my card's apparently decided tonight's the night it wants to give up on me. Haven't even had my dinner for the night."
 choices = Array[ExtResource("3_choice")]([SubResource("q1"), SubResource("q2"), SubResource("q3"), SubResource("q4")])
 wait_for_prompt = true

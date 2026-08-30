@@ -304,8 +304,7 @@ offset_bottom = 595.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_7ops2")
 
 [node name="Label" parent="clockticks/PanelContainer" index="0" unique_id=34167543]
-text = "Nice! The moment you hang up, the clock starts moving again and get ready for the next ring anytime
-click again and look right at the clock"
+text = "Nice! The moment you hang up, the clock starts moving again and get ready for the next ring anytime."
 
 [node name="ENC2" type="Control" parent="." unique_id=1743496007]
 anchors_preset = 0

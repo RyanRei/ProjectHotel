@@ -14,9 +14,18 @@ var activity_light: ColorRect
 var roster_rows: Array[ColorRect] = []
 var animation_time := 0.0
 var active_row := 0
+var display_mesh: MeshInstance3D
+var display_material: StandardMaterial3D
+var screen_glow: OmniLight3D
+var threat_flicker_active := false
+var flicker_time_remaining := 0.0
+var flicker_rng := RandomNumberGenerator.new()
+var blackout_overlay: ColorRect
 
 
 func _ready() -> void:
+	add_to_group("computer_monitor")
+	flicker_rng.randomize()
 	screen_mesh = find_screen_mesh(self)
 	if screen_mesh == null:
 		push_warning("ComputerMonitor could not find the imported computerScreen mesh.")
@@ -28,6 +37,8 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if idle_viewport == null:
 		return
+	if threat_flicker_active:
+		_update_threat_flicker(delta)
 	animation_time += delta
 	if scan_line != null:
 		scan_line.position.y = 184.0 + fmod(animation_time * 72.0, 202.0)
@@ -136,6 +147,17 @@ func create_idle_display() -> void:
 	scan_line.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	background.add_child(scan_line)
 
+	# Keep the physical display surface present during a failure. A black panel
+	# inside the live viewport prevents the imported model's baked desktop image
+	# from showing through between roster flashes.
+	blackout_overlay = ColorRect.new()
+	blackout_overlay.name = "ThreatBlackout"
+	blackout_overlay.color = Color.BLACK
+	blackout_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	blackout_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	blackout_overlay.visible = false
+	background.add_child(blackout_overlay)
+
 	var quad := QuadMesh.new()
 	var bounds := screen_mesh.get_aabb()
 	# The imported monitor has no separate screen material. This inset quad sits
@@ -145,36 +167,68 @@ func create_idle_display() -> void:
 	quad.size = Vector2(bounds.size.x * 0.86, bounds.size.y * 0.86)
 	quad.orientation = PlaneMesh.FACE_Z
 
-	var material := StandardMaterial3D.new()
-	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	material.albedo_texture = idle_viewport.get_texture()
-	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS
-	material.cull_mode = BaseMaterial3D.CULL_DISABLED
-	material.emission_enabled = true
-	material.emission_texture = idle_viewport.get_texture()
-	material.emission_energy_multiplier = 0.85
-	quad.material = material
+	display_material = StandardMaterial3D.new()
+	display_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	display_material.albedo_texture = idle_viewport.get_texture()
+	display_material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS
+	display_material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	display_material.emission_enabled = true
+	display_material.emission_texture = idle_viewport.get_texture()
+	display_material.emission_energy_multiplier = 0.85
+	quad.material = display_material
 
-	var display := MeshInstance3D.new()
-	display.name = "RosterIdleDisplay"
-	display.mesh = quad
-	display.position = Vector3(
+	display_mesh = MeshInstance3D.new()
+	display_mesh.name = "RosterIdleDisplay"
+	display_mesh.mesh = quad
+	display_mesh.position = Vector3(
 		bounds.position.x + bounds.size.x * 0.5,
 		bounds.position.y + bounds.size.y * 0.50,
 		bounds.end.z + 0.002
 	)
-	screen_mesh.add_child(display)
+	screen_mesh.add_child(display_mesh)
 
 	# Emissive materials look bright but do not illuminate nearby geometry.
 	# This restrained amber light supplies the subtle desk glow from the LCD.
-	var screen_glow := OmniLight3D.new()
+	screen_glow = OmniLight3D.new()
 	screen_glow.name = "ScreenGlow"
 	screen_glow.light_color = Color("d69b55")
 	screen_glow.light_energy = 0.42
 	screen_glow.omni_range = 2.4
 	screen_glow.shadow_enabled = false
-	screen_glow.position = display.position + Vector3(0, 0, 0.16)
+	screen_glow.position = display_mesh.position + Vector3(0, 0, 0.16)
 	screen_mesh.add_child(screen_glow)
+
+
+func activate_threat_flicker() -> void:
+	threat_flicker_active = true
+	flicker_time_remaining = 0.0
+
+
+func _update_threat_flicker(delta: float) -> void:
+	flicker_time_remaining -= delta
+	if flicker_time_remaining > 0.0:
+		return
+	var screen_on := flicker_rng.randf() > 0.38
+	if display_mesh:
+		display_mesh.visible = true
+	if blackout_overlay:
+		blackout_overlay.visible = not screen_on
+	if display_material:
+		display_material.emission_energy_multiplier = flicker_rng.randf_range(0.3, 1.05) if screen_on else 0.06
+	if screen_glow:
+		# The LCD pixels remain visible, but during the threat blackout the monitor
+		# must not cast another room light alongside the telephone spotlight.
+		screen_glow.visible = false
+		screen_glow.light_energy = 0.0
+	# Uneven frequencies create occasional sharp glitches among longer black or
+	# readable roster holds, instead of a regular on/off pulse.
+	var rapid_glitch := flicker_rng.randf() < 0.28
+	if rapid_glitch:
+		flicker_time_remaining = flicker_rng.randf_range(0.025, 0.11)
+	elif screen_on:
+		flicker_time_remaining = flicker_rng.randf_range(0.22, 1.35)
+	else:
+		flicker_time_remaining = flicker_rng.randf_range(0.10, 0.52)
 
 
 func create_click_area() -> void:

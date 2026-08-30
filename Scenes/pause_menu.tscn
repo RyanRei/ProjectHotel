@@ -1,0 +1,108 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://Scripts/UI/PauseMenu.gd" id="1_script"]
+
+[sub_resource type="Shader" id="Shader_pause_blur"]
+code = "shader_type canvas_item;\n\nuniform sampler2D screen_texture : hint_screen_texture, repeat_disable, filter_linear_mipmap;\nuniform float blur_strength : hint_range(0.0, 5.0) = 2.2;\n\nvoid fragment() {\n    vec4 blurred = textureLod(screen_texture, SCREEN_UV, blur_strength);\n    COLOR = vec4(blurred.rgb * vec3(0.38, 0.32, 0.25), 1.0);\n}\n"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pause_blur"]
+shader = SubResource("Shader_pause_blur")
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_pause_button"]
+bg_color = Color(0.055, 0.041, 0.027, 0.92)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.72, 0.46, 0.12, 0.9)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+content_margin_left = 28.0
+content_margin_top = 13.0
+content_margin_right = 28.0
+content_margin_bottom = 13.0
+
+[node name="PauseMenu" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_script")
+
+[node name="BackBufferCopy" type="BackBufferCopy" parent="."]
+copy_mode = 2
+
+[node name="BlurredBackground" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_pause_blur")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="Menu" type="VBoxContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(360, 0)
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="PausedLabel" type="Label" parent="CenterContainer/Menu"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.73, 0.46, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.85)
+theme_override_constants/shadow_offset_x = 3
+theme_override_constants/shadow_offset_y = 3
+theme_override_font_sizes/font_size = 46
+text = "PAUSED"
+horizontal_alignment = 1
+
+[node name="Rule" type="HSeparator" parent="CenterContainer/Menu"]
+layout_mode = 2
+theme_override_colors/separator = Color(0.72, 0.46, 0.12, 0.8)
+
+[node name="ContinueButton" type="Button" parent="CenterContainer/Menu"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(360, 58)
+layout_mode = 2
+focus_neighbor_bottom = NodePath("../MainMenuButton")
+theme_override_colors/font_color = Color(0.91, 0.82, 0.66, 1)
+theme_override_colors/font_focus_color = Color(1, 0.77, 0.32, 1)
+theme_override_colors/font_hover_color = Color(1, 0.77, 0.32, 1)
+theme_override_font_sizes/font_size = 23
+theme_override_styles/normal = SubResource("StyleBox_pause_button")
+theme_override_styles/hover = SubResource("StyleBox_pause_button")
+theme_override_styles/pressed = SubResource("StyleBox_pause_button")
+theme_override_styles/focus = SubResource("StyleBox_pause_button")
+text = "CONTINUE"
+
+[node name="MainMenuButton" type="Button" parent="CenterContainer/Menu"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(360, 58)
+layout_mode = 2
+focus_neighbor_top = NodePath("../ContinueButton")
+theme_override_colors/font_color = Color(0.91, 0.82, 0.66, 1)
+theme_override_colors/font_focus_color = Color(1, 0.77, 0.32, 1)
+theme_override_colors/font_hover_color = Color(1, 0.77, 0.32, 1)
+theme_override_font_sizes/font_size = 23
+theme_override_styles/normal = SubResource("StyleBox_pause_button")
+theme_override_styles/hover = SubResource("StyleBox_pause_button")
+theme_override_styles/pressed = SubResource("StyleBox_pause_button")
+theme_override_styles/focus = SubResource("StyleBox_pause_button")
+text = "MAIN MENU"
+

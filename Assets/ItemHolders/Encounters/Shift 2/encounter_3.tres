@@ -3,11 +3,20 @@
 [ext_resource type="Script" uid="uid://b5vh1alvaioay" path="res://Scripts/ResrouceScripts/EncounterData.gd" id="1_enc"]
 [ext_resource type="Script" uid="uid://cwgrdj7ntjmds" path="res://Scripts/ResrouceScripts/DialougeNode.gd" id="2_node"]
 [ext_resource type="Script" uid="uid://vwswsn27uvpe" path="res://Scripts/ResrouceScripts/DialougeChoice.gd" id="3_choice"]
+[ext_resource type="AudioStream" path="res://Assets/Sound/voicelines/Shift 2/Caleb/introbiso.wav" id="4_standard_intro"]
+[ext_resource type="AudioStream" path="res://Assets/Sound/voicelines/Shift 2/Caleb/introenc3.wav" id="5_alt_intro"]
+[ext_resource type="AudioStream" path="res://Assets/Sound/voicelines/Shift 2/Caleb/deviousenc3.wav" id="6_alt_reveal"]
+[ext_resource type="AudioStream" path="res://Assets/Sound/voicelines/Shift 2/Caleb/q1.wav" id="7_q1"]
+[ext_resource type="AudioStream" path="res://Assets/Sound/voicelines/Shift 2/Caleb/q2.wav" id="8_q2"]
+[ext_resource type="AudioStream" path="res://Assets/Sound/voicelines/Shift 2/Caleb/q3.wav" id="9_q3"]
+[ext_resource type="AudioStream" path="res://Assets/Sound/voicelines/Shift 2/Caleb/q4.wav" id="10_q4"]
 
 [sub_resource type="Resource" id="alt_reveal"]
 script = ExtResource("2_node")
+voiceline = ExtResource("6_alt_reveal")
 text = "He never got the chance, did he? Honestly, you made this super easy for me. I didn't even have to set foot in your precious building and act like his younger brother. He was standing right outside your door, just ready to accept his fate."
-wait_for_prompt = true
+wait_for_prompt = false
+final_choice = "NORMAL"
 
 [sub_resource type="Resource" id="alt_q1"]
 script = ExtResource("3_choice")
@@ -31,12 +40,15 @@ next_node = SubResource("alt_reveal")
 
 [sub_resource type="Resource" id="alternative"]
 script = ExtResource("2_node")
+voiceline = ExtResource("5_alt_intro")
 text = "Hey. It's Caleb, here to see my brother, Ven, Room 412? He said he'd let you know I was—"
 choices = Array[ExtResource("3_choice")]([SubResource("alt_q1"), SubResource("alt_q2"), SubResource("alt_q3"), SubResource("alt_q4")])
 wait_for_prompt = true
+question_only_prompt = true
 
 [sub_resource type="Resource" id="r1"]
 script = ExtResource("2_node")
+voiceline = ExtResource("7_q1")
 text = "He's my brother. Older brother, if that even matters."
 wait_for_prompt = true
 
@@ -47,6 +59,7 @@ next_node = SubResource("r1")
 
 [sub_resource type="Resource" id="r2"]
 script = ExtResource("2_node")
+voiceline = ExtResource("8_q2")
 text = "Flew in from Denver, actually. The cab dropped me off maybe twenty minutes ago. I'm running on no sleep, so bear with me."
 wait_for_prompt = true
 
@@ -57,6 +70,7 @@ next_node = SubResource("r2")
 
 [sub_resource type="Resource" id="r3"]
 script = ExtResource("2_node")
+voiceline = ExtResource("9_q3")
 text = "Around one-thirty, he said. I think I'm actually a little early, honestly."
 wait_for_prompt = true
 
@@ -67,6 +81,7 @@ next_node = SubResource("r3")
 
 [sub_resource type="Resource" id="r4"]
 script = ExtResource("2_node")
+voiceline = ExtResource("10_q4")
 text = "Yeah, sure. Want me to read off my license or something? Not sure what good that'll do you, but go for it."
 wait_for_prompt = true
 
@@ -77,6 +92,7 @@ next_node = SubResource("r4")
 
 [sub_resource type="Resource" id="standard"]
 script = ExtResource("2_node")
+voiceline = ExtResource("4_standard_intro")
 text = "Hey, sorry it's so late. This is Caleb, I'm here to see my brother, Ven? Room 412. I'm pretty wiped, but I am sure he must've talked about me, right?"
 choices = Array[ExtResource("3_choice")]([SubResource("q1"), SubResource("q2"), SubResource("q3"), SubResource("q4")])
 wait_for_prompt = true

@@ -339,14 +339,14 @@ func welcome():
 	var label= tab_explanation.get_node("opening/PanelContainer/Label")
 	#dialog_tutorial.show()
 	tab_explanation.get_node("opening").show()
-	label.text="Six PM. Shift starts. You're the night operator for XXXXXX Co. 
+	label.text="Six PM. Shift starts. You're the night operator for NightHaven Shelters.
 	Access Cards may get lost or damaged. When that happens, there's exactly one way back into their rooms, and THAT is YOUR whole job. 
 	"
 	await mouse_clicked
 	label.text="Your shift runs from 6 PM to 6 AM. Rooms close for check-out at 10 and, well, anyone calling in after that better have a very good reason
 	"
 	await mouse_clicked
-	label.text="Every decision you make tonight gets read out tomorrow morning in the daily “xxxx”. If you let the wrong person in, the resident dies. Turn away the right person, they die too except just outside instead of in. Either way, the company's numbers move up and down. Enough bad mornings, and the shelter crashes to an end.
+	label.text="Every decision you make tonight gets read out tomorrow morning in The Daily Times. If you let the wrong person in, the resident dies. Turn away the right person, they die too except just outside instead of in. Either way, the company's numbers move up and down. Enough bad mornings, and the shelter crashes to an end.
 	So. Let's get you prepared for the first call"
 	await mouse_clicked
 	label.text="Lets take a look with help of a walkthrough"
@@ -530,7 +530,7 @@ func introduce_clock():
 	clock_light.show()
 	var clock_dialogue := tab_explanation.get_node("clockticks") as Control
 	var clock_label := clock_dialogue.get_node("PanelContainer/Label") as Label
-	clock_label.text = "Nice! The moment you hang up, the clock starts moving again. Get ready for the next ring at any time."
+	clock_label.text = "Nice! The moment you hang up, the clock starts moving again and get ready for the next ring anytime."
 	clock_dialogue.show()
 	pointer.point_at(clock)
 	
@@ -662,7 +662,7 @@ func mayaChenIntroduction(mayaChen):
 	var maya_label := maya_dialogue.get_node("PanelContainer/Label") as Label
 	maya_label.text = "Not every call is a resident locked out of their own room. Sometimes it's someone asking to be let in to see someone else. Check the logbook first. Expected visitors get written down."
 	maya_dialogue.show()
-	pointer.point_at(mayaChen)
+	pointer.point_at(mayaChen, 2.15)
 	await mouse_clicked
 	maya_dialogue.hide()
 	pointer.hide_pointer()
@@ -734,7 +734,7 @@ func show_final_shift_tutorial() -> void:
 	final_dialogue.show()
 	final_label.text = "That's the shift, start to finish. Nobody's going to hold your hand after this."
 	await mouse_clicked
-	final_label.text = "Good luck. And remember, TRUST NO ONE."
+	final_label.text = "Good luck.\nAnd remember, TRUST NO ONE"
 	await mouse_clicked
 	final_dialogue.hide()
 	world_dimmer.hide()

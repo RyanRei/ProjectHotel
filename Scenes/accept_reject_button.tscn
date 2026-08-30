@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://c2na11fytckj2"]
+[gd_scene format=3 uid="uid://c2na11fytckj2"]
 
 [ext_resource type="Script" uid="uid://d3opdfc2i5xsb" path="res://Scripts/accept_reject_button.gd" id="1_script"]
 [ext_resource type="Theme" path="res://UI/DialogueTheme.tres" id="2_theme"]

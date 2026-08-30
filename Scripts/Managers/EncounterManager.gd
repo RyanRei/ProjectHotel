@@ -272,14 +272,10 @@ func _skip_unavailable_encounters() -> void:
 	while has_encounter():
 		var candidate := get_current_encounter()
 		match candidate.encounter_id:
-			"caleb":
-				# Caleb only knows to contact NightHaven if Ven was admitted and
-				# gave reception the Albany arrival message.
-				if not bool(GameState.story_flags.get("ven_admitted", false)):
-					GameState.encounter += 1
-					continue
 			"caleb_taunt":
-				if not bool(GameState.story_flags.get("caleb_admitted", false)):
+				# The final call only happens when Ven was admitted and the
+				# impersonator was subsequently allowed through as Caleb.
+				if not bool(GameState.story_flags.get("ven_admitted", false)) or not bool(GameState.story_flags.get("caleb_admitted", false)):
 					GameState.encounter += 1
 					continue
 		return
@@ -304,10 +300,9 @@ func _store_story_choice(encounter: EncounterData, choice: String) -> void:
 			if choice != "ACCEPT":
 				GameState.story_flags["ven_outside_death"] = true
 		"caleb":
-			if bool(GameState.story_flags.get("ven_admitted", false)):
-				GameState.story_flags["caleb_admitted"] = choice == "ACCEPT"
-				if choice == "ACCEPT":
-					GameState.story_flags["ven_inside_death"] = true
+			GameState.story_flags["caleb_admitted"] = choice == "ACCEPT"
+			if bool(GameState.story_flags.get("ven_admitted", false)) and choice == "ACCEPT":
+				GameState.story_flags["ven_inside_death"] = true
 
 
 func _is_reportable(encounter: EncounterData) -> bool:

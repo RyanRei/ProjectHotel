@@ -45,11 +45,8 @@ func _input(event: InputEvent) -> void:
 		target_yaw = clamp(target_yaw, -deg_to_rad(horizontal_limit_degrees), deg_to_rad(horizontal_limit_degrees))
 		target_pitch = clamp(target_pitch, -deg_to_rad(look_up_limit_degrees), deg_to_rad(look_down_limit_degrees))
 
-	elif event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-
 	elif event is InputEventMouseButton and event.pressed and Input.mouse_mode == Input.MOUSE_MODE_VISIBLE:
-		if not DialogueManager.active and not is_desk_ui_open():
+		if not get_tree().paused and not DialogueManager.active and not is_desk_ui_open():
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 
