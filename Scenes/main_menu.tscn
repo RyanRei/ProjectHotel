@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://Scripts/UI/MainMenu.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://Assets/UI/MainMenu/nighthaven_main_menu_clean_v2.png" id="2_background"]
+[ext_resource type="Texture2D" path="res://Assets/UI/MainMenu/reception_menu_background.png" id="2_background"]
 [ext_resource type="FontFile" path="res://Assets/Fonts/ShareTechMono-Regular.ttf" id="3_font"]
 
 [sub_resource type="StyleBoxFlat" id="StyleInvisible"]
@@ -141,7 +141,7 @@ offset_top = 262.0
 offset_right = 384.0
 offset_bottom = 309.0
 focus_neighbor_top = NodePath("../QuitButton")
-focus_neighbor_bottom = NodePath("../ContinueButton")
+focus_neighbor_bottom = NodePath("../SettingsButton")
 focus_mode = 2
 mouse_default_cursor_shape = 2
 theme_override_colors/font_color = Color(0.88, 0.8, 0.67, 1)
@@ -157,7 +157,7 @@ theme_override_styles/focus = SubResource("StyleHover")
 text = "  B E G I N   S H I F T"
 alignment = 0
 
-[node name="ContinueButton" type="Button" parent="DesignCanvas/MenuButtons"]
+[node name="SettingsButton" type="Button" parent="DesignCanvas/MenuButtons"]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 56.0
@@ -165,30 +165,6 @@ offset_top = 312.0
 offset_right = 326.0
 offset_bottom = 358.0
 focus_neighbor_top = NodePath("../BeginButton")
-focus_neighbor_bottom = NodePath("../SettingsButton")
-focus_mode = 2
-mouse_default_cursor_shape = 2
-theme_override_colors/font_color = Color(0.88, 0.8, 0.67, 1)
-theme_override_colors/font_hover_color = Color(1, 0.85, 0.55, 1)
-theme_override_colors/font_pressed_color = Color(1, 0.85, 0.55, 1)
-theme_override_colors/font_focus_color = Color(1, 0.85, 0.55, 1)
-theme_override_fonts/font = ExtResource("3_font")
-theme_override_font_sizes/font_size = 26
-theme_override_styles/normal = SubResource("StyleInvisible")
-theme_override_styles/hover = SubResource("StyleInvisible")
-theme_override_styles/pressed = SubResource("StylePressed")
-theme_override_styles/focus = SubResource("StyleHover")
-text = "  C O N T I N U E"
-alignment = 0
-
-[node name="SettingsButton" type="Button" parent="DesignCanvas/MenuButtons"]
-unique_name_in_owner = true
-layout_mode = 0
-offset_left = 56.0
-offset_top = 362.0
-offset_right = 326.0
-offset_bottom = 408.0
-focus_neighbor_top = NodePath("../ContinueButton")
 focus_neighbor_bottom = NodePath("../QuitButton")
 focus_mode = 2
 mouse_default_cursor_shape = 2
@@ -209,9 +185,9 @@ alignment = 0
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 56.0
-offset_top = 412.0
+offset_top = 362.0
 offset_right = 326.0
-offset_bottom = 458.0
+offset_bottom = 408.0
 focus_neighbor_top = NodePath("../SettingsButton")
 focus_neighbor_bottom = NodePath("../BeginButton")
 focus_mode = 2

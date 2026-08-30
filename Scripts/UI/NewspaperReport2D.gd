@@ -46,8 +46,13 @@ func _unhandled_input(event: InputEvent) -> void:
 			play_report_animation()
 	elif _can_close and (event.is_action_pressed("ui_cancel") or event.is_action_pressed("ui_accept") or clicked):
 		_can_close = false
+		# Closing the final report can synchronously change to the main-menu
+		# scene and free this node. Consume the input while the viewport is still
+		# valid, before notifying the end-of-day flow.
+		var viewport := get_viewport()
+		if viewport != null:
+			viewport.set_input_as_handled()
 		report_closed.emit()
-		get_viewport().set_input_as_handled()
 
 
 func show_report(report: Dictionary) -> void:

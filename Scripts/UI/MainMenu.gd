@@ -7,7 +7,6 @@ const DESIGN_SIZE := Vector2(1280.0, 720.0)
 @onready var design_canvas: Control = %DesignCanvas
 @onready var menu_buttons: Control = %MenuButtons
 @onready var begin_button: Button = %BeginButton
-@onready var continue_button: Button = %ContinueButton
 @onready var settings_button: Button = %SettingsButton
 @onready var quit_button: Button = %QuitButton
 @onready var options_panel: PanelContainer = %OptionsPanel
@@ -25,13 +24,12 @@ func _ready() -> void:
 	options_panel.hide()
 
 	begin_button.pressed.connect(_begin_shift)
-	continue_button.pressed.connect(_continue_game)
 	settings_button.pressed.connect(_open_options)
 	quit_button.pressed.connect(_quit_game)
 	volume_slider.value_changed.connect(_set_master_volume)
 	fullscreen_toggle.toggled.connect(_set_fullscreen)
 	back_button.pressed.connect(_close_options)
-	for button in [begin_button, continue_button, settings_button, quit_button]:
+	for button in [begin_button, settings_button, quit_button]:
 		button.mouse_entered.connect(button.grab_focus)
 		button.gui_input.connect(_on_menu_button_gui_input.bind(button))
 
@@ -77,7 +75,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _focus_relative(direction: int) -> void:
-	var buttons: Array[Button] = [begin_button, continue_button, settings_button, quit_button]
+	var buttons: Array[Button] = [begin_button, settings_button, quit_button]
 	var focused := get_viewport().gui_get_focus_owner()
 	var index := buttons.find(focused)
 	if index < 0:
@@ -93,11 +91,6 @@ func _begin_shift() -> void:
 	GameState.reputation = 80.0
 	GameState.share_price = 42.0
 	GameState.story_flags.clear()
-	GameState.enter_desk_state()
-	_start_game()
-
-
-func _continue_game() -> void:
 	GameState.enter_desk_state()
 	_start_game()
 
