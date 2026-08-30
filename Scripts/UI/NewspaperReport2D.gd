@@ -185,8 +185,8 @@ func _apply_results(results: Array, story_flags: Dictionary = {}, report_day: in
 	else:
 		%Headline.text = "QUIET NIGHT FOR SECRET VIP GUEST" if failures == 0 else "NIGHTHAVEN STOPS LATE-NIGHT SECURITY THREATS"
 		%Subheadline.text = "%d of %d decisions were correct; Ven Keer remained safe" % [successes, total]
-	var starting_reputation := GameState.reputation
-	var starting_share_price := GameState.share_price
+	var starting_reputation: float = float(GameState.reputation)
+	var starting_share_price: float = float(GameState.share_price)
 	var vip_penalty := 12.0 if ven_inside_death or ven_outside_death else 0.0
 	var reputation_change := weighted_successes * 2.0 - weighted_failures * 4.0 - vip_penalty
 	var share_change := weighted_successes * 1.25 - weighted_failures * 3.25 - vip_penalty * 0.8
