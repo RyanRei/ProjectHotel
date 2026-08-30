@@ -91,6 +91,5 @@ alternate_dialogue = SubResource("alternative")
 communication_type = "RESIDENT"
 time = "1:20 AM"
 room_number = "412"
-logbook_type = "CALL"
 trigger_hour = 1
 trigger_minute = 20

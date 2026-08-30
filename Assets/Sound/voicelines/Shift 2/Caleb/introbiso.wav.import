@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://c5ejhedl7s5kb"
+path="res://.godot/imported/introbiso.wav-e54574f554c8082e0c16b5bf83c4bd67.sample"
+
+[deps]
+
+source_file="res://Assets/Sound/voicelines/Shift 2/Caleb/introbiso.wav"
+dest_files=["res://.godot/imported/introbiso.wav-e54574f554c8082e0c16b5bf83c4bd67.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

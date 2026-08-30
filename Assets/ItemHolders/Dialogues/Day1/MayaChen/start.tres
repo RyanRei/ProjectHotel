@@ -3,15 +3,15 @@
 [ext_resource type="Script" uid="uid://vwswsn27uvpe" path="res://Scripts/ResrouceScripts/DialougeChoice.gd" id="1_cnddt"]
 [ext_resource type="Resource" uid="uid://ccwlmo0pu2j1g" path="res://Assets/ItemHolders/Dialogues/Day1/MayaChen/player questions/q1.tres" id="2_axdpd"]
 [ext_resource type="Script" uid="uid://cwgrdj7ntjmds" path="res://Scripts/ResrouceScripts/DialougeNode.gd" id="2_wp1q0"]
-[ext_resource type="AudioStream" uid="uid://duxkps54u67wf" path="res://Assets/Sound/sfx/phone pickup.mp3" id="3_87447"]
 [ext_resource type="Resource" uid="uid://bpabwdwce4tlc" path="res://Assets/ItemHolders/Dialogues/Day1/MayaChen/player questions/q2.tres" id="3_w4ku2"]
 [ext_resource type="Resource" uid="uid://boucc8adn82o" path="res://Assets/ItemHolders/Dialogues/Day1/MayaChen/player questions/q3.tres" id="4_yk5u1"]
 [ext_resource type="Resource" uid="uid://bh5odn4ye0ytu" path="res://Assets/ItemHolders/Dialogues/Day1/MayaChen/player questions/q4.tres" id="5_61778"]
 [ext_resource type="Resource" uid="uid://b4ycyt58gtnh0" path="res://Assets/ItemHolders/Dialogues/Day1/MayaChen/guest responses/r1.tres" id="6_b3bq8"]
+[ext_resource type="AudioStream" uid="uid://bgua3p41x48tg" path="res://Assets/Sound/voicelines/Shift1/MayaChen/intro.wav" id="8_axdpd"]
 
 [resource]
 script = ExtResource("2_wp1q0")
-voiceline = ExtResource("3_87447")
+voiceline = ExtResource("8_axdpd")
 text = "Hi.  I'm Maya Chen. I'm here to see Tracey Morgan, Room 104."
 duration = 5.0
 next_node = ExtResource("6_b3bq8")

@@ -4,6 +4,10 @@
 [ext_resource type="Script" uid="uid://cwgrdj7ntjmds" path="res://Scripts/ResrouceScripts/DialougeNode.gd" id="2_node"]
 [ext_resource type="Script" uid="uid://vwswsn27uvpe" path="res://Scripts/ResrouceScripts/DialougeChoice.gd" id="3_choice"]
 
+[sub_resource type="Resource" id="aside"]
+script = ExtResource("2_node")
+text = "Oh, and one more thing before I leave. My brother Caleb is driving up tonight from Albany. He should be here around one-thirty. He doesn't have a room, just visiting. If he calls, could you point him this way?"
+
 [sub_resource type="Resource" id="r1"]
 script = ExtResource("2_node")
 text = "Single, I think? Pretty sure. Honestly I don't read the paperwork, I just show up and hope for the best."
@@ -43,10 +47,6 @@ wait_for_prompt = true
 script = ExtResource("3_choice")
 text = "Anything special on file about your room?"
 next_node = SubResource("r4")
-
-[sub_resource type="Resource" id="aside"]
-script = ExtResource("2_node")
-text = "Oh, and one more thing before I leave. My brother Caleb is driving up tonight from Albany. He should be here around one-thirty. He doesn't have a room, just visiting. If he calls, could you point him this way?"
 
 [sub_resource type="Resource" id="start"]
 script = ExtResource("2_node")

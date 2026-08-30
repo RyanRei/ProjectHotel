@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://6unkew0cb5uo"
+path="res://.godot/imported/q1.wav-93e311fab0472dfa22c0410b1b033453.sample"
+
+[deps]
+
+source_file="res://Assets/Sound/voicelines/Shift 2/Ethan/q1.wav"
+dest_files=["res://.godot/imported/q1.wav-93e311fab0472dfa22c0410b1b033453.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2
