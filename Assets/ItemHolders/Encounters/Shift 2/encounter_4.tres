@@ -1,0 +1,49 @@
+[gd_resource type="Resource" script_class="EncounterData" format=3 uid="uid://mkikpkc1f71v"]
+
+[ext_resource type="Script" uid="uid://vwswsn27uvpe" path="res://Scripts/ResrouceScripts/DialougeChoice.gd" id="1_choice"]
+[ext_resource type="Script" uid="uid://b5vh1alvaioay" path="res://Scripts/ResrouceScripts/EncounterData.gd" id="1_enc"]
+[ext_resource type="Script" uid="uid://cwgrdj7ntjmds" path="res://Scripts/ResrouceScripts/DialougeNode.gd" id="2_node"]
+
+[sub_resource type="Resource" id="taunt"]
+script = ExtResource("2_node")
+text = "Hey. It's Ven. Sorry to bother you again... God, you really do think this place is safe, don't you? That's cute. From in here, it's a really nice place not to be interrupted. As for Ven, he was taken care of. Get some sleep. You've earned it."
+
+[sub_resource type="Resource" id="q1"]
+script = ExtResource("1_choice")
+text = "What's your relationship to Ven?"
+next_node = SubResource("taunt")
+
+[sub_resource type="Resource" id="q2"]
+script = ExtResource("1_choice")
+text = "How did you get here tonight?"
+next_node = SubResource("taunt")
+
+[sub_resource type="Resource" id="q3"]
+script = ExtResource("1_choice")
+text = "When did he ask you to come in?"
+next_node = SubResource("taunt")
+
+[sub_resource type="Resource" id="q4"]
+script = ExtResource("1_choice")
+text = "Do you have any ID on you?"
+next_node = SubResource("taunt")
+
+[sub_resource type="Resource" id="start"]
+script = ExtResource("2_node")
+text = "Hey. It's Ven. Sorry to bother you again."
+choices = Array[ExtResource("1_choice")]([SubResource("q1"), SubResource("q2"), SubResource("q3"), SubResource("q4")])
+wait_for_prompt = true
+question_only_prompt = true
+
+[resource]
+script = ExtResource("1_enc")
+name = "Room 412"
+encounter_id = "caleb_taunt"
+caller_type = "KILLER"
+dialogue = SubResource("start")
+communication_type = "RESIDENT"
+time = "1:38 AM"
+reportable = false
+room_number = "412"
+trigger_hour = 1
+trigger_minute = 38

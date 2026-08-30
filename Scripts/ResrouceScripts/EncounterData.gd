@@ -2,14 +2,18 @@ class_name EncounterData
 extends Resource
 
 @export var name: String
+@export var encounter_id: String
 @export_enum("INNOCENT", "KILLER") var caller_type: String
 @export var dialogue: DialogueNode
+@export var alternate_dialogue: DialogueNode
 @export var model:PackedScene
 @export_enum("RESIDENT","VISITOR","INFORMATIVE") var communication_type:String
 @export_enum("MALE", "FEMALE") var visitor_gender: String = "MALE"
 @export_enum("SUCCESS","FAIL","TBD") var status:String="TBD"
 @export var time:String
 @export var LogbookEntry:String
+@export var reportable: bool = true
+@export_range(1.0, 5.0, 0.5) var report_weight: float = 1.0
 @export_group("Logbook")
 @export var room_number: String
 @export_enum("CALL", "VIS", "IN", "OUT") var logbook_type: String = "CALL"

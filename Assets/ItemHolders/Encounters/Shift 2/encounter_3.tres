@@ -1,0 +1,98 @@
+[gd_resource type="Resource" script_class="EncounterData" format=3 uid="uid://dhp6vdplsh7iq"]
+
+[ext_resource type="Script" uid="uid://b5vh1alvaioay" path="res://Scripts/ResrouceScripts/EncounterData.gd" id="1_enc"]
+[ext_resource type="Script" uid="uid://cwgrdj7ntjmds" path="res://Scripts/ResrouceScripts/DialougeNode.gd" id="2_node"]
+[ext_resource type="Script" uid="uid://vwswsn27uvpe" path="res://Scripts/ResrouceScripts/DialougeChoice.gd" id="3_choice"]
+[ext_resource type="PackedScene" uid="uid://cu3jpjd8bf44a" path="res://Scenes/humanEntity.tscn" id="4_model"]
+
+[sub_resource type="Resource" id="alt_reveal"]
+script = ExtResource("2_node")
+text = "He never got the chance, did he? Honestly, you made this super easy for me. I didn't even have to set foot in your precious building and act like his younger brother. He was standing right outside your door, just ready to accept his fate."
+
+[sub_resource type="Resource" id="alt_q1"]
+script = ExtResource("3_choice")
+text = "What's your relationship to Ven?"
+next_node = SubResource("alt_reveal")
+
+[sub_resource type="Resource" id="alt_q2"]
+script = ExtResource("3_choice")
+text = "How did you get here tonight?"
+next_node = SubResource("alt_reveal")
+
+[sub_resource type="Resource" id="alt_q3"]
+script = ExtResource("3_choice")
+text = "When did he ask you to come in?"
+next_node = SubResource("alt_reveal")
+
+[sub_resource type="Resource" id="alt_q4"]
+script = ExtResource("3_choice")
+text = "Do you have any ID on you?"
+next_node = SubResource("alt_reveal")
+
+[sub_resource type="Resource" id="alternative"]
+script = ExtResource("2_node")
+text = "Hey. It's Caleb, here to see my brother, Ven, Room 412? He said he'd let you know I was—"
+choices = Array[ExtResource("3_choice")]([SubResource("alt_q1"), SubResource("alt_q2"), SubResource("alt_q3"), SubResource("alt_q4")])
+wait_for_prompt = true
+question_only_prompt = true
+
+[sub_resource type="Resource" id="r1"]
+script = ExtResource("2_node")
+text = "He's my brother. Older brother, if that even matters."
+wait_for_prompt = true
+
+[sub_resource type="Resource" id="q1"]
+script = ExtResource("3_choice")
+text = "What's your relationship to Ven?"
+next_node = SubResource("r1")
+
+[sub_resource type="Resource" id="r2"]
+script = ExtResource("2_node")
+text = "Flew in from Denver, actually. The cab dropped me off maybe twenty minutes ago. I'm running on no sleep, so bear with me."
+wait_for_prompt = true
+
+[sub_resource type="Resource" id="q2"]
+script = ExtResource("3_choice")
+text = "How did you get here tonight?"
+next_node = SubResource("r2")
+
+[sub_resource type="Resource" id="r3"]
+script = ExtResource("2_node")
+text = "Around one-thirty, he said. I think I'm actually a little early, honestly."
+wait_for_prompt = true
+
+[sub_resource type="Resource" id="q3"]
+script = ExtResource("3_choice")
+text = "When did he ask you to come in?"
+next_node = SubResource("r3")
+
+[sub_resource type="Resource" id="r4"]
+script = ExtResource("2_node")
+text = "Yeah, sure. Want me to read off my license or something? Not sure what good that'll do you, but go for it."
+wait_for_prompt = true
+
+[sub_resource type="Resource" id="q4"]
+script = ExtResource("3_choice")
+text = "Do you have any ID on you?"
+next_node = SubResource("r4")
+
+[sub_resource type="Resource" id="standard"]
+script = ExtResource("2_node")
+text = "Hey, sorry it's so late. This is Caleb, I'm here to see my brother, Ven? Room 412. I'm pretty wiped, but I am sure he must've talked about me, right?"
+choices = Array[ExtResource("3_choice")]([SubResource("q1"), SubResource("q2"), SubResource("q3"), SubResource("q4")])
+wait_for_prompt = true
+
+[resource]
+script = ExtResource("1_enc")
+name = "Caleb"
+encounter_id = "caleb"
+caller_type = "KILLER"
+dialogue = SubResource("standard")
+alternate_dialogue = SubResource("alternative")
+model = ExtResource("4_model")
+communication_type = "VISITOR"
+time = "1:20 AM"
+room_number = "412"
+logbook_type = "VIS"
+trigger_hour = 1
+trigger_minute = 20

@@ -17,7 +17,7 @@
 [ext_resource type="PackedScene" uid="uid://baabtnhguem4d" path="res://Scenes/Tutorial/box_pointing_to_text.tscn" id="6_rs52r"]
 [ext_resource type="PackedScene" uid="uid://bb8bpfxy4igwf" path="res://Assets/3D Models/Computer/desktop_computer.glb" id="7_i2uxr"]
 [ext_resource type="Resource" uid="uid://borvgm7cvlbtd" path="res://Assets/ItemHolders/Encounters/Shift 1/encounter_2.tres" id="7_yrwa2"]
-[ext_resource type="PackedScene" uid="uid://dneeofe0xoqcs" path="res://Scenes/RosterUI.tscn" id="8_roster"]
+[ext_resource type="PackedScene" path="res://Scenes/RosterUI.tscn" id="8_roster"]
 [ext_resource type="Script" uid="uid://m6c7lfrjow88" path="res://Scripts/Roster/ComputerMonitor.gd" id="9_monitor"]
 [ext_resource type="Script" uid="uid://b7i3xkbxsn32n" path="res://Scripts/DeskCameraController.gd" id="10_camera"]
 [ext_resource type="Script" uid="uid://dop5fevvwspt4" path="res://Scripts/InteractionHand.gd" id="11_hand"]
@@ -28,13 +28,18 @@
 [ext_resource type="PackedScene" uid="uid://b51biclicg0bf" path="res://Assets/3D Models/Bulb/light.glb" id="13_jloce"]
 [ext_resource type="Script" uid="uid://ca5auu7qff8vv" path="res://Scripts/Logbook/LogbookController.gd" id="13_logbook_controller"]
 [ext_resource type="PackedScene" uid="uid://yqtwdwhowpt1" path="res://Scenes/day_report_ui.tscn" id="13_qnepm"]
-[ext_resource type="PackedScene" uid="uid://cw0yaw10bfhlc" path="res://Scenes/LogbookUI.tscn" id="14_logbook_ui"]
+[ext_resource type="PackedScene" path="res://Scenes/LogbookUI.tscn" id="14_logbook_ui"]
 [ext_resource type="AudioStream" uid="uid://cbaafyuvhebc2" path="res://Assets/Sound/sfx/pageFlip.mp3" id="17_ue4or"]
 [ext_resource type="Texture2D" uid="uid://uaaui4wtmpk7" path="res://Assets/Textures/alterwall.jpg" id="20_5hxig"]
-[ext_resource type="Resource" uid="uid://b0jqimso2xpsb" path="res://Assets/ItemHolders/Encounters/Shift 2/encounter_1.tres" id="24_c24b1"]
+[ext_resource type="Resource" uid="uid://brqsu6qudugp3" path="res://Assets/ItemHolders/Encounters/Shift 2/encounter_1.tres" id="24_c24b1"]
 [ext_resource type="Resource" uid="uid://ocqe63udp2ju" path="res://Assets/ItemHolders/Encounters/Shift 1/encounter_3.tres" id="25_2gwif"]
-[ext_resource type="Resource" uid="uid://bosukl3h62n8u" path="res://Assets/ItemHolders/Encounters/Shift 2/encounter_2.tres" id="25_ue4or"]
+[ext_resource type="Resource" uid="uid://c55r1htmn33lf" path="res://Assets/ItemHolders/Encounters/Shift 2/encounter_2.tres" id="25_ue4or"]
 [ext_resource type="Resource" uid="uid://dvpitgbkkwxsb" path="res://Assets/ItemHolders/Encounters/Shift 1/encounter_4.tres" id="26_vnq4p"]
+[ext_resource type="Resource" uid="uid://dhp6vdplsh7iq" path="res://Assets/ItemHolders/Encounters/Shift 2/encounter_3.tres" id="27_shift2_3"]
+[ext_resource type="Resource" uid="uid://mkikpkc1f71v" path="res://Assets/ItemHolders/Encounters/Shift 2/encounter_4.tres" id="28_shift2_4"]
+[ext_resource type="Resource" uid="uid://6285jd1jr4a7" path="res://Assets/ItemHolders/Encounters/Shift 2/encounter_5.tres" id="29_shift2_5"]
+[ext_resource type="PackedScene" path="res://Scenes/shift_transition_ui.tscn" id="30_shift_transition"]
+[ext_resource type="PackedScene" path="res://Scenes/Environment/reception_lobby.tscn" id="31_lobby"]
 
 [sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_cm8yc"]
 ground_color = Color(0.89985204, 0.4907532, 0.21794471, 1)
@@ -94,7 +99,7 @@ metadata/_custom_type_script = "uid://8570ain8w4hx"
 
 [sub_resource type="Resource" id="Resource_5hxig"]
 script = ExtResource("2_2hvnh")
-encounters = Array[ExtResource("3_wnmts")]([ExtResource("24_c24b1"), ExtResource("25_ue4or")])
+encounters = Array[ExtResource("3_wnmts")]([ExtResource("24_c24b1"), ExtResource("25_ue4or"), ExtResource("27_shift2_3"), ExtResource("28_shift2_4"), ExtResource("29_shift2_5")])
 metadata/_custom_type_script = "uid://8570ain8w4hx"
 
 [node name="Node3D" type="Node3D" unique_id=1681156658]
@@ -109,6 +114,8 @@ script = ExtResource("10_camera")
 
 [node name="models" type="Node" parent="." unique_id=673787417]
 
+[node name="ReceptionLobby" parent="models" unique_id=2127325261 instance=ExtResource("31_lobby")]
+
 [node name="reception_table" parent="models" unique_id=1800046158 instance=ExtResource("1_15lvy")]
 transform = Transform3D(3.535534, 0, -3.535534, 0, 5, 0, 3.535534, 0, 3.535534, -1.6761309, 0, 3.9475596)
 
@@ -119,22 +126,22 @@ transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 0.7720361, 2.0122602
 transform = Transform3D(7.9988327, -0.0007051654, -0.13666779, 0, 7.9998937, -0.041277084, 0.1366696, 0.04127106, 7.9987264, -2.1664891, 2.9574757, 1.562563)
 script = ExtResource("9_monitor")
 
-[node name="defaultMaterial" parent="models/computah/Sketchfab_model/Collada visual scene group/Mouse_Wheel_Low" parent_id_path=PackedInt32Array(1114786589, 475541606) index="0" unique_id=554555474]
+[node name="defaultMaterial" parent="models/computah/Sketchfab_model/Collada visual scene group/Mouse_Wheel_Low" parent_id_path=PackedInt32Array(1114786589, 193065424) index="0" unique_id=544706403]
 transform = Transform3D(0.39959186, 9.313323e-05, 0.018049983, -9.313345e-05, 0.3999994, -2.0982698e-06, -0.018049983, -2.1059532e-06, 0.39959213, -0.14093643, -0.030498207, 0.20731899)
 
-[node name="defaultMaterial2" parent="models/computah/Sketchfab_model/Collada visual scene group/Mouse_Low" parent_id_path=PackedInt32Array(1114786589, 352854908) index="0" unique_id=2070005797]
+[node name="defaultMaterial2" parent="models/computah/Sketchfab_model/Collada visual scene group/Mouse_Low" parent_id_path=PackedInt32Array(1114786589, 857369718) index="0" unique_id=557410940]
 transform = Transform3D(0.39888582, 0.0001539214, 0.029831205, -0.00015392152, 0.3999998, -5.746493e-06, -0.029831205, -5.74952e-06, 0.39888588, -0.13918996, -0.030419528, 0.2191678)
 
-[node name="defaultMaterial3" parent="models/computah/Sketchfab_model/Collada visual scene group/Base_Low" parent_id_path=PackedInt32Array(1114786589, 1777794563) index="0" unique_id=394983047]
+[node name="defaultMaterial3" parent="models/computah/Sketchfab_model/Collada visual scene group/Base_Low" parent_id_path=PackedInt32Array(1114786589, 2144100107) index="0" unique_id=1672925608]
 transform = Transform3D(0.39999992, 3.637979e-12, -2.7939677e-09, 0, 0.39999992, 9.313226e-10, 3.7252903e-09, -1.1641532e-09, 0.39999992, 0.002469182, -0.019545555, 0.14461479)
 
-[node name="defaultMaterial4" parent="models/computah/Sketchfab_model/Collada visual scene group/Vert_Low" parent_id_path=PackedInt32Array(1114786589, 1875643566) index="0" unique_id=1392626751]
+[node name="defaultMaterial4" parent="models/computah/Sketchfab_model/Collada visual scene group/Vert_Low" parent_id_path=PackedInt32Array(1114786589, 1144788793) index="0" unique_id=207218652]
 transform = Transform3D(0.2999999, 7.275958e-12, -4.1909516e-09, -1.6370905e-11, 0.3, 2.2118911e-09, 2.7939677e-09, -1.7462298e-09, 0.3, 0.0084812045, -0.05689746, 0.1804916)
 
-[node name="defaultMaterial5" parent="models/computah/Sketchfab_model/Collada visual scene group/Computer_Low" parent_id_path=PackedInt32Array(1114786589, 1713742004) index="0" unique_id=510536054]
+[node name="defaultMaterial5" parent="models/computah/Sketchfab_model/Collada visual scene group/Computer_Low" parent_id_path=PackedInt32Array(1114786589, 376919465) index="0" unique_id=1023339267]
 transform = Transform3D(0.49997613, -0.0013246113, 0.004698918, 0.000566037, 0.49372703, 0.078952394, -0.004849129, -0.078943305, 0.49370477, 0.004231155, -0.00551641, 0.24766394)
 
-[node name="defaultMaterial6" parent="models/computah/Sketchfab_model/Collada visual scene group/Key_Board_Low" parent_id_path=PackedInt32Array(1114786589, 1531244796) index="0" unique_id=1808161109]
+[node name="defaultMaterial6" parent="models/computah/Sketchfab_model/Collada visual scene group/Key_Board_Low" parent_id_path=PackedInt32Array(1114786589, 532525736) index="0" unique_id=1437999894]
 transform = Transform3D(0.3499632, 2.6129557e-05, 0.0050641145, -2.6129625e-05, 0.3500003, -1.8964056e-07, -0.0050641196, -1.9290019e-07, 0.34996325, -0.07371694, -0.058675766, 0.15438148)
 
 [node name="Logbook" parent="models" unique_id=2051017322 node_paths=PackedStringArray("logbook", "logUpdateAudio", "pageFlipAudio") instance=ExtResource("4_jmvtc")]
@@ -144,14 +151,14 @@ logbook = NodePath("../../CanvasLayer/LogbookUI")
 logUpdateAudio = NodePath("whencorniferbemapping")
 pageFlipAudio = NodePath("pageflip")
 
-[node name="Collada visual scene group" parent="models/Logbook/Sketchfab_model" parent_id_path=PackedInt32Array(2051017322, 125633443) index="0" unique_id=1202365656]
+[node name="Collada visual scene group" parent="models/Logbook/Sketchfab_model" parent_id_path=PackedInt32Array(2051017322, 79811789) index="0" unique_id=665357334]
 transform = Transform3D(1, 0, 0, 0, -4.3711385e-08, -0.99999994, 0, 0.99999994, -4.3711385e-08, 0, 0, 0)
 
-[node name="defaultMaterial_001" parent="models/Logbook/Sketchfab_model/Collada visual scene group/notebook" parent_id_path=PackedInt32Array(2051017322, 1030892043) index="0" unique_id=1484271737]
+[node name="defaultMaterial_001" parent="models/Logbook/Sketchfab_model/Collada visual scene group/notebook" parent_id_path=PackedInt32Array(2051017322, 718344277) index="0" unique_id=637014689]
 transform = Transform3D(-0.99800265, 0.14202243, 0.027653921, -0.056808602, -2.495963, 0.00078626315, 0.027653925, -0.0019657402, 0.99961776, 0.15295768, 0.022822142, -0.0021170676)
 surface_material_override/0 = ExtResource("12_u3pq5")
 
-[node name="defaultMaterial" parent="models/Logbook/Sketchfab_model/Collada visual scene group/penna" parent_id_path=PackedInt32Array(2051017322, 1552377788) index="0" unique_id=1057759552]
+[node name="defaultMaterial" parent="models/Logbook/Sketchfab_model/Collada visual scene group/penna" parent_id_path=PackedInt32Array(2051017322, 713728379) index="0" unique_id=790055126]
 transform = Transform3D(1, -2.0816682e-17, 2.7939677e-09, -1.3877788e-17, 1.0000001, -1.3322676e-15, 0, 1.7763568e-15, 1.0000002, 0.37629592, 0, -0.005208224)
 
 [node name="whencorniferbemapping" type="AudioStreamPlayer3D" parent="models/Logbook" unique_id=1175347376]
@@ -164,7 +171,7 @@ stream = ExtResource("17_ue4or")
 volume_db = -2.367
 
 [node name="Wallclock" parent="models" unique_id=1020162297 instance=ExtResource("12_j1ydb")]
-transform = Transform3D(0.088670745, -4.9992137, 0, 4.9992137, 0.088670745, 0, 0, 0, 5, 11.237114, 6.931054, -0.2118001)
+transform = Transform3D(-0.004235055, 0.23877029, 3.992865, 3.9993708, 0.070936605, 0, -0.07081007, 3.992237, -0.23880786, 0.012044907, 12.546742, -16.400383)
 script = ExtResource("12_wallclock_controller")
 
 [node name="light" parent="models" unique_id=1780392581 instance=ExtResource("13_jloce")]
@@ -172,6 +179,7 @@ transform = Transform3D(4.9729, 0, -0.5198722, 0, 5, 0, 0.5198722, 0, 4.9729, -2
 
 [node name="Wall" type="CSGBox3D" parent="models" unique_id=702493538]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.633514, 4.66564, -12.118917)
+visible = false
 size = Vector3(2, 20, 40)
 material = SubResource("StandardMaterial3D_5hxig")
 
@@ -194,11 +202,13 @@ metadata/_edit_group_ = true
 
 [node name="Roof" type="CSGBox3D" parent="models" unique_id=403116593]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.85289955, 15.458476, -12.590821)
+visible = false
 size = Vector3(40, 2, 40)
 material = SubResource("StandardMaterial3D_ldmme")
 
 [node name="Floor" type="CSGBox3D" parent="models" unique_id=350448394]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.800312, -3.96, -11.85965)
+visible = false
 size = Vector3(30, 2, 40)
 material = SubResource("StandardMaterial3D_ldmme")
 
@@ -207,7 +217,7 @@ material = SubResource("StandardMaterial3D_ldmme")
 [node name="OmniLight3D3" type="OmniLight3D" parent="Lights" unique_id=1985307974]
 transform = Transform3D(0.9999762, 0.006874963, 0.00052147126, -0.0068781553, 0.99995595, 0.0063888333, -0.00047752523, -0.006392268, 0.9999795, 32.62258, 3.1644402, -27.830126)
 light_color = Color(1, 0.87, 0.87, 1)
-light_energy = 1.065
+light_energy = 0.35
 light_indirect_energy = 16.0
 light_volumetric_fog_energy = 3.906
 omni_range = 54.55811
@@ -215,7 +225,7 @@ omni_range = 54.55811
 [node name="OmniLight3D2" type="OmniLight3D" parent="Lights" unique_id=145564592]
 transform = Transform3D(1, 0, 0, 0, -0.520924, 0.85360307, 0, -0.85360307, -0.520924, -2.8914318, 13.010827, -8.211379)
 light_color = Color(1, 0.889, 0.82, 1)
-light_energy = 1.107
+light_energy = 0.42
 light_indirect_energy = 16.0
 light_volumetric_fog_energy = 16.0
 light_size = 0.493
@@ -232,7 +242,7 @@ omni_range = 35.586117
 [node name="SpotLight3D2" type="SpotLight3D" parent="Lights/base lights" unique_id=434221459]
 transform = Transform3D(0.3972774, 0.6257363, -0.6712859, 0.10155303, 0.6970195, 0.70982444, 0.91206235, -0.35016832, 0.2133647, -9.111044, 4.618067, 0.11233735)
 light_color = Color(0.28046393, 0.379823, 0.42634302, 1)
-light_energy = 40.0
+light_energy = 9.0
 light_specular = 2.258
 shadow_enabled = true
 spot_range = 6.0899944
@@ -241,7 +251,7 @@ spot_angle = 89.99
 [node name="SpotLight3D" type="SpotLight3D" parent="Lights/base lights" unique_id=1808260354]
 transform = Transform3D(0.998379, 2.4878615e-09, -0.056915637, 0.056915637, -4.3640533e-08, 0.998379, 0, -1, -4.371139e-08, 0.71091366, 5.187361, 2.0646698)
 light_color = Color(0.28046393, 0.379823, 0.42634302, 1)
-light_energy = 40.0
+light_energy = 9.0
 light_specular = 2.258
 shadow_enabled = true
 spot_range = 6.3599453
@@ -250,7 +260,7 @@ spot_angle = 20.232937
 [node name="OmniLight3D" type="OmniLight3D" parent="Lights/base lights" unique_id=62980994]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2802238, 3.4659672, 0)
 light_color = Color(1, 0.8126302, 0.72623205, 1)
-light_energy = 6.622
+light_energy = 2.6
 omni_range = 8.721
 
 [node name="OmniLight3D5" type="OmniLight3D" parent="Lights/base lights" unique_id=1233346839]
@@ -450,12 +460,14 @@ script = ExtResource("11_hand")
 
 [node name="DayReportUI" parent="CanvasLayer" unique_id=86161530 instance=ExtResource("13_qnepm")]
 
+[node name="ShiftTransitionUI" parent="CanvasLayer" unique_id=1068896443 instance=ExtResource("30_shift_transition")]
+
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=436142256]
 
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="." unique_id=923016706]
 visible = false
 
-[node name="Encounter Manager" type="Node" parent="." unique_id=446126930 node_paths=PackedStringArray("logBookController", "phone", "encounter_button", "day_report_ui", "tutorial")]
+[node name="Encounter Manager" type="Node" parent="." unique_id=446126930 node_paths=PackedStringArray("logBookController", "phone", "encounter_button", "day_report_ui", "shift_transition_ui", "tutorial")]
 process_mode = 3
 script = ExtResource("1_lov0d")
 logBookController = NodePath("../models/Logbook")
@@ -463,6 +475,7 @@ phone = NodePath("../models/Telephone")
 encounter_button = NodePath("../UI/continue_encounters")
 days = Array[ExtResource("2_2hvnh")]([SubResource("Resource_u3pq5"), SubResource("Resource_5hxig")])
 day_report_ui = NodePath("../CanvasLayer/DayReportUI")
+shift_transition_ui = NodePath("../CanvasLayer/ShiftTransitionUI")
 tutorial = NodePath("../TutorialManager")
 
 [node name="empty" type="Node3D" parent="." unique_id=84633623]

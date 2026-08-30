@@ -1,5 +1,9 @@
 extends Node
 
+var story_flags: Dictionary = {}
+var reputation := 80.0
+var share_price := 42.0
+
 @export var day:int=1
 @export var encounter:int=1
 

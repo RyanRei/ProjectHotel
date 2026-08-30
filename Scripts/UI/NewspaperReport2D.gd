@@ -131,11 +131,13 @@ func set_report(report: Dictionary) -> void:
 	if report.has("day"):
 		$Display/Paper/Edition.text = "MORNING REPORT\nSHIFT %d" % int(report.day)
 	if report.has("results"):
-		_apply_results(report.results)
+		_apply_results(report.results, report.get("story_flags", {}))
 
 
-func _apply_results(results: Array) -> void:
+func _apply_results(results: Array, story_flags: Dictionary = {}) -> void:
 	var successes := 0
+	var weighted_successes := 0.0
+	var weighted_failures := 0.0
 	var has_outside_crime := false
 	var has_inside_crime := false
 	for index in range(4):
@@ -152,15 +154,20 @@ func _apply_results(results: Array) -> void:
 		has_outside_crime = has_outside_crime or consequence == "OUTSIDE"
 		if succeeded:
 			successes += 1
+			weighted_successes += float(result.get("weight", 1.0))
+		else:
+			weighted_failures += float(result.get("weight", 1.0))
 		card.get_node("Name").text = str(result.get("name", "UNKNOWN")).to_upper()
 		card.get_node("Result").text = "CORRECT DECISION" if succeeded else "WRONG DECISION"
 		card.get_node("StatusBand").color = Color("71824b") if succeeded else Color("94382c")
-		card.get_node("Details").text = "The caller was handled safely using the available evidence." if succeeded else "The decision caused a serious consequence revealed in the morning report."
+		card.get_node("Details").text = _get_result_details(str(result.get("id", "")), succeeded, story_flags)
 
 	var total := results.size()
 	var failures := total - successes
 	%BreakdownTitle.text = "DECISION BREAKDOWN - %d OF %d CORRECT" % [successes, total]
-	if has_inside_crime:
+	var ven_inside_death := bool(story_flags.get("ven_inside_death", false))
+	var ven_outside_death := bool(story_flags.get("ven_outside_death", false))
+	if has_inside_crime or ven_inside_death:
 		%OutcomeImage.texture = CRIME_INSIDE_IMAGE
 		%PhotoCaption.text = "CRIME SCENE PHOTOGRAPH — INCIDENT INSIDE NIGHTHAVEN"
 	elif has_outside_crime:
@@ -169,14 +176,41 @@ func _apply_results(results: Array) -> void:
 	else:
 		%OutcomeImage.texture = NEUTRAL_SHIFT_IMAGE
 		%PhotoCaption.text = "MORNING PHOTOGRAPH — NIGHTHAVEN REMAINED SECURE"
-	%Headline.text = "A CLEAN NIGHT AT NIGHTHAVEN" if failures == 0 else ("ONE BAD CALL ENDS A LIFE" if failures == 1 else "A NIGHT OF DEADLY MISTAKES")
-	%Subheadline.text = "%d of %d decisions were correct during the night shift" % [successes, total]
-	var reputation_change := float(successes * 2 - failures * 4)
-	var share_change := float(successes) * 1.25 - float(failures) * 3.25
-	%ReputationValue.text = "%d / 100" % clampi(80 + int(reputation_change), 0, 100)
-	%ShareValue.text = "$%.2f" % maxf(1.0, 42.0 + share_change)
+	if ven_inside_death:
+		%Headline.text = "POP STAR VEN KEER KILLED INSIDE NIGHTHAVEN"
+		%Subheadline.text = "Public outrage follows a fatal security breach inside Room 412"
+	elif ven_outside_death:
+		%Headline.text = "VEN KEER TURNED AWAY, KILLED OUTSIDE SHELTER"
+		%Subheadline.text = "Night operator rejected the star minutes before the fatal street attack"
+	else:
+		%Headline.text = "QUIET NIGHT FOR SECRET VIP GUEST" if failures == 0 else "NIGHTHAVEN STOPS LATE-NIGHT SECURITY THREATS"
+		%Subheadline.text = "%d of %d decisions were correct; Ven Keer remained safe" % [successes, total]
+	var vip_penalty := 12.0 if ven_inside_death or ven_outside_death else 0.0
+	var reputation_change := weighted_successes * 2.0 - weighted_failures * 4.0 - vip_penalty
+	var share_change := weighted_successes * 1.25 - weighted_failures * 3.25 - vip_penalty * 0.8
+	GameState.reputation = clampf(GameState.reputation + reputation_change, 0.0, 100.0)
+	GameState.share_price = maxf(1.0, GameState.share_price + share_change)
+	%ReputationValue.text = "%d / 100" % int(GameState.reputation)
+	%ShareValue.text = "$%.2f" % GameState.share_price
 	_set_metric_change(%ReputationDelta, reputation_change, "")
 	_set_metric_change(%ShareDelta, share_change, "%")
+
+
+func _get_result_details(encounter_id: String, succeeded: bool, story_flags: Dictionary) -> String:
+	match encounter_id:
+		"ethan_cole":
+			return "Room 103 companion record exposed the stolen reservation card." if succeeded else "A stolen card holder gained access to Room 103."
+		"ven_keer":
+			if bool(story_flags.get("ven_inside_death", false)):
+				return "Initially admitted, then killed inside Room 412 after the visitor breach."
+			if bool(story_flags.get("ven_outside_death", false)):
+				return "Rejected during synchronization and killed outside the shelter."
+			return "The operator trusted the live logbook and restored VIP access."
+		"caleb":
+			return "Communication History exposed the Albany/Denver contradiction." if succeeded else "The impersonator reached Ven's room."
+		"maintenance_207":
+			return "The Room 207 log disproved the emergency work order." if succeeded else "A false worker was granted resident-area access."
+	return "Handled safely using the available evidence." if succeeded else "The decision caused a serious consequence."
 
 
 func set_metric_changes(reputation_change: float, share_change_percent: float) -> void:

@@ -227,10 +227,10 @@ func _on_time_updated(_hour: int, _minute: int) -> void:
 
 
 func _sync_scheduled_entries() -> void:
-	if Engine.is_editor_hint() or GameState.day != 1 or not logbook:
+	if Engine.is_editor_hint() or GameState.day not in [1, 2] or not logbook:
 		return
 	var added_any := false
-	var schedule := Shift1Data.logbook_schedule()
+	var schedule := Shift1Data.logbook_schedule() if GameState.day == 1 else Shift2Data.logbook_schedule()
 	for index in schedule.size():
 		if released_schedule_entries.has(index):
 			continue
@@ -246,6 +246,7 @@ func _sync_scheduled_entries() -> void:
 		
 		
 func add_page():
+	released_schedule_entries.clear()
 	var index=GameState.day-1
 	logbook.pages.append({
 		"tab":"LOGBOOK",

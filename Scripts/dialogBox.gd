@@ -35,6 +35,7 @@ var hint_label : Label
 var confirmation_text_generation := 0
 var history_open := false
 var history_previous_mouse_mode := Input.MOUSE_MODE_CAPTURED
+var dialogue_generation := 0
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -55,9 +56,25 @@ func _ready() -> void:
 	hint_label.hide()
 	
 	DialogueManager.dialogue_started.connect(run_dialogue)
+	DialogueManager.dialogue_finished.connect(_on_dialogue_finished)
 	DialogueManager.choices_requested.connect(show_choices)
 	accept_reject.confirmation_requested.connect(_on_confirmation_requested)
 	accept_reject.confirmation_cancelled.connect(_on_confirmation_cancelled)
+	hide_dialogue_ui()
+
+
+func _on_dialogue_finished(choice: String) -> void:
+	if choice == "SECRET_CANCELLED":
+		dialogue_generation += 1
+		is_decision_pending = false
+		is_in_choices = false
+		question_menu.hide()
+		accept_reject.active = false
+		accept_reject.hide()
+	audio_stream_player.stop()
+	typing = false
+	waiting_for_line_audio = false
+	awaiting_advance = false
 	hide_dialogue_ui()
 
 
@@ -97,6 +114,8 @@ var typing_skipped := false
 func run_dialogue(current_node: DialogueNode):
 	if not is_instance_valid(current_node):
 		return
+	dialogue_generation += 1
+	var run_generation := dialogue_generation
 
 	visible = true
 	is_hud_visible = true
@@ -113,6 +132,8 @@ func run_dialogue(current_node: DialogueNode):
 		line_duration = maxf(line_duration, current_node.voiceline.get_length())
 
 	await show_line(current_node.text)
+	if run_generation != dialogue_generation or not DialogueManager.active or current_node != DialogueManager.current_node:
+		return
 	history_overlay.add_guest_message(DialogueManager.current_speaker_name, current_node.text)
 	var remaining_time := line_duration - (Time.get_ticks_msec() - line_started_at) / 1000.0
 	
@@ -126,21 +147,29 @@ func run_dialogue(current_node: DialogueNode):
 		while waiting_for_line_audio and Time.get_ticks_msec() < audio_deadline:
 			await get_tree().process_frame
 		waiting_for_line_audio = false
+	if run_generation != dialogue_generation or not DialogueManager.active or current_node != DialogueManager.current_node:
+		return
 
 	continue_indicator.show()
 	await wait_for_advance()
+	if run_generation != dialogue_generation or not DialogueManager.active or current_node != DialogueManager.current_node:
+		return
 	# This is the final advance press for the displayed line. Stop its voice
 	# whether the next state hides the box or replaces it with the action prompt.
 	audio_stream_player.stop()
 
 	if current_node.wait_for_prompt:
-		await present_action_prompt()
+		if current_node.question_only_prompt and not current_node.choices.is_empty():
+			DialogueManager.current_active_choices = current_node.choices.duplicate()
+			show_choices(DialogueManager.current_active_choices)
+		else:
+			await present_action_prompt(run_generation)
 	else:
 		await hide_line()
 		DialogueManager.advance()
 
 
-func present_action_prompt() -> void:
+func present_action_prompt(run_generation := dialogue_generation) -> void:
 	visible = true
 	GameState.leave_desk_state()
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -158,7 +187,7 @@ func present_action_prompt() -> void:
 	
 		
 	accept_reject.turnOn(DialogueManager.get_remaining_question_count())
-	if GameState.day==1 and GameState.encounter==1 :
+	if GameState.day==1 and GameState.encounter==1 and not tutorial.skipped:
 		if tutorial.question_asked == 1:
 			tutorial.question_asked += 1
 			await tutorial.introduce_tabs()
@@ -166,7 +195,7 @@ func present_action_prompt() -> void:
 			tutorial.question_asked += 1
 			await tutorial.check_tab_button()
 	
-	if GameState.day == 1 and GameState.encounter == 2:
+	if GameState.day == 1 and GameState.encounter == 2 and not tutorial.skipped:
 		
 		
 		if tutorial.question_asked == 1 or tutorial.question_asked==2:
@@ -177,7 +206,7 @@ func present_action_prompt() -> void:
 			print("tabbing")
 			tutorial.question_asked += 1
 			await tutorial.e2_check_tab_button()
-	if GameState.day == 1 and GameState.encounter == 3:
+	if GameState.day == 1 and GameState.encounter == 3 and not tutorial.skipped:
 		print(tutorial.question_asked)
 		
 		if tutorial.question_asked == 1 or tutorial.question_asked==2:
@@ -190,6 +219,8 @@ func present_action_prompt() -> void:
 			#await tutorial.e2_check_tab_button()
 		
 	var choice_made: String = await accept_reject.choiceMade
+	if run_generation != dialogue_generation or not DialogueManager.active:
+		return
 	if choice_made == "ACCEPT" or choice_made == "REJECT":
 		history_overlay.add_decision(choice_made)
 	is_decision_pending = false
@@ -420,16 +451,16 @@ func update_choice_display():
 	for i in dialogue_choices.size():
 		var choice_button: DialogueChoiceButton = choices_container.get_child(i)
 		choice_button.set_selected(i == selected_choice)
-	if GameState.day==1 and GameState.encounter==1 :
+	if GameState.day==1 and GameState.encounter==1 and not tutorial.skipped:
 		if tutorial.question_asked==2:
 			await tutorial.select_question()
 
-	elif GameState.day == 1 and GameState.encounter == 2:
+	elif GameState.day == 1 and GameState.encounter == 2 and not tutorial.skipped:
 		if tutorial.question_asked == 2 or tutorial.question_asked == 3 :
 			#print("going here")
 			await tutorial.enc2SelectQuestion()
 			
-	elif GameState.day == 1 and GameState.encounter == 3:
+	elif GameState.day == 1 and GameState.encounter == 3 and not tutorial.skipped:
 		if tutorial.question_asked == 2 :
 			#print("going here")
 			await tutorial.enc3SelectQuestion()

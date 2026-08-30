@@ -10,6 +10,7 @@ var encounterOngoing:=false
 var day_results: Array[Dictionary] = []
 @export var days: Array[Day]
 @export var day_report_ui: DayReportUI
+@export var shift_transition_ui: Control
 @export var guestModel:Node3D
 @export var tutorial:TutorialManager
 enum MovePosition {
@@ -20,10 +21,11 @@ enum MovePosition {
 
 @export_group("Visitor Movement")
 @export var visitor_scale := Vector3.ONE
-@export var visitor_entry_position := Vector3(-22.2, -1.55, -6.22)
-@export var visitor_desk_position := Vector3(-3.249, -1.55, -1.25)
-@export var visitor_right_turn_position := Vector3(-3.249, -1.55, -11.0)
-@export var visitor_inside_position := Vector3(35.404, -1.55, -19.834)
+@export var visitor_entry_position := Vector3(0.0, -1.55, -36.0)
+@export var visitor_lobby_entry_position := Vector3(0.0, -1.55, -29.5)
+@export var visitor_desk_position := Vector3(-3.249, -1.55, -3.682)
+@export var visitor_right_turn_position := Vector3(10.5, -1.55, -6.0)
+@export var visitor_inside_position := Vector3(19.5, -1.55, -8.0)
 @export_range(1.0, 10.0, 0.25) var visitor_walk_speed := 4.5
 @export_range(1.0, 12.0, 0.5) var visitor_turn_speed := 5.0
 
@@ -34,10 +36,13 @@ var waiting_for_end_shift := false
 ## Prevents the schedule watcher from starting the same encounter more than once
 ## while start_encounter() is awaiting its startup animation.
 var encounter_starting := false
+var encounter_generation := 0
 
 
 func _ready() -> void:
 	encounter_button.startEncounter.connect(_on_end_shift_pressed)
+	if not TimeManager.shift_ended.is_connected(_on_clock_shift_ended):
+		TimeManager.shift_ended.connect(_on_clock_shift_ended)
 	begin_day()
 
 
@@ -48,6 +53,11 @@ func begin_day() -> void:
 	is_tutorial_day = (GameState.day == 1)
 	TimeManager.set_time(18, 0)
 	encounter_button.set_hidden_immediately()
+	if GameState.day == 2:
+		GameState.story_flags.clear()
+	if GameState.day > 1 and shift_transition_ui != null and shift_transition_ui.has_method("play_shift_intro"):
+		TimeManager.pause()
+		await shift_transition_ui.call("play_shift_intro", GameState.day)
 
 	if is_tutorial_day:
 		TimeManager.pause()
@@ -67,10 +77,58 @@ func _process(_delta: float) -> void:
 		return
 	if not has_encounter():
 		return
+	_skip_unavailable_encounters()
+	if not has_encounter():
+		show_end_shift()
+		return
 
 	var encounter := get_current_encounter()
 	if TimeManager.in_game_seconds >= encounter.get_trigger_seconds():
 		start_encounter()
+
+
+func _input(event: InputEvent) -> void:
+	var key_event := event as InputEventKey
+	if key_event == null or not key_event.is_pressed() or key_event.is_echo():
+		return
+	if not key_event.ctrl_pressed or not key_event.shift_pressed:
+		return
+	if key_event.physical_keycode == KEY_N:
+		_request_secret_encounter_navigation(1)
+		get_viewport().set_input_as_handled()
+	elif key_event.physical_keycode == KEY_P:
+		_request_secret_encounter_navigation(-1)
+		get_viewport().set_input_as_handled()
+
+
+func _request_secret_encounter_navigation(direction: int) -> void:
+	if GameState.day < 1 or GameState.day > days.size():
+		return
+	var encounter_count := days[GameState.day - 1].encounters.size()
+	var target := clampi(GameState.encounter + direction, 1, encounter_count + 1)
+	encounter_generation += 1
+	waiting_for_end_shift = false
+	if tutorial != null:
+		tutorial.reset_after_secret_navigation()
+	is_tutorial_day = false
+	if DialogueManager.active:
+		DialogueManager.end_dialogue("SECRET_CANCELLED")
+	if phone != null and (phone.ringing or phone.answering):
+		phone.skip_ringing()
+	if is_instance_valid(guestModel):
+		guestModel.queue_free()
+		guestModel = null
+	encounterOngoing = false
+	encounter_starting = false
+	if target > encounter_count:
+		GameState.encounter = encounter_count + 1
+		show_end_shift()
+		return
+	GameState.encounter = target
+	var encounter := get_current_encounter()
+	TimeManager.set_time(encounter.trigger_hour, encounter.trigger_minute)
+	TimeManager.pause()
+	call_deferred("start_encounter")
 
 
 # ── Tutorial day: sequential encounter firing ───────────────────────
@@ -101,40 +159,52 @@ func start_encounter() -> void:
 		return
 	if not has_encounter():
 		return
-	if GameState.day==1:
+	if GameState.day==1 and not tutorial.skipped:
 		tutorial.question_asked=1
 		if GameState.encounter==2:
 		
 			sendClockFinished.emit()
 	encounter_starting = true
+	encounter_generation += 1
+	var run_generation := encounter_generation
 	var encounter := get_current_encounter()
 
 	await encounter_startup_props(encounter)
+	if run_generation != encounter_generation:
+		return
 	encounter_starting = false
 	encounterOngoing = true
 	# Once an encounter is active, the clock advances at real-world speed.
 	TimeManager.resume_encounter()
 
-	if encounter.communication_type=="RESIDENT":
+	var communication_type := _get_communication_type(encounter)
+	if communication_type=="RESIDENT":
 		await wait_for_phone()
-	elif encounter.communication_type=="VISITOR":
-		await move_customer(encounter.model,MovePosition.MOVE_IN)
-		if GameState.day==1 and GameState.encounter==3:
+	elif communication_type=="VISITOR":
+		await move_customer(_get_visitor_model(encounter), MovePosition.MOVE_IN)
+		if run_generation != encounter_generation:
+			return
+		if GameState.day==1 and GameState.encounter==3 and not tutorial.skipped:
 			await tutorial.mayaChenIntroduction(guestModel)
-	elif encounter.communication_type=="INFORMATIVE":
+	elif communication_type=="INFORMATIVE":
 		await wait_for_phone()
-
+		if run_generation != encounter_generation:
+			return
 		logBookController.updateLogbook(encounter)
 		# For informative encounters, no dialogue — just show info and move on
 		await finish_encounter(encounter, "NORMAL")
 		return
 
+	if run_generation != encounter_generation:
+		return
+
 	logBookController.updateLogbook(encounter)
 
-	DialogueManager.start_dialogue(encounter.dialogue, encounter.name)
+	DialogueManager.start_dialogue(_get_dialogue(encounter), encounter.name)
 
 	var choice:String=await DialogueManager.dialogue_finished
-	
+	if run_generation != encounter_generation:
+		return
 	
 	await finish_encounter(encounter, choice)
 
@@ -143,25 +213,29 @@ func start_encounter() -> void:
 func finish_encounter(encounter: EncounterData, choice: String):
 	await encounter_end_props(encounter, choice)
 
-	day_results.append({
-		"name": encounter.name,
-		"status": encounter.status,
-		"consequence": _get_consequence(encounter, choice)
-	})
-	if GameState.encounter==1 and GameState.day==1:
+	_store_story_choice(encounter, choice)
+	if _is_reportable(encounter):
+		day_results.append({
+			"id": encounter.encounter_id,
+			"name": encounter.name,
+			"status": encounter.status,
+			"consequence": _get_consequence(encounter, choice),
+			"weight": encounter.report_weight
+		})
+	if GameState.encounter==1 and GameState.day==1 and not tutorial.skipped:
 		await tutorial.introduce_clock()
-	if GameState.encounter == 4 and GameState.day == 1:
+	if GameState.encounter == 4 and GameState.day == 1 and not tutorial.skipped:
 		await tutorial.show_final_shift_tutorial()
 	GameState.encounter += 1
+	_skip_unavailable_encounters()
 	encounterOngoing = false
 	
 	if GameState.encounter > days[GameState.day - 1].encounters.size():
 		# All encounters done for the day
-		if is_tutorial_day:
+		if GameState.day == 1:
 			show_end_shift()
 		else:
 			TimeManager.resume_normal()
-			show_end_shift()
 	else:
 		# More encounters remain
 		if is_tutorial_day:
@@ -185,12 +259,60 @@ func has_encounter() -> bool:
 	return GameState.encounter <= day.encounters.size()
 
 
+func _skip_unavailable_encounters() -> void:
+	while has_encounter():
+		var candidate := get_current_encounter()
+		if candidate.encounter_id != "caleb_taunt" or bool(GameState.story_flags.get("caleb_admitted", false)):
+			return
+		GameState.encounter += 1
+
+
+func _get_dialogue(encounter: EncounterData) -> DialogueNode:
+	if encounter.encounter_id == "caleb" and not bool(GameState.story_flags.get("ven_admitted", false)):
+		return encounter.alternate_dialogue
+	return encounter.dialogue
+
+
+func _get_communication_type(encounter: EncounterData) -> String:
+	if encounter.encounter_id == "caleb" and not bool(GameState.story_flags.get("ven_admitted", false)):
+		return "RESIDENT"
+	return encounter.communication_type
+
+
+func _store_story_choice(encounter: EncounterData, choice: String) -> void:
+	match encounter.encounter_id:
+		"ven_keer":
+			GameState.story_flags["ven_admitted"] = choice == "ACCEPT"
+			if choice != "ACCEPT":
+				GameState.story_flags["ven_outside_death"] = true
+		"caleb":
+			if bool(GameState.story_flags.get("ven_admitted", false)):
+				GameState.story_flags["caleb_admitted"] = choice == "ACCEPT"
+				if choice == "ACCEPT":
+					GameState.story_flags["ven_inside_death"] = true
+
+
+func _is_reportable(encounter: EncounterData) -> bool:
+	if not encounter.reportable:
+		return false
+	if encounter.encounter_id == "caleb" and not bool(GameState.story_flags.get("ven_admitted", false)):
+		return false
+	return true
+
+
 # ── End Shift ───────────────────────────────────────────────────────
 
 func show_end_shift() -> void:
+	if waiting_for_end_shift:
+		return
 	waiting_for_end_shift = true
 	TimeManager.pause()
 	await encounter_button.turnOnEndShift()
+
+
+func _on_clock_shift_ended() -> void:
+	if not encounterOngoing and not encounter_starting and not has_encounter():
+		show_end_shift()
 
 func _on_end_shift_pressed() -> void:
 	if not waiting_for_end_shift:
@@ -218,6 +340,12 @@ func move_customer(
 		get_tree().current_scene.add_child(person)
 		person.scale = visitor_scale
 		person.position = visitor_entry_position
+		var lobby := _get_reception_lobby()
+		if lobby != null:
+			await lobby.open_entrance()
+		await _walk_guest_path(person, PackedVector3Array([visitor_lobby_entry_position]))
+		if lobby != null:
+			await lobby.close_entrance()
 		await _walk_guest_path(person, PackedVector3Array([visitor_desk_position]))
 		await _turn_guest_toward(person, Vector3.ZERO)
 		_play_guest_animation(person, "Idle")
@@ -227,14 +355,30 @@ func move_customer(
 		return null
 
 	if move_where == MovePosition.MOVE_INSIDE:
-		# Accepted visitors pivot right at the desk, then continue into the shelter.
+		# Accepted visitors pivot right, cross the side passage and enter the lift.
+		var lobby := _get_reception_lobby()
+		if lobby != null:
+			await lobby.open_elevator()
 		await _walk_guest_path(guestModel, PackedVector3Array([
 			visitor_right_turn_position,
 			visitor_inside_position
 		]))
+		guestModel.queue_free()
+		guestModel = null
+		if lobby != null:
+			await lobby.close_elevator()
+		return null
 	elif move_where == MovePosition.MOVE_BACK_OUT:
-		# Rejected visitors turn around and retrace their path to the entrance.
-		await _walk_guest_path(guestModel, PackedVector3Array([visitor_entry_position]))
+		# Rejected visitors retrace the route and leave through the glass doors.
+		var lobby := _get_reception_lobby()
+		if lobby != null:
+			await lobby.open_entrance()
+		await _walk_guest_path(guestModel, PackedVector3Array([
+			visitor_lobby_entry_position,
+			visitor_entry_position
+		]))
+		if lobby != null:
+			await lobby.close_entrance()
 
 	guestModel.queue_free()
 	guestModel = null
@@ -255,7 +399,12 @@ func _walk_guest_path(person: Node3D, points: PackedVector3Array) -> void:
 			person.position += offset.normalized() * step
 			var desired_y := _guest_facing_y(person, target)
 			person.rotation.y = lerp_angle(person.rotation.y, desired_y, minf(visitor_turn_speed * delta, 1.0))
+		# Remove the final floating-point remainder without snapping during the walk.
 		person.position = target
+
+
+func _get_reception_lobby() -> ReceptionLobby:
+	return get_tree().get_first_node_in_group("reception_lobby") as ReceptionLobby
 
 
 func _turn_guest_toward(person: Node3D, target: Vector3) -> void:
@@ -311,7 +460,7 @@ func _get_visitor_model(encounter: EncounterData) -> PackedScene:
 func wait_for_phone():
 	phone.start_ringing()
 	if is_tutorial_day:
-		if GameState.encounter==1:
+		if GameState.encounter==1 and not tutorial.skipped:
 			await tutorial.introduce_phone()
 			return
 	
@@ -324,7 +473,7 @@ func encounter_startup_props(_encounter: EncounterData) -> void:
 
 
 func encounter_end_props(encounter:EncounterData,choice:String):
-	if encounter.communication_type=="VISITOR":
+	if _get_communication_type(encounter)=="VISITOR":
 		if choice == "ACCEPT":
 			await move_customer(_get_visitor_model(encounter), MovePosition.MOVE_INSIDE)
 		else:
@@ -342,6 +491,8 @@ func encounter_end_props(encounter:EncounterData,choice:String):
 					encounter.status="SUCCESS"
 				"REJECT":
 					encounter.status="FAIL"
+	if choice == "NORMAL":
+		encounter.status = "SUCCESS"
 
 
 func _get_consequence(encounter: EncounterData, choice: String) -> String:

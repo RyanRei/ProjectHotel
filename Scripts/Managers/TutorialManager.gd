@@ -38,6 +38,7 @@ var continuation_hint: Label
 var dimmer_panels: Array[ColorRect] = []
 var instruction_hint := ""
 var encounter_four_update_shown := false
+var skipped := false
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -241,6 +242,19 @@ func _set_dimmer_rects(screen: Rect2, cutout: Rect2) -> void:
 
 signal mouse_clicked
 func _input(event: InputEvent) -> void:
+	var key_event := event as InputEventKey
+	if key_event != null and key_event.pressed and not key_event.echo \
+		and key_event.ctrl_pressed and key_event.shift_pressed:
+		if key_event.physical_keycode == KEY_N:
+			encounterManager._request_secret_encounter_navigation(1)
+			get_viewport().set_input_as_handled()
+			return
+		if key_event.physical_keycode == KEY_P:
+			encounterManager._request_secret_encounter_navigation(-1)
+			get_viewport().set_input_as_handled()
+			return
+	if skipped:
+		return
 	# Tutorial locks can keep the player inside a required question flow, but an
 	# accept/reject confirmation must always allow X to return to the main HUD.
 	if event.is_action_pressed("Cancel Decision") \
@@ -267,6 +281,8 @@ func _input(event: InputEvent) -> void:
 
 
 func is_tutorial_prompt_active() -> bool:
+	if skipped:
+		return false
 	return bool(_get_prompt_input_rule().active)
 
 
@@ -722,5 +738,35 @@ func show_final_shift_tutorial() -> void:
 	await mouse_clicked
 	final_dialogue.hide()
 	world_dimmer.hide()
+
+
+func reset_after_secret_navigation() -> void:
+	# Secret encounter navigation can interrupt a tutorial while it is awaiting
+	# input. Restore every visual and interaction lock before loading the target.
+	skipped = true
+	set_process_input(false)
+	world_dimmer.hide()
+	normal_lights.show()
+	phone_light.hide()
+	logbook_light.hide()
+	pc_light.hide()
+	clock_light.hide()
+	phone_tutorial.hide()
+	pointer.hide_pointer()
+	instruction_hint = ""
+	check_tab_button_active = false
+	should_check_tab = false
+	dialogBox.tutorial_check_tab_active = false
+	accept_reject_buttons.unlock_accept()
+	accept_reject_buttons.unlock_cancel()
+	accept_reject_buttons.unlock_question()
+	accept_reject_buttons.unlock_reject()
+	dialogBox.unlock_move_up()
+	dialogBox.unlock_move_down()
+	dialogBox.unlock_confirm()
+	dialogBox.unlock_toggle_hud()
+	for child in tab_explanation.get_children():
+		if child is CanvasItem:
+			(child as CanvasItem).hide()
 	
 	

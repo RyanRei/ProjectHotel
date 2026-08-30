@@ -8,7 +8,8 @@ var reports: Array[Dictionary] = []
 func add_report(day: int, results: Array[Dictionary]):
 	var report := {
 		"day": day,
-		"results": results.duplicate(true)
+		"results": results.duplicate(true),
+		"story_flags": GameState.story_flags.duplicate(true)
 	}
 
 	reports.append(report)
