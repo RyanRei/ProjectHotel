@@ -40,6 +40,7 @@ var encounter_generation := 0
 
 
 func _ready() -> void:
+	MusicManager.play_gameplay()
 	encounter_button.startEncounter.connect(_on_end_shift_pressed)
 	if not TimeManager.shift_ended.is_connected(_on_clock_shift_ended):
 		TimeManager.shift_ended.connect(_on_clock_shift_ended)
@@ -205,6 +206,14 @@ func start_encounter() -> void:
 	var choice:String=await DialogueManager.dialogue_finished
 	if run_generation != encounter_generation:
 		return
+
+	# Some residents provide information only once access has actually been
+	# authorized. Keep that dialogue out of the verification phase.
+	if choice == "ACCEPT" and encounter.accepted_dialogue != null:
+		DialogueManager.start_dialogue(encounter.accepted_dialogue, encounter.name)
+		await DialogueManager.dialogue_finished
+		if run_generation != encounter_generation:
+			return
 	
 	await finish_encounter(encounter, choice)
 
@@ -262,9 +271,18 @@ func has_encounter() -> bool:
 func _skip_unavailable_encounters() -> void:
 	while has_encounter():
 		var candidate := get_current_encounter()
-		if candidate.encounter_id != "caleb_taunt" or bool(GameState.story_flags.get("caleb_admitted", false)):
-			return
-		GameState.encounter += 1
+		match candidate.encounter_id:
+			"caleb":
+				# Caleb only knows to contact NightHaven if Ven was admitted and
+				# gave reception the Albany arrival message.
+				if not bool(GameState.story_flags.get("ven_admitted", false)):
+					GameState.encounter += 1
+					continue
+			"caleb_taunt":
+				if not bool(GameState.story_flags.get("caleb_admitted", false)):
+					GameState.encounter += 1
+					continue
+		return
 
 
 func _get_dialogue(encounter: EncounterData) -> DialogueNode:
@@ -432,11 +450,48 @@ func _play_guest_animation(person: Node3D, requested_name: StringName) -> void:
 	var animation_name := _resolve_guest_animation(player, requested_name)
 	if animation_name == &"":
 		return
+	animation_name = _get_stabilized_animation(person, player, animation_name)
 	if player.is_playing() and player.current_animation == animation_name:
 		return
 	var animation := player.get_animation(animation_name)
 	animation.loop_mode = Animation.LOOP_LINEAR
 	player.play(animation_name, 0.18)
+
+
+## The male source animations contain world-like translation on the hips bone.
+## Since the encounter manager already moves the visitor root, that translation
+## causes the visible mesh to jump whenever the clip loops or changes. Runtime
+## copies retain all limb animation while holding the hips at the clip's initial
+## local position.
+func _get_stabilized_animation(person: Node3D, player: AnimationPlayer, source_name: StringName) -> StringName:
+	if person.name != &"MaleVisitor":
+		return source_name
+
+	const LIBRARY_NAME := &"stable_motion"
+	var local_name := StringName(String(source_name).replace("/", "_") + "_root_locked")
+	var full_name := StringName("%s/%s" % [LIBRARY_NAME, local_name])
+	if player.has_animation(full_name):
+		return full_name
+
+	var source := player.get_animation(source_name)
+	if source == null:
+		return source_name
+	if not player.has_animation_library(LIBRARY_NAME):
+		player.add_animation_library(LIBRARY_NAME, AnimationLibrary.new())
+	var library := player.get_animation_library(LIBRARY_NAME)
+	var stabilized := source.duplicate(true) as Animation
+	for track_index in stabilized.get_track_count():
+		if stabilized.track_get_type(track_index) != Animation.TYPE_POSITION_3D:
+			continue
+		if "mixamorig_Hips" not in String(stabilized.track_get_path(track_index)):
+			continue
+		if stabilized.track_get_key_count(track_index) == 0:
+			continue
+		var locked_position: Vector3 = stabilized.track_get_key_value(track_index, 0)
+		for key_index in stabilized.track_get_key_count(track_index):
+			stabilized.track_set_key_value(track_index, key_index, locked_position)
+	library.add_animation(local_name, stabilized)
+	return full_name
 
 
 func _resolve_guest_animation(player: AnimationPlayer, requested_name: StringName) -> StringName:
@@ -514,6 +569,18 @@ func end_day():
 	await day_report_ui.show_report(
 	DayReportManager.get_report(finished_day)
 	)
+
+	# The Shift 2 newspaper is the final Win/Game Over screen. Once the player
+	# closes it, return directly to the main menu instead of starting another day.
+	if finished_day >= days.size():
+		TimeManager.pause()
+		GameState.day = 1
+		GameState.encounter = 1
+		GameState.story_flags.clear()
+		GameState.enter_desk_state()
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+		get_tree().change_scene_to_file("res://Scenes/main_menu.tscn")
+		return
 
 	GameState.day += 1
 	GameState.encounter = 1

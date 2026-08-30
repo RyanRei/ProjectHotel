@@ -6,6 +6,8 @@ extends Resource
 @export_enum("INNOCENT", "KILLER") var caller_type: String
 @export var dialogue: DialogueNode
 @export var alternate_dialogue: DialogueNode
+## Optional follow-up played only after the player authorizes this encounter.
+@export var accepted_dialogue: DialogueNode
 @export var model:PackedScene
 @export_enum("RESIDENT","VISITOR","INFORMATIVE") var communication_type:String
 @export_enum("MALE", "FEMALE") var visitor_gender: String = "MALE"

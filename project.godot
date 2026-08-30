@@ -21,6 +21,7 @@ DayReportManager="*uid://b264q5evjd2ky"
 DialogueManager="*uid://wqjrphcvmu8g"
 GameState="*uid://big8p5bq03poy"
 TimeManager="*res://Scripts/Managers/TimeManager.gd"
+MusicManager="*res://Scripts/Managers/MusicManager.gd"
 
 [display]
 

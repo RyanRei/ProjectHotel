@@ -131,10 +131,10 @@ func set_report(report: Dictionary) -> void:
 	if report.has("day"):
 		$Display/Paper/Edition.text = "MORNING REPORT\nSHIFT %d" % int(report.day)
 	if report.has("results"):
-		_apply_results(report.results, report.get("story_flags", {}))
+		_apply_results(report.results, report.get("story_flags", {}), int(report.get("day", 1)))
 
 
-func _apply_results(results: Array, story_flags: Dictionary = {}) -> void:
+func _apply_results(results: Array, story_flags: Dictionary = {}, report_day: int = 1) -> void:
 	var successes := 0
 	var weighted_successes := 0.0
 	var weighted_failures := 0.0
@@ -185,11 +185,35 @@ func _apply_results(results: Array, story_flags: Dictionary = {}) -> void:
 	else:
 		%Headline.text = "QUIET NIGHT FOR SECRET VIP GUEST" if failures == 0 else "NIGHTHAVEN STOPS LATE-NIGHT SECURITY THREATS"
 		%Subheadline.text = "%d of %d decisions were correct; Ven Keer remained safe" % [successes, total]
+	var starting_reputation := GameState.reputation
+	var starting_share_price := GameState.share_price
 	var vip_penalty := 12.0 if ven_inside_death or ven_outside_death else 0.0
 	var reputation_change := weighted_successes * 2.0 - weighted_failures * 4.0 - vip_penalty
 	var share_change := weighted_successes * 1.25 - weighted_failures * 3.25 - vip_penalty * 0.8
-	GameState.reputation = clampf(GameState.reputation + reputation_change, 0.0, 100.0)
-	GameState.share_price = maxf(1.0, GameState.share_price + share_change)
+
+	# Shift 2 is the complete game's decisive celebrity case. Its newspaper is
+	# also the final result screen, so the outcome deliberately overwhelms the
+	# smaller per-encounter adjustments.
+	if report_day == 2:
+		if ven_inside_death or ven_outside_death:
+			GameState.reputation = 0.0
+			GameState.share_price = 1.0
+			reputation_change = GameState.reputation - starting_reputation
+			share_change = ((GameState.share_price - starting_share_price) / maxf(starting_share_price, 0.01)) * 100.0
+			%Headline.text = "GAME OVER — NIGHTHAVEN CLOSES PERMANENTLY"
+			%Subheadline.text = "Ven Keer's death destroys public trust; collapsing shares force the hotel to close"
+			%BreakdownTitle.text = "FINAL VERDICT — THE CELEBRITY WAS NOT SAVED"
+		else:
+			GameState.reputation = 100.0
+			GameState.share_price = maxf(100.0, starting_share_price * 2.5)
+			reputation_change = GameState.reputation - starting_reputation
+			share_change = ((GameState.share_price - starting_share_price) / maxf(starting_share_price, 0.01)) * 100.0
+			%Headline.text = "YOU WON — VEN KEER SAVED"
+			%Subheadline.text = "Congratulations! Your decisions protected the celebrity and sent NightHaven's reputation and shares soaring"
+			%BreakdownTitle.text = "VICTORY — NIGHTHAVEN'S FUTURE IS SECURE"
+	else:
+		GameState.reputation = clampf(GameState.reputation + reputation_change, 0.0, 100.0)
+		GameState.share_price = maxf(1.0, GameState.share_price + share_change)
 	%ReputationValue.text = "%d / 100" % int(GameState.reputation)
 	%ShareValue.text = "$%.2f" % GameState.share_price
 	_set_metric_change(%ReputationDelta, reputation_change, "")
@@ -208,8 +232,6 @@ func _get_result_details(encounter_id: String, succeeded: bool, story_flags: Dic
 			return "The operator trusted the live logbook and restored VIP access."
 		"caleb":
 			return "Communication History exposed the Albany/Denver contradiction." if succeeded else "The impersonator reached Ven's room."
-		"maintenance_207":
-			return "The Room 207 log disproved the emergency work order." if succeeded else "A false worker was granted resident-area access."
 	return "Handled safely using the available evidence." if succeeded else "The decision caused a serious consequence."
 
 

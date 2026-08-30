@@ -25,7 +25,7 @@ static func visitor_records() -> Array[Dictionary]:
 static func room_records() -> Array[Dictionary]:
 	return [
 		room_record("103", "Ethan Cole / Diana Webb", "Occupied", "Aug 19, 5:08 PM", "Sep 01, 10:00 AM", "Shared reservation"),
-		room_record("207", "Daniel Reeves / Michael Turner", "Occupied", "Aug 21, 7:10 PM", "Sep 01, 10:00 AM", "No maintenance visit scheduled"),
+		room_record("207", "Daniel Reeves / Michael Turner", "Occupied", "Aug 21, 7:10 PM", "Sep 01, 10:00 AM", "Shared reservation"),
 		room_record("412", "Previous occupant: Lydia Shaw", "Stale", "Aug 27, 3:20 PM", "Aug 31, 9:40 PM", "Last updated 11:32 PM; live assignment synchronizing", true),
 	]
 
@@ -34,7 +34,6 @@ static func logbook_schedule() -> Array[Dictionary]:
 	return [
 		log_entry(18, 0, "6:00 PM", "SHIFT 2", "--", "IN", "Shift opened. Communication History cleared for the new shift."),
 		log_entry(23, 45, "11:45 PM", "Ven Keer", "412", "IN", "New VIP check-in. Keep a low profile; do not disclose his stay to press or other guests."),
-		log_entry(2, 48, "2:48 AM", "Room 207", "207", "CALL", "Residents reported no plumbing fault and requested no overnight maintenance."),
 	]
 
 

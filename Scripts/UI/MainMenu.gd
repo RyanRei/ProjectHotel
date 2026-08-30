@@ -17,6 +17,7 @@ const DESIGN_SIZE := Vector2(1280.0, 720.0)
 
 
 func _ready() -> void:
+	MusicManager.play_menu()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	_fit_design_canvas()
 	get_viewport().size_changed.connect(_fit_design_canvas)

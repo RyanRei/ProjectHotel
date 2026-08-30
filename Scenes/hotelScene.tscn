@@ -37,7 +37,6 @@
 [ext_resource type="Resource" uid="uid://dvpitgbkkwxsb" path="res://Assets/ItemHolders/Encounters/Shift 1/encounter_4.tres" id="26_vnq4p"]
 [ext_resource type="Resource" uid="uid://dhp6vdplsh7iq" path="res://Assets/ItemHolders/Encounters/Shift 2/encounter_3.tres" id="27_shift2_3"]
 [ext_resource type="Resource" uid="uid://mkikpkc1f71v" path="res://Assets/ItemHolders/Encounters/Shift 2/encounter_4.tres" id="28_shift2_4"]
-[ext_resource type="Resource" uid="uid://6285jd1jr4a7" path="res://Assets/ItemHolders/Encounters/Shift 2/encounter_5.tres" id="29_shift2_5"]
 [ext_resource type="PackedScene" path="res://Scenes/shift_transition_ui.tscn" id="30_shift_transition"]
 [ext_resource type="PackedScene" path="res://Scenes/Environment/reception_lobby.tscn" id="31_lobby"]
 
@@ -99,7 +98,7 @@ metadata/_custom_type_script = "uid://8570ain8w4hx"
 
 [sub_resource type="Resource" id="Resource_5hxig"]
 script = ExtResource("2_2hvnh")
-encounters = Array[ExtResource("3_wnmts")]([ExtResource("24_c24b1"), ExtResource("25_ue4or"), ExtResource("27_shift2_3"), ExtResource("28_shift2_4"), ExtResource("29_shift2_5")])
+encounters = Array[ExtResource("3_wnmts")]([ExtResource("24_c24b1"), ExtResource("25_ue4or"), ExtResource("27_shift2_3"), ExtResource("28_shift2_4")])
 metadata/_custom_type_script = "uid://8570ain8w4hx"
 
 [node name="Node3D" type="Node3D" unique_id=1681156658]

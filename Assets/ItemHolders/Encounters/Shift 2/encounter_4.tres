@@ -6,7 +6,7 @@
 
 [sub_resource type="Resource" id="taunt"]
 script = ExtResource("2_node")
-text = "Hey. It's Ven. Sorry to bother you again... God, you really do think this place is safe, don't you? That's cute. From in here, it's a really nice place not to be interrupted. As for Ven, he was taken care of. Get some sleep. You've earned it."
+text = "God, you really do think this place is safe, don't you? That's cute. From in here, it's a really nice place not to be interrupted. As for Ven, he was taken care of. Get some sleep. You've earned it."
 
 [sub_resource type="Resource" id="q1"]
 script = ExtResource("1_choice")
