@@ -11,6 +11,9 @@ extends Control
 @onready var history_indicator: Control = $HistoryIndicator
 @onready var history_overlay: DialogueHistory = $HistoryOverlay
 @export var accept_reject: AcceptRejectButton
+@export var scroll:AudioStreamPlayer
+@export var select:AudioStreamPlayer
+
 @export_range(10.0, 120.0, 1.0) var characters_per_second := 48.0
 
 @export var tutorial:TutorialManager
@@ -43,6 +46,7 @@ var dialogue_generation := 0
 var tutorial_line_active := false
 var tutorial_line_allow_navigation := false
 var tab_feature_available := true
+var maya_word_tweens: Array[Tween] = []
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -137,6 +141,7 @@ func run_dialogue(current_node: DialogueNode):
 
 	if current_node.voiceline:
 		_play_voice(current_node.voiceline)
+		_start_maya_word_timing(current_node.text, current_node.voiceline.get_length())
 		line_duration = maxf(line_duration, current_node.voiceline.get_length())
 
 	await show_line(current_node.text)
@@ -423,18 +428,116 @@ func _play_voice(stream: AudioStream) -> void:
 	_stop_voice_players()
 	var spatial_player := DialogueManager.current_spatial_voice_player
 	if is_instance_valid(spatial_player):
+		if not spatial_player.finished.is_connected(_on_voice_finished):
+			spatial_player.finished.connect(_on_voice_finished)
 		spatial_player.stream = stream
 		spatial_player.play()
+		_sync_maya_voice_animation(true)
 		return
+	if not audio_stream_player.finished.is_connected(_on_voice_finished):
+		audio_stream_player.finished.connect(_on_voice_finished)
 	audio_stream_player.stream = stream
 	audio_stream_player.play()
+	_sync_maya_voice_animation(true)
 
 
 func _stop_voice_players() -> void:
+	_cancel_maya_word_timers()
 	audio_stream_player.stop()
+	
 	var spatial_player := DialogueManager.current_spatial_voice_player
 	if is_instance_valid(spatial_player):
 		spatial_player.stop()
+	_sync_maya_voice_animation(false)
+
+
+func _cancel_maya_word_timers() -> void:
+	for tween in maya_word_tweens:
+		if is_instance_valid(tween):
+			tween.kill()
+	maya_word_tweens.clear()
+
+
+func _start_maya_word_timing(text: String, total_duration: float) -> void:
+	_cancel_maya_word_timers()
+	if not (GameState.day == 1 and GameState.encounter == 3):
+		return
+	if text.strip_edges() == "":
+		return
+	var words := text.split(" ", false)
+	if words.is_empty():
+		return
+	var word_count := maxf(float(words.size()), 1.0)
+	var per_word_time := maxf(total_duration / word_count, 0.12)
+	var pulse_length := maxf(per_word_time * 0.55, 0.12)
+	for index in range(words.size()):
+		var start_delay := per_word_time * index
+		var end_delay := start_delay + pulse_length
+		var start_tween := create_tween()
+		maya_word_tweens.append(start_tween)
+		start_tween.tween_callback(_pulse_maya_word_animation).set_delay(start_delay)
+		var end_tween := create_tween()
+		maya_word_tweens.append(end_tween)
+		end_tween.tween_callback(_release_maya_word_animation).set_delay(end_delay)
+
+
+func _pulse_maya_word_animation() -> void:
+	_sync_maya_voice_animation(true)
+
+
+func _release_maya_word_animation() -> void:
+	_sync_maya_voice_animation(false)
+
+
+func _on_voice_finished() -> void:
+	_cancel_maya_word_timers()
+	_sync_maya_voice_animation(false)
+
+
+func _sync_maya_voice_animation(is_speaking: bool) -> void:
+	if not (GameState.day == 1 and GameState.encounter == 3):
+		return
+	var speaker_name := DialogueManager.current_speaker_name
+	if speaker_name == "":
+		return
+	var speaker_lower := speaker_name.to_lower()
+	if not speaker_lower.contains("maya") or not speaker_lower.contains("chen"):
+		return
+	var current_voice_player := DialogueManager.current_spatial_voice_player
+	var guest: Node3D = null
+	if is_instance_valid(current_voice_player):
+		guest = current_voice_player.get_parent() as Node3D
+	if guest == null:
+		return
+	var animation_player := guest.get_node_or_null("AnimationPlayer2") as AnimationPlayer
+	if animation_player == null:
+		return
+	if is_speaking:
+		if not animation_player.has_animation("sppeaak"):
+			return
+		if animation_player.is_playing() and animation_player.current_animation == "sppeaak":
+			return
+		animation_player.play("sppeaak", 0.18, 0.7)
+		return
+	if not animation_player.is_playing():
+		return
+	if animation_player.current_animation != "sppeaak":
+		return
+	# Freeze the current speaking pose instead of resetting the track to frame 0.
+	# The movement/idle animation on AnimationPlayer1 is still active and should continue.
+	animation_player.pause()
+	animation_player.seek(animation_player.current_animation_position, true)
+
+
+func _resolve_animation_name(player: AnimationPlayer, requested_name: String) -> StringName:
+	if player.has_animation(requested_name):
+		return StringName(requested_name)
+	var requested_lower := requested_name.to_lower()
+	for candidate in player.get_animation_list():
+		var candidate_lower := candidate.to_lower()
+		if candidate_lower == requested_lower or candidate_lower.ends_with("_" + requested_lower):
+			return StringName(candidate)
+	return &""
 
 func show_choices(choices: Array[DialogueChoice]):
 	
@@ -555,6 +658,7 @@ func _input(event):
 	if is_in_choices and event.is_action_pressed("Cancel Decision"):
 		if accept_reject.canceled_locked:
 			return
+		select.play()
 		return_to_action_hud()
 		get_viewport().set_input_as_handled()
 		return
@@ -583,17 +687,30 @@ func _input(event):
 		if move_up_locked:
 			get_viewport().set_input_as_handled()
 			return
+		var old_choice := selected_choice
 		selected_choice = max(0, selected_choice - 1)
+		if selected_choice != old_choice:
+			scroll.play()
 		update_choice_display(false)
 		get_viewport().set_input_as_handled()
+		
+		
 	elif event.is_action_pressed("Move Down"):
 		if move_down_locked:
 			get_viewport().set_input_as_handled()
 			return
 		
+		var old_choice := selected_choice
 		selected_choice = min(dialogue_choices.size() - 1, selected_choice + 1)
+		# if GameState.encounter == 3 and GameState.day == 1:
+		# 	if tutorial.question_asked == 2:
+		# 		selected_choice = min(1, selected_choice + 1)
+		if selected_choice != old_choice:
+			scroll.play()
 		update_choice_display(false)
 		get_viewport().set_input_as_handled()
+		
+		
 	elif event.is_action_pressed("Confirm"):
 		if confirm_locked:
 			get_viewport().set_input_as_handled()
@@ -617,6 +734,7 @@ func _input(event):
 		question_menu.hide()
 		DialogueManager.choose(choice)
 		confirmqn.emit()
+		select.play()
 		get_viewport().set_input_as_handled()
 
 func update_choice_display(run_tutorial_hook := true):

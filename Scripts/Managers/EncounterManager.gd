@@ -2,7 +2,7 @@ class_name EncounterManager
 extends Node
 
 const MALE_VISITOR_SCENE: PackedScene = preload("res://Scenes/humanEntity.tscn")
-const FEMALE_VISITOR_SCENE: PackedScene = preload("res://Scenes/femaleEntity.tscn")
+const FEMALE_VISITOR_SCENE: PackedScene = preload("res://Scenes/maya_chen.tscn")
 const VISITOR_VOICE_BUS := &"VisitorVoice"
 const VISITOR_VOICE_NODE := &"VisitorVoice3D"
 @export var logBookController:LogbookController
@@ -25,10 +25,12 @@ enum MovePosition {
 @export var visitor_scale := Vector3.ONE
 @export var visitor_entry_position := Vector3(0.0, -1.55, -36.0)
 @export var visitor_lobby_entry_position := Vector3(0.0, -1.55, -29.5)
-@export var visitor_desk_position := Vector3(-3.249, -1.55, -3.682)
-@export var visitor_right_turn_position := Vector3(10.5, -1.55, -6.0)
-@export var visitor_inside_position := Vector3(19.5, -1.55, -8.0)
+@export var visitor_desk_position := Vector3(-3.249, -1.55, -3.2)
+@export var visitor_right_turn_position := Vector3(10.5, -1.55, -9.0)
+@export var visitor_inside_position := Vector3(19.5, -1.55, -9.0)
+@export var visitor_lift_wait_position := Vector3(13.0, -1.55, -9.0)
 @export_range(1.0, 10.0, 0.25) var visitor_walk_speed := 4.5
+@export_range(0.01, 1.0, 0.05) var walk_arrival_threshold := 0.5  # Distance to target before stopping
 @export_range(1.0, 12.0, 0.5) var visitor_turn_speed := 5.0
 
 ## Whether this day uses automatic time-based triggering or manual clock jumps (tutorial).
@@ -394,26 +396,44 @@ func move_customer(
 		return null
 
 	if move_where == MovePosition.MOVE_INSIDE:
-		# Accepted visitors pivot right, cross the side passage and enter the lift.
+		# Accepted visitors pivot right, cross the side passage and wait at the lift.
 		var lobby := _get_reception_lobby()
+		# Walk directly to the lift entrance to wait
+		await _walk_guest_path(guestModel, PackedVector3Array([
+			visitor_lift_wait_position
+		]))
+		# Stop walking and play idle animation
+		_play_guest_animation(guestModel, "Idle")
+		# Wait a moment for Maya to arrive and face the lift
+		await get_tree().create_timer(0.5).timeout
+		# Now open the lift door
 		if lobby != null:
 			await lobby.open_elevator()
+		# Walk into the lift
 		await _walk_guest_path(guestModel, PackedVector3Array([
-			visitor_right_turn_position,
 			visitor_inside_position
 		]))
-		guestModel.queue_free()
-		guestModel = null
+		# Close the door after she's inside
 		if lobby != null:
 			await lobby.close_elevator()
+		# Wait a moment, then she disappears
+		await get_tree().create_timer(0.3).timeout
+		guestModel.queue_free()
+		guestModel = null
 		return null
 	elif move_where == MovePosition.MOVE_BACK_OUT:
 		# Rejected visitors retrace the route and leave through the glass doors.
+		# Turn in controlled stages so the exit rotation feels natural instead of
+		# snapping aggressively toward the final target while mid-step.
 		var lobby := _get_reception_lobby()
 		if lobby != null:
 			await lobby.open_entrance()
+		await _turn_guest_toward(guestModel, visitor_lobby_entry_position)
 		await _walk_guest_path(guestModel, PackedVector3Array([
-			visitor_lobby_entry_position,
+			visitor_lobby_entry_position
+		]))
+		await _turn_guest_toward(guestModel, visitor_entry_position)
+		await _walk_guest_path(guestModel, PackedVector3Array([
 			visitor_entry_position
 		]))
 		if lobby != null:
@@ -427,7 +447,17 @@ func move_customer(
 func _walk_guest_path(person: Node3D, points: PackedVector3Array) -> void:
 	_play_guest_animation(person, "Walk")
 	for target in points:
-		while person.position.distance_to(target) > 0.025:
+		var start_y := person.rotation.y
+		var desired_y := _guest_facing_y(person, target)
+		var target_y := start_y + wrapf(desired_y - start_y, -PI, PI)
+		var turn_tween := create_tween()
+		turn_tween.tween_property(person, "rotation:y", target_y, 0.6).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		await turn_tween.finished
+		
+		var footstep_timer := -0.25  # Start negative so first footstep triggers immediately
+		var footstep_interval := 0.5  # Footstep every 0.5 seconds (adjust for speed)
+		
+		while person.position.distance_to(target) > walk_arrival_threshold:
 			await get_tree().process_frame
 			if not is_instance_valid(person):
 				return
@@ -436,10 +466,37 @@ func _walk_guest_path(person: Node3D, points: PackedVector3Array) -> void:
 			var distance := offset.length()
 			var step := minf(visitor_walk_speed * delta, distance)
 			person.position += offset.normalized() * step
-			var desired_y := _guest_facing_y(person, target)
-			person.rotation.y = lerp_angle(person.rotation.y, desired_y, minf(visitor_turn_speed * delta, 1.0))
+			
+			# Play footstep sound at intervals
+			footstep_timer += delta
+			if footstep_timer >= footstep_interval:
+				_play_footstep_sound(person)
+				footstep_timer = 0.0
+		
 		# Remove the final floating-point remainder without snapping during the walk.
 		person.position = target
+
+
+func _play_footstep_sound(person: Node3D) -> void:
+	if not is_instance_valid(person):
+		return
+	var footstep_player = AudioStreamPlayer3D.new()
+	footstep_player.stream = preload("res://Assets/Sound/sfx/footstep.mp3")  # Replace with your actual footstep sound file
+	footstep_player.bus = "Master"
+	footstep_player.position = person.position + Vector3(0, 0.5, 0)  # Slightly above ground
+	
+	# Randomize pitch (playback speed between 0.9 and 1.1)
+	var pitch_variation = randf_range(0.9, 1.1)
+	footstep_player.pitch_scale = pitch_variation
+	
+	# Randomize volume (between -2 and 2 dB variation)
+	var volume_variation = randf_range(-2.0, 2.0)
+	footstep_player.volume_db = volume_variation
+	
+	get_tree().current_scene.add_child(footstep_player)
+	footstep_player.play()
+	await footstep_player.finished
+	footstep_player.queue_free()
 
 
 func _get_reception_lobby() -> ReceptionLobby:
@@ -451,7 +508,7 @@ func _turn_guest_toward(person: Node3D, target: Vector3) -> void:
 	var desired_y := _guest_facing_y(person, target)
 	var target_y := start_y + wrapf(desired_y - start_y, -PI, PI)
 	var turn_tween := create_tween()
-	turn_tween.tween_property(person, "rotation:y", target_y, 0.32).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	turn_tween.tween_property(person, "rotation:y", target_y, 0.6).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	await turn_tween.finished
 
 
