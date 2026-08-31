@@ -11,9 +11,10 @@ const DESIGN_SIZE := Vector2(1280.0, 720.0)
 @onready var quit_button: Button = %QuitButton
 @onready var options_panel: PanelContainer = %OptionsPanel
 @onready var volume_slider: HSlider = %VolumeSlider
-@onready var fullscreen_toggle: CheckButton = %FullscreenToggle
 @onready var back_button: Button = %BackButton
 @onready var trust_label: Label = %Subtitle
+@onready var trust_glow_wide: Label = %SubtitleGlowWide
+@onready var trust_glow_near: Label = %SubtitleGlowNear
 @onready var title_rule_left: ColorRect = %TitleRuleLeft
 @onready var title_rule_right: ColorRect = %TitleRuleRight
 @export var hoverSound:AudioStreamPlayer
@@ -26,7 +27,6 @@ func _ready() -> void:
 	MusicManager.play_menu()
 	begin_button.mouse_entered.connect(play_hover_sound)
 	settings_button.mouse_entered.connect(play_hover_sound)
-	quit_button.mouse_entered.connect(play_hover_sound)
 	back_button.mouse_entered.connect(play_hover_sound)
 	quit_button.mouse_entered.connect(play_hover_sound)
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -45,7 +45,6 @@ func _ready() -> void:
 	quit_button.pressed.connect(play_select_sound)
 	
 	volume_slider.value_changed.connect(_set_master_volume)
-	fullscreen_toggle.toggled.connect(_set_fullscreen)
 	
 	back_button.pressed.connect(_close_options)
 	back_button.pressed.connect(play_select_sound)
@@ -57,7 +56,6 @@ func _ready() -> void:
 	var master_bus := AudioServer.get_bus_index("Master")
 	if master_bus >= 0:
 		volume_slider.value = db_to_linear(AudioServer.get_bus_volume_db(master_bus)) * 100.0
-	fullscreen_toggle.button_pressed = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN
 	begin_button.grab_focus()
 	_run_trust_neon_cycle()
 
@@ -70,32 +68,54 @@ func play_select_sound():
 
 
 func _run_trust_neon_cycle() -> void:
+	var failure_patterns := [
+		["TR_ST NO ONE", 0.42],
+		["TRUST N_ ONE", 0.72],
+		["", 0.0],
+		["T_UST NO ON_", 0.25],
+		["TRUST NO ONE", 1.0],
+		["TRU_T _O ONE", 0.5],
+	]
 	while is_inside_tree():
-		_set_trust_neon(true)
-		await get_tree().create_timer(3.6).timeout
-		for delay in [0.08, 0.14, 0.06, 0.19, 0.09, 0.12]:
-			_set_trust_neon(not _trust_neon_is_on())
-			await get_tree().create_timer(float(delay)).timeout
-		_set_trust_neon(true)
-		await get_tree().create_timer(3.4).timeout
-		_set_trust_neon(false)
-		await get_tree().create_timer(1.7).timeout
+		# Keep the sign actively failing for three seconds. Short randomized steps
+		# prevent the sequence from looking like a repeated animation preset.
+		var flicker_until := Time.get_ticks_msec() + 3000
+		while is_inside_tree() and Time.get_ticks_msec() < flicker_until:
+			var failure: Array = failure_patterns.pick_random()
+			var failure_text := str(failure[0])
+			_set_trust_neon(not failure_text.is_empty(), failure_text, float(failure[1]))
+			await get_tree().create_timer(randf_range(0.05, 0.16)).timeout
+
+		# The short calm period still breathes subtly, so the neon never appears
+		# frozen before the next three-second failure cycle begins.
+		var calm_until := Time.get_ticks_msec() + int(randf_range(1.0, 2.0) * 1000.0)
+		while is_inside_tree() and Time.get_ticks_msec() < calm_until:
+			var pulse := 0.92 + sin(Time.get_ticks_msec() * 0.012) * 0.08
+			_set_trust_neon(true, "TRUST NO ONE", pulse)
+			await get_tree().create_timer(0.08).timeout
 
 
 func _trust_neon_is_on() -> bool:
 	return trust_label.get_theme_color("font_color") == Color("ff2a24")
 
 
-func _set_trust_neon(enabled: bool) -> void:
-	var text_color := Color("ff2a24") if enabled else Color("7b3b32")
-	var glow_color := Color(1.0, 0.02, 0.01, 0.92) if enabled else Color(0.22, 0.035, 0.025, 0.35)
-	var rule_color := Color(1.0, 0.04, 0.02, 0.96) if enabled else Color(0.34, 0.08, 0.045, 0.52)
+func _set_trust_neon(enabled: bool, display_text := "TRUST NO ONE", power := 1.0) -> void:
+	trust_label.text = display_text
+	trust_glow_wide.text = display_text
+	trust_glow_near.text = display_text
+	var text_color := Color("ffd4cc").lerp(Color("a31d18"), 1.0 - power) if enabled else Color("321613")
+	var glow_color := Color(1.0, 0.02, 0.01, 0.92 * power) if enabled else Color(0.12, 0.015, 0.01, 0.12)
+	var rule_color := Color(1.0, 0.04, 0.02, 0.96 * power) if enabled else Color(0.18, 0.025, 0.015, 0.25)
 	trust_label.add_theme_color_override("font_color", text_color)
 	trust_label.add_theme_color_override("font_outline_color", glow_color)
 	trust_label.add_theme_color_override("font_shadow_color", glow_color)
-	trust_label.add_theme_constant_override("outline_size", 3 if enabled else 1)
+	trust_label.add_theme_constant_override("outline_size", 4 if enabled and power > 0.7 else 1)
 	trust_label.add_theme_constant_override("shadow_offset_x", 0)
 	trust_label.add_theme_constant_override("shadow_offset_y", 0)
+	trust_glow_near.modulate = Color(1.0, 0.16, 0.08, power if enabled else 0.08)
+	trust_glow_wide.modulate = Color(1.0, 0.02, 0.01, power * 0.72 if enabled else 0.04)
+	trust_glow_near.add_theme_constant_override("outline_size", 8 if power > 0.7 else 5)
+	trust_glow_wide.add_theme_constant_override("outline_size", 16 if power > 0.7 else 10)
 	title_rule_left.color = rule_color
 	title_rule_right.color = rule_color
 
@@ -180,12 +200,6 @@ func _set_master_volume(value: float) -> void:
 	else:
 		AudioServer.set_bus_mute(master_bus, false)
 		AudioServer.set_bus_volume_db(master_bus, linear_to_db(value / 100.0))
-
-
-func _set_fullscreen(enabled: bool) -> void:
-	DisplayServer.window_set_mode(
-		DisplayServer.WINDOW_MODE_FULLSCREEN if enabled else DisplayServer.WINDOW_MODE_WINDOWED
-	)
 
 
 func _quit_game() -> void:

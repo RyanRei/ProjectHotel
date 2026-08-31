@@ -28,6 +28,7 @@ var status_label: Label
 var sync_window_active := false
 var roster_closable := true
 var close_button: Button
+var date_time_label: Label
 
 
 func _ready() -> void:
@@ -42,6 +43,7 @@ func _ready() -> void:
 
 
 func _on_time_updated(_hour: int, _minute: int) -> void:
+	_update_date_time()
 	var is_now_syncing := database.is_sync_window()
 	if is_now_syncing == sync_window_active:
 		return
@@ -114,7 +116,6 @@ func build_header() -> Control:
 	var title := make_label("NIGHTHAVEN SHELTER SYSTEM", 24, COLOR_TEXT)
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(title)
-	row.add_child(make_label("11:45 PM", 22, COLOR_TEXT))
 	close_button = Button.new()
 	close_button.text = "CLOSE"
 	close_button.custom_minimum_size = Vector2(100, 36)
@@ -205,9 +206,26 @@ func build_content() -> Control:
 
 
 func build_footer() -> Control:
-	var footer := make_label("SYSTEM ONLINE  •  RECORDS LAST UPDATED 11:30 PM  •  ESC TO CLOSE", 15, COLOR_MUTED)
-	footer.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	var footer := HBoxContainer.new()
+	var status := make_label("SYSTEM ONLINE  •  RECORDS LAST UPDATED 11:30 PM  •  ESC TO CLOSE", 15, COLOR_MUTED)
+	status.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	status.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	footer.add_child(status)
+	date_time_label = make_label("", 17, COLOR_TEXT)
+	date_time_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	footer.add_child(date_time_label)
+	_update_date_time()
 	return footer
+
+
+func _update_date_time() -> void:
+	if not is_instance_valid(date_time_label):
+		return
+	var date_text := "AUG 30" if GameState.day == 1 else "AUG 31"
+	# Each shift begins in the evening and crosses into the following date.
+	if TimeManager.in_game_seconds >= 21600.0:
+		date_text = "AUG 31" if GameState.day == 1 else "SEP 01"
+	date_time_label.text = "%s  •  %s" % [date_text, TimeManager.get_time_string()]
 
 
 func switch_tab(tab_name: String) -> void:

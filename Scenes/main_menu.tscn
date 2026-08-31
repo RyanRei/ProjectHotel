@@ -118,6 +118,38 @@ offset_bottom = 168.0
 mouse_filter = 2
 color = Color(0.7, 0.46, 0.2, 0.9)
 
+[node name="SubtitleGlowWide" type="Label" parent="DesignCanvas/MenuButtons"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 145.0
+offset_top = 150.0
+offset_right = 333.0
+offset_bottom = 181.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 0, 0, 0.03)
+theme_override_colors/font_outline_color = Color(1, 0, 0, 0.2)
+theme_override_constants/outline_size = 14
+theme_override_fonts/font = ExtResource("5_trust_font")
+theme_override_font_sizes/font_size = 24
+text = "TRUST NO ONE"
+horizontal_alignment = 1
+
+[node name="SubtitleGlowNear" type="Label" parent="DesignCanvas/MenuButtons"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 145.0
+offset_top = 150.0
+offset_right = 333.0
+offset_bottom = 181.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 0.04, 0.02, 0.08)
+theme_override_colors/font_outline_color = Color(1, 0.015, 0.005, 0.52)
+theme_override_constants/outline_size = 7
+theme_override_fonts/font = ExtResource("5_trust_font")
+theme_override_font_sizes/font_size = 24
+text = "TRUST NO ONE"
+horizontal_alignment = 1
+
 [node name="Subtitle" type="Label" parent="DesignCanvas/MenuButtons" unique_id=610174082]
 unique_name_in_owner = true
 layout_mode = 0
@@ -125,10 +157,10 @@ offset_left = 145.0
 offset_top = 150.0
 offset_right = 333.0
 offset_bottom = 181.0
-theme_override_colors/font_color = Color(1, 0.1647, 0.1412, 1)
+theme_override_colors/font_color = Color(1, 0.84, 0.8, 1)
 theme_override_colors/font_shadow_color = Color(1, 0.02, 0.01, 0.75)
 theme_override_colors/font_outline_color = Color(1, 0.02, 0.01, 0.92)
-theme_override_constants/outline_size = 3
+theme_override_constants/outline_size = 4
 theme_override_fonts/font = ExtResource("5_trust_font")
 theme_override_font_sizes/font_size = 24
 text = "TRUST NO ONE"
@@ -148,9 +180,9 @@ color = Color(0.7, 0.46, 0.2, 0.9)
 [node name="BeginButton" type="Button" parent="DesignCanvas/MenuButtons" unique_id=238920107]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 56.0
+offset_left = 104.0
 offset_top = 262.0
-offset_right = 384.0
+offset_right = 374.0
 offset_bottom = 309.0
 focus_neighbor_top = NodePath("../QuitButton")
 focus_neighbor_bottom = NodePath("../SettingsButton")
@@ -166,14 +198,14 @@ theme_override_styles/pressed = SubResource("StylePressed")
 theme_override_styles/hover = SubResource("StyleInvisible")
 theme_override_styles/focus = SubResource("StyleHover")
 text = "START GAME"
-alignment = 0
+alignment = 1
 
 [node name="SettingsButton" type="Button" parent="DesignCanvas/MenuButtons" unique_id=168654287]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 56.0
+offset_left = 104.0
 offset_top = 312.0
-offset_right = 326.0
+offset_right = 374.0
 offset_bottom = 358.0
 focus_neighbor_top = NodePath("../BeginButton")
 focus_neighbor_bottom = NodePath("../QuitButton")
@@ -189,14 +221,14 @@ theme_override_styles/pressed = SubResource("StylePressed")
 theme_override_styles/hover = SubResource("StyleInvisible")
 theme_override_styles/focus = SubResource("StyleHover")
 text = "OPTIONS"
-alignment = 0
+alignment = 1
 
 [node name="QuitButton" type="Button" parent="DesignCanvas/MenuButtons" unique_id=232986371]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 56.0
+offset_left = 104.0
 offset_top = 362.0
-offset_right = 326.0
+offset_right = 374.0
 offset_bottom = 408.0
 focus_neighbor_top = NodePath("../SettingsButton")
 focus_neighbor_bottom = NodePath("../BeginButton")
@@ -212,18 +244,7 @@ theme_override_styles/pressed = SubResource("StylePressed")
 theme_override_styles/hover = SubResource("StyleInvisible")
 theme_override_styles/focus = SubResource("StyleHover")
 text = "QUIT"
-alignment = 0
-
-[node name="ShiftTime" type="Label" parent="DesignCanvas/MenuButtons" unique_id=149919451]
-layout_mode = 0
-offset_left = 57.0
-offset_top = 474.0
-offset_right = 380.0
-offset_bottom = 506.0
-theme_override_colors/font_color = Color(0.66, 0.45, 0.22, 1)
-theme_override_fonts/font = ExtResource("3_font")
-theme_override_font_sizes/font_size = 17
-text = "6:00 PM  •  SHIFT BEGINS"
+alignment = 1
 
 [node name="OptionsPanel" type="PanelContainer" parent="DesignCanvas" unique_id=876584044]
 unique_name_in_owner = true
@@ -232,7 +253,7 @@ layout_mode = 0
 offset_left = 54.0
 offset_top = 232.0
 offset_right = 470.0
-offset_bottom = 572.0
+offset_bottom = 490.0
 theme_override_styles/panel = SubResource("StylePanel")
 
 [node name="Options" type="VBoxContainer" parent="DesignCanvas/OptionsPanel" unique_id=1200440726]
@@ -244,7 +265,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.76, 0.49, 1)
 theme_override_fonts/font = ExtResource("6_menu_font")
 theme_override_font_sizes/font_size = 34
-text = "SETTINGS"
+text = "OPTIONS"
 
 [node name="Rule" type="HSeparator" parent="DesignCanvas/OptionsPanel/Options" unique_id=1462020339]
 layout_mode = 2
@@ -263,18 +284,8 @@ mouse_default_cursor_shape = 2
 value = 80.0
 ticks_on_borders = true
 
-[node name="FullscreenToggle" type="CheckButton" parent="DesignCanvas/OptionsPanel/Options" unique_id=2116292747]
-unique_name_in_owner = true
-layout_mode = 2
-mouse_default_cursor_shape = 2
-theme_override_colors/font_color = Color(0.86, 0.81, 0.7, 1)
-theme_override_colors/font_focus_color = Color(0.95, 0.71, 0.28, 1)
-theme_override_fonts/font = ExtResource("6_menu_font")
-theme_override_font_sizes/font_size = 20
-text = "FULLSCREEN"
-
 [node name="Spacer" type="Control" parent="DesignCanvas/OptionsPanel/Options" unique_id=761533880]
-custom_minimum_size = Vector2(0, 24)
+custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
 size_flags_vertical = 3
 

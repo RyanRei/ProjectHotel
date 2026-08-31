@@ -21,6 +21,12 @@ var threat_flicker_active := false
 var flicker_time_remaining := 0.0
 var flicker_rng := RandomNumberGenerator.new()
 var blackout_overlay: ColorRect
+var threat_screen_on := true
+var threat_elapsed := 0.0
+var threat_shutdown_active := false
+var threat_shutdown_elapsed := 0.0
+var threat_shutdown_duration := 4.0
+var shutdown_fade_overlay: ColorRect
 
 
 func _ready() -> void:
@@ -39,6 +45,8 @@ func _process(delta: float) -> void:
 		return
 	if threat_flicker_active:
 		_update_threat_flicker(delta)
+	if threat_shutdown_active:
+		_update_threat_shutdown(delta)
 	animation_time += delta
 	if scan_line != null:
 		scan_line.position.y = 184.0 + fmod(animation_time * 72.0, 202.0)
@@ -158,13 +166,24 @@ func create_idle_display() -> void:
 	blackout_overlay.visible = false
 	background.add_child(blackout_overlay)
 
+	# This second black layer performs the final post-hang-up power-down. It is
+	# independent from the hard flicker layer, allowing the LCD to keep glitching
+	# underneath while the whole display gradually disappears into black.
+	shutdown_fade_overlay = ColorRect.new()
+	shutdown_fade_overlay.name = "ThreatShutdownFade"
+	shutdown_fade_overlay.color = Color(0, 0, 0, 0)
+	shutdown_fade_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	shutdown_fade_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	shutdown_fade_overlay.visible = false
+	background.add_child(shutdown_fade_overlay)
+
 	var quad := QuadMesh.new()
 	var bounds := screen_mesh.get_aabb()
-	# The imported monitor has no separate screen material. This inset quad sits
-	# just behind the front bezel so it reads as the glass instead of an overlay.
-	# Cover the downloaded model's complete baked Windows screen, leaving only
-	# its physical black bezel visible.
-	quad.size = Vector2(bounds.size.x * 0.86, bounds.size.y * 0.86)
+	# Fill the complete LCD opening rather than only the roster-window region.
+	# The small remaining inset preserves the monitor's physical black bezel.
+	# Because the blackout is drawn across the entire SubViewport, every visible
+	# LCD pixel now turns black together during the threat flicker.
+	quad.size = Vector2(bounds.size.x * 0.95, bounds.size.y * 0.95)
 	quad.orientation = PlaneMesh.FACE_Z
 
 	display_material = StandardMaterial3D.new()
@@ -201,34 +220,81 @@ func create_idle_display() -> void:
 
 func activate_threat_flicker() -> void:
 	threat_flicker_active = true
+	threat_shutdown_active = false
+	threat_elapsed = 0.0
+	threat_screen_on = true
 	flicker_time_remaining = 0.0
+	if shutdown_fade_overlay:
+		shutdown_fade_overlay.visible = false
+		shutdown_fade_overlay.color.a = 0.0
 
 
 func _update_threat_flicker(delta: float) -> void:
+	threat_elapsed += delta
 	flicker_time_remaining -= delta
 	if flicker_time_remaining > 0.0:
 		return
-	var screen_on := flicker_rng.randf() > 0.38
+	# The longer the threat call lasts, the less often the roster recovers and
+	# the longer each blackout holds. It begins near the original 3–4 Hz flicker
+	# and deteriorates toward an LCD that is mostly black.
+	var deterioration := clampf(threat_elapsed / 14.0, 0.0, 1.0)
+	var black_probability := lerpf(0.5, 0.88, deterioration)
+	threat_screen_on = flicker_rng.randf() > black_probability
+	var screen_on := threat_screen_on
 	if display_mesh:
 		display_mesh.visible = true
 	if blackout_overlay:
 		blackout_overlay.visible = not screen_on
 	if display_material:
-		display_material.emission_energy_multiplier = flicker_rng.randf_range(0.3, 1.05) if screen_on else 0.06
+		display_material.emission_energy_multiplier = flicker_rng.randf_range(0.72, 1.05) if screen_on else 0.0
 	if screen_glow:
 		# The LCD pixels remain visible, but during the threat blackout the monitor
 		# must not cast another room light alongside the telephone spotlight.
 		screen_glow.visible = false
 		screen_glow.light_energy = 0.0
-	# Uneven frequencies create occasional sharp glitches among longer black or
-	# readable roster holds, instead of a regular on/off pulse.
-	var rapid_glitch := flicker_rng.randf() < 0.28
-	if rapid_glitch:
-		flicker_time_remaining = flicker_rng.randf_range(0.025, 0.11)
-	elif screen_on:
-		flicker_time_remaining = flicker_rng.randf_range(0.22, 1.35)
+	if screen_on:
+		flicker_time_remaining = flicker_rng.randf_range(
+			lerpf(0.12, 0.045, deterioration),
+			lerpf(0.17, 0.09, deterioration)
+		)
 	else:
-		flicker_time_remaining = flicker_rng.randf_range(0.10, 0.52)
+		flicker_time_remaining = flicker_rng.randf_range(
+			lerpf(0.12, 0.24, deterioration),
+			lerpf(0.17, 0.62, deterioration)
+		)
+
+
+func begin_threat_shutdown(duration := 4.0) -> void:
+	if not threat_flicker_active and not threat_shutdown_active:
+		return
+	threat_shutdown_active = true
+	threat_shutdown_elapsed = 0.0
+	threat_shutdown_duration = clampf(duration, 3.0, 5.0)
+	if shutdown_fade_overlay:
+		shutdown_fade_overlay.visible = true
+		shutdown_fade_overlay.color = Color(0, 0, 0, 0)
+
+
+func _update_threat_shutdown(delta: float) -> void:
+	threat_shutdown_elapsed += delta
+	var progress := clampf(threat_shutdown_elapsed / threat_shutdown_duration, 0.0, 1.0)
+	# Slow start, then a heavier fall into darkness during the final seconds.
+	var darkness := smoothstep(0.0, 1.0, progress)
+	if shutdown_fade_overlay:
+		shutdown_fade_overlay.color.a = darkness
+	if display_material:
+		display_material.emission_energy_multiplier *= 1.0 - delta * lerpf(0.15, 1.2, progress)
+	if progress < 1.0:
+		return
+	threat_shutdown_active = false
+	threat_flicker_active = false
+	if blackout_overlay:
+		blackout_overlay.visible = true
+	if shutdown_fade_overlay:
+		shutdown_fade_overlay.visible = true
+		shutdown_fade_overlay.color = Color.BLACK
+	if display_material:
+		display_material.emission_energy_multiplier = 0.0
 
 
 func create_click_area() -> void:

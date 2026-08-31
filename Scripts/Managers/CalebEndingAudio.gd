@@ -31,6 +31,9 @@ func start_sequence() -> void:
 	var run_generation := _generation
 	MusicManager.fade_out(0.9)
 	_hangup.play()
+	for monitor in get_tree().get_nodes_in_group("computer_monitor"):
+		if monitor.has_method("begin_threat_shutdown"):
+			monitor.call("begin_threat_shutdown", 4.0)
 	while _hangup.playing and _active and run_generation == _generation:
 		await get_tree().process_frame
 	if not _active or run_generation != _generation:
