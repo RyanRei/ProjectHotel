@@ -11,6 +11,8 @@ const COLOR_GREEN := Color("758e55")
 const COLOR_YELLOW := Color("b18b37")
 const COLOR_GRAY := Color("747b7a")
 signal computah_closed
+signal roster_opened
+signal record_selected(title: String, tab: String)
 @export var pcClick:AudioStreamPlayer
 
 var database := RosterDatabase.new()
@@ -24,6 +26,8 @@ var record_title: Label
 var record_details: RichTextLabel
 var status_label: Label
 var sync_window_active := false
+var roster_closable := true
+var close_button: Button
 
 
 func _ready() -> void:
@@ -48,7 +52,8 @@ func _on_time_updated(_hour: int, _minute: int) -> void:
 
 func _input(event: InputEvent) -> void:
 	if visible and event.is_action_pressed("ui_cancel"):
-		close_roster()
+		if roster_closable:
+			close_roster()
 		get_viewport().set_input_as_handled()
 
 
@@ -59,14 +64,23 @@ func open_roster() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	search_field.grab_focus()
 	refresh_records(search_field.text)
+	roster_opened.emit()
 
 
 func close_roster() -> void:
+	if not roster_closable:
+		return
 	pcClick.play()
 	computah_closed.emit()
 	visible = false
 	search_field.release_focus()
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+
+func set_roster_closable(value: bool) -> void:
+	roster_closable = value
+	if is_instance_valid(close_button):
+		close_button.disabled = not value
 
 
 func build_interface() -> void:
@@ -101,7 +115,7 @@ func build_header() -> Control:
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(title)
 	row.add_child(make_label("11:45 PM", 22, COLOR_TEXT))
-	var close_button := Button.new()
+	close_button = Button.new()
 	close_button.text = "CLOSE"
 	close_button.custom_minimum_size = Vector2(100, 36)
 	close_button.add_theme_font_size_override("font_size", 15)
@@ -165,7 +179,7 @@ func build_content() -> Control:
 	roster_list.add_theme_color_override("font_color", COLOR_TEXT)
 	roster_list.add_theme_color_override("font_selected_color", Color("fff0c7"))
 	roster_list.add_theme_stylebox_override("selected", make_style(COLOR_AMBER, COLOR_AMBER, 0, 1))
-	roster_list.item_selected.connect(show_selected_record)
+	roster_list.item_selected.connect(_on_record_selected)
 	list_panel.add_child(roster_list)
 	split.add_child(list_panel)
 
@@ -235,6 +249,12 @@ func show_selected_record(index: int) -> void:
 	record_details.text = details_text + "[/table]"
 	status_label.text = "STATUS  •  " + str(record.status).to_upper()
 	status_label.add_theme_color_override("font_color", status_color(str(record.status)))
+
+
+func _on_record_selected(index: int) -> void:
+	show_selected_record(index)
+	if index >= 0 and index < filtered_records.size():
+		record_selected.emit(str(filtered_records[index].title), current_tab)
 
 
 func clear_record(message: String) -> void:

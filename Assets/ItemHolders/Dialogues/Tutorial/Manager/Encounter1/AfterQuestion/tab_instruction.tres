@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="DialogueNode" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Scripts/ResrouceScripts/DialougeNode.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+text = "By the way, you can press Tab to step into your desk and interact with your logbook, computer screen, and telephone. Press it again to get back to your call system, where you'll actually manage the shift."
+duration = 0.0
+final_choice = "NORMAL"

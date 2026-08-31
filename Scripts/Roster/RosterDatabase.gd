@@ -120,4 +120,12 @@ func _get_companion(resident_name: String) -> String:
 		for spec in Shift2Data.resident_specs():
 			if str(spec.name) == resident_name:
 				return str(spec.get("companion", "None"))
-	return "Michael Turner" if resident_name == "Daniel Reeves" else "Daniel Reeves" if resident_name == "Michael Turner" else "None"
+	if resident_name == "Daniel Reeves":
+		return "Michael Turner"
+	if resident_name == "Michael Turner":
+		return "Daniel Reeves"
+	if resident_name == "Arthur Williams":
+		return "Angelica Williams"
+	if resident_name == "Angelica Williams":
+		return "Arthur Williams"
+	return "None"

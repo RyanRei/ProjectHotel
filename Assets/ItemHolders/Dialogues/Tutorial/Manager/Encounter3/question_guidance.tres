@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="DialogueNode" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Scripts/ResrouceScripts/DialougeNode.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+text = "Notice how, if you paid attention, she already answered the first two questions, so there shouldn't be a need to pick them. But you can pick them anyway if you want to see her reaction. It just won't give you any real value."
+duration = 7.0
+final_choice = "NORMAL"

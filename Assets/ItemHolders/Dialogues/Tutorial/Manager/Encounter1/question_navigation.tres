@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="DialogueNode" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Scripts/ResrouceScripts/DialougeNode.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+text = "You can ask her any of the four questions. Use W and S to move around the questions."
+duration = 4.0
+final_choice = "NORMAL"

@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="DialogueNode" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Scripts/ResrouceScripts/DialougeNode.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+text = "Really? Did you forget again? Don't leave them hanging, c'mon."
+duration = 0.0
+final_choice = "NORMAL"

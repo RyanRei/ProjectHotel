@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="DialogueNode" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Scripts/ResrouceScripts/DialougeNode.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+text = "This side's everything else. Think of it as special notes. Anything that broke down, residents with special needs."
+duration = 0.0
+final_choice = "NORMAL"
+

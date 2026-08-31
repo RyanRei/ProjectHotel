@@ -12,7 +12,6 @@
 [ext_resource type="Resource" uid="uid://cp84m54cdi8us" path="res://Assets/ItemHolders/Encounters/Shift 1/encounter_1.tres" id="4_uyxfn"]
 [ext_resource type="Script" uid="uid://dv6jaggoi3q3q" path="res://Scripts/TutorialPointer.gd" id="4_w5r7g"]
 [ext_resource type="PackedScene" uid="uid://ba3nri8t48jc6" path="res://Scenes/subtitlesText.tscn" id="4_wnmts"]
-[ext_resource type="PackedScene" uid="uid://ynqdo42m44m7" path="res://Scenes/Tutorial/hand_model.tscn" id="5_75spv"]
 [ext_resource type="PackedScene" uid="uid://p5ev8eu8tcfi" path="res://Scenes/Telephone.tscn" id="6_cm8yc"]
 [ext_resource type="PackedScene" uid="uid://baabtnhguem4d" path="res://Scenes/Tutorial/box_pointing_to_text.tscn" id="6_rs52r"]
 [ext_resource type="PackedScene" uid="uid://bb8bpfxy4igwf" path="res://Assets/3D Models/Computer/desktop_computer.glb" id="7_i2uxr"]
@@ -374,9 +373,6 @@ process_mode = 3
 [node name="Pointer" type="Node3D" parent="TutorialManager" unique_id=399075682]
 process_mode = 3
 script = ExtResource("4_w5r7g")
-hand_model = ExtResource("5_75spv")
-hover_height = 0.75
-animation_speed = 5.315
 
 [node name="CanvasLayer for tesing" type="CanvasLayer" parent="TutorialManager" unique_id=574014767]
 layer = 2

@@ -6,6 +6,7 @@ extends Node
 
 signal time_updated(hour: int, minute: int)
 signal shift_ended
+signal midnight_reached
 
 const SHIFT_DURATION := 43200.0  # 12 hours in seconds
 const SCALE_NORMAL := 2000.0     # when 600  10 in-game minutes per 1 real second- 
@@ -24,8 +25,11 @@ func _process(delta: float) -> void:
 	if time_scale <= 0.0:
 		return
 
+	var previous_seconds := in_game_seconds
 	in_game_seconds += delta * time_scale
 	in_game_seconds = minf(in_game_seconds, SHIFT_DURATION)
+	if previous_seconds < 21600.0 and in_game_seconds >= 21600.0:
+		midnight_reached.emit()
 
 	var current_minute := get_minute()
 	var current_hour := get_hour()

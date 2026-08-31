@@ -4,6 +4,7 @@ extends Control
 signal choiceMade(choice: String)
 signal confirmation_requested(message: String)
 signal confirmation_cancelled
+signal locked_decision_attempted(choice: String)
 var accept_locked := false
 var reject_locked := false
 var question_locked := false
@@ -62,19 +63,18 @@ func _input(event: InputEvent) -> void:
 		return
 
 	if event.is_action_pressed("Accept"):
-		if accept_locked:
-			return
 		_handle_accept()
 		get_viewport().set_input_as_handled()
 		return
 
 	if event.is_action_pressed("Reject"):
-		if reject_locked:
-			return
 		_handle_reject()
 		get_viewport().set_input_as_handled()
 
 func _handle_accept() -> void:
+	if accept_locked:
+		locked_decision_attempted.emit("ACCEPT")
+		return
 	if decision_state == DecisionState.CHOOSING:
 		decision_state = DecisionState.CONFIRMING_ACCEPT
 		accept.grab_focus()
@@ -85,6 +85,9 @@ func _handle_accept() -> void:
 
 
 func _handle_reject() -> void:
+	if reject_locked:
+		locked_decision_attempted.emit("REJECT")
+		return
 	if decision_state == DecisionState.CHOOSING:
 		decision_state = DecisionState.CONFIRMING_REJECT
 		reject.grab_focus()

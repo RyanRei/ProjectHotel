@@ -2,6 +2,7 @@ class_name DialogBox
 extends Control
 
 @onready var text_label: Label = $DialoguePanel/MarginContainer/VBoxContainer/Subtitles
+@onready var speaker_label: Label = $DialoguePanel/MarginContainer/VBoxContainer/SpeakerLabel
 @onready var continue_indicator: Label = $DialoguePanel/MarginContainer/VBoxContainer/ContinueIndicator
 @onready var audio_stream_player: AudioStreamPlayer = $AudioStreamPlayer
 @onready var question_menu: VBoxContainer = $QuestionMenu
@@ -15,6 +16,8 @@ extends Control
 @export var tutorial:TutorialManager
 signal confirmqn #for tutorial
 signal tab_checked
+signal history_opened
+signal history_closed
 var tutorial_check_tab_active := false
 var move_up_locked := false
 var move_down_locked := false
@@ -28,6 +31,7 @@ var dialogue_choices: Array[DialogueChoice]
 var selected_choice := 0
 const CHOICE_BUTTON_SCENE := preload("res://Scenes/dialogue_choice_button.tscn")
 const HUD_FONT := preload("res://Assets/Fonts/ShareTechMono-Regular.ttf")
+const DEFAULT_ACTION_PROMPT := "What would you like to do?"
 
 var is_decision_pending := false
 var is_hud_visible := true
@@ -36,6 +40,9 @@ var confirmation_text_generation := 0
 var history_open := false
 var history_previous_mouse_mode := Input.MOUSE_MODE_CAPTURED
 var dialogue_generation := 0
+var tutorial_line_active := false
+var tutorial_line_allow_navigation := false
+var tab_feature_available := true
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -85,10 +92,11 @@ func _on_confirmation_requested(message: String) -> void:
 
 func _on_confirmation_cancelled() -> void:
 	confirmation_text_generation += 1
-	text_label.text = "What would you like to do?"
+	text_label.text = DEFAULT_ACTION_PROMPT
 
 
 func _type_confirmation(message: String, generation: int) -> void:
+	message = _hud_text_or_default(message)
 	text_label.text = ""
 	for character_index in message.length():
 		if generation != confirmation_text_generation:
@@ -123,6 +131,7 @@ func run_dialogue(current_node: DialogueNode):
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	$DialoguePanel.show()
 	$DialoguePanel.modulate.a = 1.0
+	speaker_label.text = DialogueManager.current_speaker_name
 	var line_started_at := Time.get_ticks_msec()
 	var line_duration := current_node.duration
 
@@ -172,6 +181,82 @@ func run_dialogue(current_node: DialogueNode):
 		DialogueManager.advance()
 
 
+## Plays a voiced tutorial interstitial in the normal dialogue box without
+## replacing DialogueManager.current_node. The active encounter remains paused
+## underneath and resumes from the exact same decision state afterward.
+func play_tutorial_line(node: DialogueNode, allow_question_navigation := false) -> void:
+	if not is_instance_valid(node):
+		return
+	var previous_hud_visibility := is_hud_visible
+	var previous_desk_state := GameState.desk_state
+	var previous_mouse_mode := Input.mouse_mode
+	var previous_hud_text := text_label.text
+	var previous_speaker_text := speaker_label.text
+	tutorial_line_active = true
+	tutorial_line_allow_navigation = allow_question_navigation
+	visible = true
+	is_hud_visible = true
+	GameState.leave_desk_state()
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	$DialoguePanel.show()
+	$DialoguePanel.modulate.a = 1.0
+	speaker_label.text = "Manager"
+	continue_indicator.hide()
+	var line_started_at := Time.get_ticks_msec()
+	var line_duration := node.duration
+	if node.voiceline:
+		_play_voice(node.voiceline)
+		line_duration = maxf(line_duration, node.voiceline.get_length())
+	await show_line(node.text)
+	history_overlay.add_guest_message("Manager", node.text)
+	var remaining_time := line_duration - (Time.get_ticks_msec() - line_started_at) / 1000.0
+	if not typing_skipped and remaining_time > 0.0:
+		waiting_for_line_audio = true
+		var audio_deadline := Time.get_ticks_msec() + int(maxf(remaining_time, 0.15) * 1000.0)
+		while waiting_for_line_audio and Time.get_ticks_msec() < audio_deadline:
+			await get_tree().process_frame
+		waiting_for_line_audio = false
+	continue_indicator.show()
+	await wait_for_advance()
+	_stop_voice_players()
+	continue_indicator.hide()
+	var tween := create_tween()
+	tween.tween_property($DialoguePanel, "modulate:a", 0.0, 0.15)
+	await tween.finished
+	$DialoguePanel.hide()
+	$DialoguePanel.modulate.a = 1.0
+	tutorial_line_active = false
+	tutorial_line_allow_navigation = false
+	text_label.text = _hud_text_or_default(previous_hud_text)
+	speaker_label.text = previous_speaker_text
+	is_hud_visible = previous_hud_visibility
+	if previous_desk_state:
+		GameState.enter_desk_state()
+	else:
+		GameState.leave_desk_state()
+	Input.mouse_mode = previous_mouse_mode
+
+
+func show_tutorial_action_prompt(message: String) -> void:
+	visible = true
+	is_hud_visible = true
+	GameState.leave_desk_state()
+	$DialoguePanel.show()
+	$DialoguePanel.modulate.a = 1.0
+	speaker_label.text = ""
+	text_label.text = _hud_text_or_default(message)
+	continue_indicator.hide()
+	question_menu.hide()
+	hint_label.hide()
+	accept_reject.show()
+	accept_reject.active = true
+
+
+func set_tutorial_choice_index(index: int) -> void:
+	selected_choice = clampi(index, 0, maxi(dialogue_choices.size() - 1, 0))
+	update_choice_display(false)
+
+
 func present_action_prompt(run_generation := dialogue_generation) -> void:
 	visible = true
 	GameState.leave_desk_state()
@@ -179,13 +264,16 @@ func present_action_prompt(run_generation := dialogue_generation) -> void:
 	$DialoguePanel.show()
 	$DialoguePanel.modulate.a = 1.0
 	question_menu.hide()
-	text_label.text = "What would you like to do?"
+	text_label.text = DEFAULT_ACTION_PROMPT
 	continue_indicator.hide()
 	is_decision_pending = true
 	is_hud_visible = true
 	is_in_choices = false
 	hint_label.text = "[TAB] Inspect Desk"
-	hint_label.show()
+	if tab_feature_available:
+		hint_label.show()
+	else:
+		hint_label.hide()
 	accept_reject.show()
 	
 		
@@ -199,27 +287,14 @@ func present_action_prompt(run_generation := dialogue_generation) -> void:
 			await tutorial.check_tab_button()
 	
 	if GameState.day == 1 and GameState.encounter == 2 and not tutorial.skipped:
-		
-		
-		if tutorial.question_asked == 1 or tutorial.question_asked==2:
-			
-			tutorial.question_asked += 1
+		if not tutorial.daniel_intro_complete:
 			await tutorial.enc2QuestionPointer()
-		elif tutorial.question_asked == 3 :
-			print("tabbing")
-			tutorial.question_asked += 1
-			await tutorial.e2_check_tab_button()
 	if GameState.day == 1 and GameState.encounter == 3 and not tutorial.skipped:
-		print(tutorial.question_asked)
-		
-		if tutorial.question_asked == 1 or tutorial.question_asked==2:
-			
-			tutorial.question_asked += 1
+		if not tutorial.maya_hud_initialized:
 			await tutorial.enc3QuestionPointer()
-		#elif tutorial.question_asked == 3 :
-			#print("tabbing")
-			#tutorial.question_asked += 1
-			#await tutorial.e2_check_tab_button()
+	if GameState.day == 1 and GameState.encounter == 4 and not tutorial.skipped:
+		if not tutorial.arthur_hud_initialized:
+			tutorial.initialize_arthur_tutorial()
 		
 	var choice_made: String = await accept_reject.choiceMade
 	if run_generation != dialogue_generation or not DialogueManager.active:
@@ -247,6 +322,8 @@ func toggle_action_hud():
 					question_menu.show()
 			else:
 				$DialoguePanel.show()
+				if not accept_reject.is_confirming_decision():
+					text_label.text = DEFAULT_ACTION_PROMPT
 				accept_reject.show()
 				accept_reject.active = true
 		else:
@@ -266,6 +343,10 @@ func toggle_action_hud():
 			
 		hint_label.text = "[TAB] Open Actions"
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	if tab_feature_available:
+		hint_label.show()
+	else:
+		hint_label.hide()
 
 func lock_move_up() -> void:
 	move_up_locked = true
@@ -291,28 +372,43 @@ func lock_toggle_hud() -> void:
 func unlock_toggle_hud() -> void:
 	toggle_hud_locked = false
 
+
+func set_tab_feature_available(value: bool) -> void:
+	tab_feature_available = value
+	if not is_instance_valid(hint_label):
+		return
+	if not value:
+		hint_label.hide()
+	elif is_decision_pending:
+		hint_label.text = "[TAB] Inspect Desk" if is_hud_visible else "[TAB] Open Actions"
+		hint_label.show()
+
 func wait_for_advance() -> void:
 	awaiting_advance = true
 	while awaiting_advance:
 		await get_tree().process_frame
 
 func show_line(text: String):
-	reveal_text = text
+	reveal_text = _hud_text_or_default(text)
 	text_label.text = ""
 	continue_indicator.hide()
 	typing = true
 	awaiting_advance = false
 	typing_skipped = false
 
-	for character_index in text.length():
+	for character_index in reveal_text.length():
 		if not typing:
 			typing_skipped = true
 			break
-		text_label.text = text.substr(0, character_index + 1)
+		text_label.text = reveal_text.substr(0, character_index + 1)
 		await get_tree().create_timer(1.0 / characters_per_second).timeout
 
 	text_label.text = reveal_text
 	typing = false
+
+
+func _hud_text_or_default(value: String) -> String:
+	return DEFAULT_ACTION_PROMPT if value.strip_edges().is_empty() else value
 
 func hide_line():
 	_stop_voice_players()
@@ -352,7 +448,10 @@ func show_choices(choices: Array[DialogueChoice]):
 	is_hud_visible = true
 	is_in_choices = true
 	hint_label.text = "[TAB] Inspect Desk"
-	hint_label.show()
+	if tab_feature_available:
+		hint_label.show()
+	else:
+		hint_label.hide()
 
 	dialogue_choices = choices
 	selected_choice = 0
@@ -378,7 +477,31 @@ func show_choices(choices: Array[DialogueChoice]):
 	tween.tween_property(question_menu, "modulate:a", 1.0, 0.18)
 
 func _input(event):
+	if tutorial_line_active:
+		if event.is_action_pressed("Move Up") and tutorial_line_allow_navigation:
+			selected_choice = max(0, selected_choice - 1)
+			update_choice_display(false)
+			get_viewport().set_input_as_handled()
+		elif event.is_action_pressed("Move Down") and tutorial_line_allow_navigation:
+			selected_choice = min(dialogue_choices.size() - 1, selected_choice + 1)
+			update_choice_display(false)
+			get_viewport().set_input_as_handled()
+		elif event.is_action_pressed("Confirm"):
+			if typing:
+				typing = false
+				text_label.text = reveal_text
+			elif waiting_for_line_audio:
+				waiting_for_line_audio = false
+			elif awaiting_advance:
+				awaiting_advance = false
+			get_viewport().set_input_as_handled()
+		return
 	if event.is_action_pressed("History"):
+		# The roster owns all keyboard input while its monitor is open. In
+		# particular, typing "T" into its search field must not open history.
+		for roster_ui in get_tree().get_nodes_in_group("roster_ui"):
+			if roster_ui is CanvasItem and (roster_ui as CanvasItem).visible:
+				return
 		if DialogueManager.active and DialogueManager.current_node != null and DialogueManager.current_node.unskippable:
 			get_viewport().set_input_as_handled()
 			return
@@ -390,9 +513,26 @@ func _input(event):
 		return
 
 	if history_open:
+		if event is InputEventMouseButton and event.pressed:
+			if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+				history_overlay.scroll_by(-90)
+				get_viewport().set_input_as_handled()
+			elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+				history_overlay.scroll_by(90)
+				get_viewport().set_input_as_handled()
+		elif event is InputEventKey and event.pressed and not event.echo:
+			if event.is_action_pressed("Move Up") or event.is_action_pressed("ui_up"):
+				history_overlay.scroll_by(-70)
+				get_viewport().set_input_as_handled()
+			elif event.is_action_pressed("Move Down") or event.is_action_pressed("ui_down"):
+				history_overlay.scroll_by(70)
+				get_viewport().set_input_as_handled()
 		return
 
 	if event.is_action_pressed("toggle_hud") and DialogueManager.active:
+		if not tab_feature_available:
+			get_viewport().set_input_as_handled()
+			return
 		if DialogueManager.current_node != null and DialogueManager.current_node.unskippable:
 			get_viewport().set_input_as_handled()
 			return
@@ -444,7 +584,7 @@ func _input(event):
 			get_viewport().set_input_as_handled()
 			return
 		selected_choice = max(0, selected_choice - 1)
-		update_choice_display()
+		update_choice_display(false)
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("Move Down"):
 		if move_down_locked:
@@ -452,11 +592,7 @@ func _input(event):
 			return
 		
 		selected_choice = min(dialogue_choices.size() - 1, selected_choice + 1)
-		if GameState.encounter==3 and GameState.day==1:
-			if tutorial.question_asked==2:
-				print("reaches heree")
-				selected_choice = min(1, selected_choice + 1)
-		update_choice_display()
+		update_choice_display(false)
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("Confirm"):
 		if confirm_locked:
@@ -465,6 +601,12 @@ func _input(event):
 		if dialogue_choices.is_empty():
 			return
 		var choice = dialogue_choices[selected_choice]
+		if tutorial != null and not tutorial.can_select_dialogue_choice(choice):
+			tutorial.on_blocked_dialogue_choice()
+			get_viewport().set_input_as_handled()
+			return
+		if tutorial != null:
+			tutorial.on_dialogue_choice_selected(choice)
 		history_overlay.add_player_message(choice.text)
 		
 		is_decision_pending = false
@@ -477,23 +619,21 @@ func _input(event):
 		confirmqn.emit()
 		get_viewport().set_input_as_handled()
 
-func update_choice_display():
+func update_choice_display(run_tutorial_hook := true):
 	for i in dialogue_choices.size():
 		var choice_button: DialogueChoiceButton = choices_container.get_child(i)
 		choice_button.set_selected(i == selected_choice)
-	if GameState.day==1 and GameState.encounter==1 and not tutorial.skipped:
+	if run_tutorial_hook and GameState.day==1 and GameState.encounter==1 and not tutorial.skipped:
 		if tutorial.question_asked==2:
 			await tutorial.select_question()
 
-	elif GameState.day == 1 and GameState.encounter == 2 and not tutorial.skipped:
-		if tutorial.question_asked == 2 or tutorial.question_asked == 3 :
-			#print("going here")
-			await tutorial.enc2SelectQuestion()
+	elif run_tutorial_hook and GameState.day == 1 and GameState.encounter == 2 and not tutorial.skipped:
+		if tutorial.daniel_tutorial_active:
+			tutorial.enc2SelectQuestion()
 			
-	elif GameState.day == 1 and GameState.encounter == 3 and not tutorial.skipped:
-		if tutorial.question_asked == 2 :
-			#print("going here")
-			await tutorial.enc3SelectQuestion()
+	elif run_tutorial_hook and GameState.day == 1 and GameState.encounter == 3 and not tutorial.skipped:
+		if tutorial.maya_tutorial_active:
+			tutorial.enc3SelectQuestion()
 		
 
 
@@ -532,10 +672,12 @@ func toggle_history() -> void:
 	history_open = not history_open
 	history_overlay.visible = history_open
 	if history_open:
+		history_opened.emit()
 		history_previous_mouse_mode = Input.mouse_mode
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 		accept_reject.active = false
 		history_overlay.scroll_to_latest()
 	else:
+		history_closed.emit()
 		Input.mouse_mode = history_previous_mouse_mode
 		accept_reject.active = is_decision_pending and not is_in_choices and accept_reject.visible

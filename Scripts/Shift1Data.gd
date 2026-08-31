@@ -9,6 +9,7 @@ static func resident_specs() -> Array[Dictionary]:
 		{"room":"207", "name":"Daniel Reeves", "check_in":"Aug 21, 7:10 PM", "checkout":"Sep 01, 10:00 AM", "status":"Occupied", "dob":"Nov 02, 1987", "id_type":"National ID", "id":"1906", "phone":"2418"},
 		{"room":"207", "name":"Michael Turner", "check_in":"Aug 21, 7:12 PM", "checkout":"Sep 01, 10:00 AM", "status":"Occupied", "dob":"Feb 18, 1989", "id_type":"Driver License", "id":"7742", "phone":"6105"},
 		{"room":"112", "name":"Arthur Williams", "check_in":"Aug 19, 5:20 PM", "checkout":"Aug 31, 10:00 AM", "status":"Occupied", "dob":"Jan 09, 1946", "id_type":"Senior ID", "id":"7312", "phone":"0965"},
+		{"room":"112", "name":"Angelica Williams", "check_in":"Aug 19, 5:22 PM", "checkout":"Aug 31, 10:00 AM", "status":"Occupied", "dob":"Apr 17, 1975", "id_type":"Driver License", "id":"4286", "phone":"5831"},
 		{"room":"203", "name":"Elena Voss", "check_in":"Aug 30, 6:12 PM", "checkout":"Sep 03, 10:00 AM", "status":"Occupied", "dob":"Jun 11, 1990", "id_type":"Passport", "id":"5528", "phone":"1830"},
 		{"room":"205", "name":"Nora Bell", "check_in":"Aug 24, 8:15 PM", "checkout":"Sep 02, 10:00 AM", "status":"Occupied", "dob":"Mar 31, 1983", "id_type":"Passport", "id":"3589", "phone":"4207"},
 	]
@@ -36,7 +37,7 @@ static func room_records() -> Array[Dictionary]:
 	return [
 		room_record("102", "Vacant", "Vacant", "Aug 25, 7:10 PM", "Aug 30, 7:05 PM", "Checkout complete; cleaning pending"),
 		room_record("104", "Tracey Morgan", "Occupied", "Aug 20, 4:35 PM", "Sep 02, 10:00 AM", "None"),
-		room_record("112", "Arthur Williams", "Occupied", "Aug 19, 5:20 PM", "Aug 31, 10:00 AM", "Radiator fault; relocation and room release pending", true),
+		room_record("112", "Arthur Williams / Angelica Williams", "Occupied", "Aug 19, 5:20 PM", "Aug 31, 10:00 AM", "Radiator fault; relocation and room release pending", true),
 		room_record("203", "Elena Voss", "Occupied", "Aug 30, 6:12 PM", "Sep 03, 10:00 AM", "Checked in this shift"),
 		room_record("204", "Vacant", "Vacant", "--", "--", "Inventory update processing", true),
 		room_record("205", "Nora Bell", "Occupied", "Aug 24, 8:15 PM", "Sep 02, 10:00 AM", "Visitor expected after 1:00 AM"),

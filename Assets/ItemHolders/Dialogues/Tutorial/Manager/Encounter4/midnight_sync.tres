@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="DialogueNode" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Scripts/ResrouceScripts/DialougeNode.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+text = "Alright, heads up. It's midnight, so the system's about to do its nightly sync. For the next hour or so, some records might come up out of date or straight-up wrong. Keyword: 'Some - not all.'"
+duration = 0.0
+final_choice = "NORMAL"

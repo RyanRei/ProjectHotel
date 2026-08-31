@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="DialogueNode" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Scripts/ResrouceScripts/DialougeNode.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+text = "Every decision you make tonight gets read out tomorrow morning in The Daily Times. If you let the wrong person in, they kill the resident inside. Turn away the right person, they die too — just outside instead of in. Either way, the company's numbers are gunna move up and down. Enough bad mornings, and the shelter crashes to an end."
+duration = 0.0
+final_choice = "NORMAL"
+

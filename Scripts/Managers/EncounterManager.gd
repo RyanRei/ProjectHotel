@@ -250,7 +250,7 @@ func finish_encounter(encounter: EncounterData, choice: String):
 			"weight": encounter.report_weight
 		})
 	if GameState.encounter==1 and GameState.day==1 and not tutorial.skipped:
-		await tutorial.introduce_clock()
+		await tutorial.introduce_clock(choice)
 	if GameState.encounter == 4 and GameState.day == 1 and not tutorial.skipped:
 		await tutorial.show_final_shift_tutorial()
 	GameState.encounter += 1

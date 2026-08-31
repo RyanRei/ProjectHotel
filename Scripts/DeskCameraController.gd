@@ -29,6 +29,9 @@ var target_pitch := 0.0
 var target_xz_offset := Vector2.ZERO
 var current_xz_offset := Vector2.ZERO
 var head_bob_time := 0.0
+var cutscene_active := false
+var cutscene_tween: Tween
+var cutscene_start_transform: Transform3D
 
 
 func _ready() -> void:
@@ -58,6 +61,8 @@ func is_desk_ui_open() -> bool:
 
 
 func _process(delta: float) -> void:
+	if cutscene_active:
+		return
 	var target_rotation := Vector3(
 		base_rotation.x + target_pitch,
 		base_rotation.y + target_yaw,
@@ -128,3 +133,40 @@ func _process(delta: float) -> void:
 	position.x = base_x_z.x + current_xz_offset.x
 	position.z = base_x_z.y + current_xz_offset.y
 	position.y = base_height + bob_offset
+
+
+## Temporarily hands camera control to a tutorial cutscene and eases the view
+## toward a world-space target. Player look and movement resume afterward.
+func begin_cutscene_focus(target: Node3D, duration := 1.35) -> void:
+	if not is_instance_valid(target):
+		return
+	begin_cutscene_focus_position(target.global_position, duration)
+
+
+func begin_cutscene_focus_position(target_position: Vector3, duration := 1.35) -> void:
+	if is_instance_valid(cutscene_tween):
+		cutscene_tween.kill()
+	cutscene_start_transform = global_transform
+	cutscene_active = true
+	# Cameras look down their local -Z axis, which is Node3D's default
+	# looking_at convention.
+	var focus_transform := global_transform.looking_at(target_position, Vector3.UP)
+	cutscene_tween = create_tween()
+	cutscene_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	cutscene_tween.tween_property(self, "quaternion", focus_transform.basis.get_rotation_quaternion(), duration)
+
+
+func end_cutscene_focus(duration := 0.65) -> void:
+	if not cutscene_active:
+		return
+	if is_instance_valid(cutscene_tween):
+		cutscene_tween.kill()
+	cutscene_tween = create_tween()
+	cutscene_tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	cutscene_tween.tween_property(self, "global_transform", cutscene_start_transform, duration)
+	await cutscene_tween.finished
+	cutscene_active = false
+	target_yaw = 0.0
+	target_pitch = 0.0
+	target_xz_offset = Vector2.ZERO
+	current_xz_offset = Vector2.ZERO

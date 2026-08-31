@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="DialogueNode" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://Scripts/ResrouceScripts/DialougeNode.gd" id="1"]
+[ext_resource type="Resource" path="res://Assets/ItemHolders/Dialogues/Tutorial/Manager/Computer/warning.tres" id="2"]
+
+[resource]
+script = ExtResource("1")
+text = "This is the official records. The reservations, room assignments, visitors, straight from the database."
+duration = 0.0
+next_node = ExtResource("2")
+final_choice = "NORMAL"

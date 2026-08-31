@@ -39,6 +39,10 @@ func set_shift(shift_number: int) -> void:
 
 
 func add_guest_message(speaker_name: String, message: String) -> void:
+	# Manager guidance is tutorial narration, not part of the resident/visitor
+	# communication record the player consults during a call.
+	if speaker_name.strip_edges().to_lower() == "manager":
+		return
 	_ensure_current_shift()
 	if recorded_encounter != GameState.encounter:
 		recorded_encounter = GameState.encounter
@@ -69,6 +73,11 @@ func add_decision(decision: String) -> void:
 func scroll_to_latest() -> void:
 	await get_tree().process_frame
 	scroll.scroll_vertical = int(scroll.get_v_scroll_bar().max_value)
+
+
+func scroll_by(amount: int) -> void:
+	var bar := scroll.get_v_scroll_bar()
+	scroll.scroll_vertical = clampi(scroll.scroll_vertical + amount, 0, int(bar.max_value))
 
 
 func _ensure_current_shift() -> void:

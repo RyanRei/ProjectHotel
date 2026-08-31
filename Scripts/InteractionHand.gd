@@ -96,7 +96,6 @@ func _draw() -> void:
 		center = get_viewport().get_mouse_position()
 	center += Vector2(0, 2 if is_pressed else 0)
 	var color := HAND_ACTIVE if is_hovering else HAND_IDLE
-	# Compact, low-resolution pointing-hand silhouette for the captured mouse.
 	var hand := PackedVector2Array([
 		Vector2(-3, 12), Vector2(-3, -9), Vector2(0, -13), Vector2(3, -9),
 		Vector2(3, 1), Vector2(5, -2), Vector2(8, -1), Vector2(9, 2),
@@ -109,13 +108,3 @@ func _draw() -> void:
 	draw_polyline(hand + PackedVector2Array([hand[0]]), OUTLINE, 2.0, true)
 	if is_hovering:
 		draw_arc(center + Vector2(1, -10), 8.0, PI, TAU, 12, HAND_ACTIVE, 1.5, true)
-		var prompt_position := center + Vector2(22, 12)
-		draw_string(
-			ThemeDB.fallback_font,
-			prompt_position,
-			"CLICK",
-			HORIZONTAL_ALIGNMENT_LEFT,
-			-1,
-			14,
-			HAND_ACTIVE
-		)
