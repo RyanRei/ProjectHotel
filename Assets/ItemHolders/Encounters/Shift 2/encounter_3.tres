@@ -15,10 +15,8 @@
 script = ExtResource("2_node")
 voiceline = ExtResource("6_alt_reveal")
 text = "He never got the chance, did he? Honestly, you made this super easy for me. I didn't even have to set foot in your precious building and act like his younger brother. He was standing right outside your door, just ready to accept his fate."
-wait_for_prompt = false
 unskippable = true
 auto_advance = true
-final_choice = "NORMAL"
 
 [sub_resource type="Resource" id="alt_q1"]
 script = ExtResource("3_choice")

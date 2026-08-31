@@ -40,7 +40,7 @@
 [ext_resource type="PackedScene" path="res://Scenes/shift_transition_ui.tscn" id="30_shift_transition"]
 [ext_resource type="PackedScene" path="res://Scenes/Environment/reception_lobby.tscn" id="31_lobby"]
 [ext_resource type="PackedScene" path="res://Scenes/pause_menu.tscn" id="32_pause_menu"]
-[ext_resource type="Script" path="res://Scripts/Managers/ThreatAtmosphere.gd" id="33_threat_atmosphere"]
+[ext_resource type="Script" uid="uid://ct3py5j87fg6p" path="res://Scripts/Managers/ThreatAtmosphere.gd" id="33_threat_atmosphere"]
 
 [sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_cm8yc"]
 ground_color = Color(0.89985204, 0.4907532, 0.21794471, 1)
@@ -105,7 +105,7 @@ metadata/_custom_type_script = "uid://8570ain8w4hx"
 
 [node name="Node3D" type="Node3D" unique_id=1681156658]
 
-[node name="ThreatAtmosphere" type="Node" parent="." node_paths=PackedStringArray("lights_root", "telephone_threat_light")]
+[node name="ThreatAtmosphere" type="Node" parent="." unique_id=937943317 node_paths=PackedStringArray("lights_root", "telephone_threat_light")]
 script = ExtResource("33_threat_atmosphere")
 lights_root = NodePath("../Lights")
 telephone_threat_light = NodePath("../Lights/ThreatTelephoneLight")
@@ -132,22 +132,22 @@ transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 0.7720361, 2.0122602
 transform = Transform3D(7.9988327, -0.0007051654, -0.13666779, 0, 7.9998937, -0.041277084, 0.1366696, 0.04127106, 7.9987264, -2.1664891, 2.9574757, 1.562563)
 script = ExtResource("9_monitor")
 
-[node name="defaultMaterial" parent="models/computah/Sketchfab_model/Collada visual scene group/Mouse_Wheel_Low" parent_id_path=PackedInt32Array(1114786589, 193065424) index="0" unique_id=544706403]
+[node name="defaultMaterial" parent="models/computah/Sketchfab_model/Collada visual scene group/Mouse_Wheel_Low" parent_id_path=PackedInt32Array(1114786589, 1131302171) index="0" unique_id=999183091]
 transform = Transform3D(0.39959186, 9.313323e-05, 0.018049983, -9.313345e-05, 0.3999994, -2.0982698e-06, -0.018049983, -2.1059532e-06, 0.39959213, -0.14093643, -0.030498207, 0.20731899)
 
-[node name="defaultMaterial2" parent="models/computah/Sketchfab_model/Collada visual scene group/Mouse_Low" parent_id_path=PackedInt32Array(1114786589, 857369718) index="0" unique_id=557410940]
+[node name="defaultMaterial2" parent="models/computah/Sketchfab_model/Collada visual scene group/Mouse_Low" parent_id_path=PackedInt32Array(1114786589, 552149035) index="0" unique_id=211799687]
 transform = Transform3D(0.39888582, 0.0001539214, 0.029831205, -0.00015392152, 0.3999998, -5.746493e-06, -0.029831205, -5.74952e-06, 0.39888588, -0.13918996, -0.030419528, 0.2191678)
 
-[node name="defaultMaterial3" parent="models/computah/Sketchfab_model/Collada visual scene group/Base_Low" parent_id_path=PackedInt32Array(1114786589, 2144100107) index="0" unique_id=1672925608]
+[node name="defaultMaterial3" parent="models/computah/Sketchfab_model/Collada visual scene group/Base_Low" parent_id_path=PackedInt32Array(1114786589, 600102034) index="0" unique_id=1632585161]
 transform = Transform3D(0.39999992, 3.637979e-12, -2.7939677e-09, 0, 0.39999992, 9.313226e-10, 3.7252903e-09, -1.1641532e-09, 0.39999992, 0.002469182, -0.019545555, 0.14461479)
 
-[node name="defaultMaterial4" parent="models/computah/Sketchfab_model/Collada visual scene group/Vert_Low" parent_id_path=PackedInt32Array(1114786589, 1144788793) index="0" unique_id=207218652]
+[node name="defaultMaterial4" parent="models/computah/Sketchfab_model/Collada visual scene group/Vert_Low" parent_id_path=PackedInt32Array(1114786589, 190110689) index="0" unique_id=915900434]
 transform = Transform3D(0.2999999, 7.275958e-12, -4.1909516e-09, -1.6370905e-11, 0.3, 2.2118911e-09, 2.7939677e-09, -1.7462298e-09, 0.3, 0.0084812045, -0.05689746, 0.1804916)
 
-[node name="defaultMaterial5" parent="models/computah/Sketchfab_model/Collada visual scene group/Computer_Low" parent_id_path=PackedInt32Array(1114786589, 376919465) index="0" unique_id=1023339267]
+[node name="defaultMaterial5" parent="models/computah/Sketchfab_model/Collada visual scene group/Computer_Low" parent_id_path=PackedInt32Array(1114786589, 288841810) index="0" unique_id=1293543901]
 transform = Transform3D(0.49997613, -0.0013246113, 0.004698918, 0.000566037, 0.49372703, 0.078952394, -0.004849129, -0.078943305, 0.49370477, 0.004231155, -0.00551641, 0.24766394)
 
-[node name="defaultMaterial6" parent="models/computah/Sketchfab_model/Collada visual scene group/Key_Board_Low" parent_id_path=PackedInt32Array(1114786589, 532525736) index="0" unique_id=1437999894]
+[node name="defaultMaterial6" parent="models/computah/Sketchfab_model/Collada visual scene group/Key_Board_Low" parent_id_path=PackedInt32Array(1114786589, 1683541517) index="0" unique_id=622999514]
 transform = Transform3D(0.3499632, 2.6129557e-05, 0.0050641145, -2.6129625e-05, 0.3500003, -1.8964056e-07, -0.0050641196, -1.9290019e-07, 0.34996325, -0.07371694, -0.058675766, 0.15438148)
 
 [node name="Logbook" parent="models" unique_id=2051017322 node_paths=PackedStringArray("logbook", "logUpdateAudio", "pageFlipAudio") instance=ExtResource("4_jmvtc")]
@@ -157,14 +157,14 @@ logbook = NodePath("../../CanvasLayer/LogbookUI")
 logUpdateAudio = NodePath("whencorniferbemapping")
 pageFlipAudio = NodePath("pageflip")
 
-[node name="Collada visual scene group" parent="models/Logbook/Sketchfab_model" parent_id_path=PackedInt32Array(2051017322, 79811789) index="0" unique_id=665357334]
+[node name="Collada visual scene group" parent="models/Logbook/Sketchfab_model" parent_id_path=PackedInt32Array(2051017322, 617261688) index="0" unique_id=1577816945]
 transform = Transform3D(1, 0, 0, 0, -4.3711385e-08, -0.99999994, 0, 0.99999994, -4.3711385e-08, 0, 0, 0)
 
-[node name="defaultMaterial_001" parent="models/Logbook/Sketchfab_model/Collada visual scene group/notebook" parent_id_path=PackedInt32Array(2051017322, 718344277) index="0" unique_id=637014689]
+[node name="defaultMaterial_001" parent="models/Logbook/Sketchfab_model/Collada visual scene group/notebook" parent_id_path=PackedInt32Array(2051017322, 1298453669) index="0" unique_id=1044404364]
 transform = Transform3D(-0.99800265, 0.14202243, 0.027653921, -0.056808602, -2.495963, 0.00078626315, 0.027653925, -0.0019657402, 0.99961776, 0.15295768, 0.022822142, -0.0021170676)
 surface_material_override/0 = ExtResource("12_u3pq5")
 
-[node name="defaultMaterial" parent="models/Logbook/Sketchfab_model/Collada visual scene group/penna" parent_id_path=PackedInt32Array(2051017322, 713728379) index="0" unique_id=790055126]
+[node name="defaultMaterial" parent="models/Logbook/Sketchfab_model/Collada visual scene group/penna" parent_id_path=PackedInt32Array(2051017322, 1969647053) index="0" unique_id=1910885735]
 transform = Transform3D(1, -2.0816682e-17, 2.7939677e-09, -1.3877788e-17, 1.0000001, -1.3322676e-15, 0, 1.7763568e-15, 1.0000002, 0.37629592, 0, -0.005208224)
 
 [node name="whencorniferbemapping" type="AudioStreamPlayer3D" parent="models/Logbook" unique_id=1175347376]
@@ -220,9 +220,8 @@ material = SubResource("StandardMaterial3D_ldmme")
 
 [node name="Lights" type="Node" parent="." unique_id=1123067539]
 
-[node name="ThreatTelephoneLight" type="SpotLight3D" parent="Lights"]
-position = Vector3(0.77, 5.5, 2.2)
-rotation_degrees = Vector3(-90, 0, 0)
+[node name="ThreatTelephoneLight" type="SpotLight3D" parent="Lights" unique_id=1717076537]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0.77, 5.5, 2.2)
 visible = false
 light_color = Color(1, 0.45, 0.12, 1)
 light_energy = 7.5
@@ -479,7 +478,7 @@ script = ExtResource("11_hand")
 
 [node name="ShiftTransitionUI" parent="CanvasLayer" unique_id=1068896443 instance=ExtResource("30_shift_transition")]
 
-[node name="PauseMenu" parent="CanvasLayer" instance=ExtResource("32_pause_menu")]
+[node name="PauseMenu" parent="CanvasLayer" unique_id=405723742 instance=ExtResource("32_pause_menu")]
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=436142256]
 

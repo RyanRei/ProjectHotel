@@ -2,11 +2,11 @@
 
 [ext_resource type="Script" uid="uid://vwswsn27uvpe" path="res://Scripts/ResrouceScripts/DialougeChoice.gd" id="1_7lt45"]
 [ext_resource type="Script" uid="uid://cwgrdj7ntjmds" path="res://Scripts/ResrouceScripts/DialougeNode.gd" id="2_0j3av"]
-[ext_resource type="AudioStream" uid="uid://b4gxot7naylhy" path="res://Assets/Sound/voicelines/Shift1/ArthurWilliams/q1.wav" id="3_7lt45"]
+[ext_resource type="AudioStream" uid="uid://b8883wjyc24f6" path="res://Assets/Sound/voicelines/Shift1/ArthurWilliams/q1.wav" id="3_7lt45"]
 
 [resource]
 script = ExtResource("2_0j3av")
 voiceline = ExtResource("3_7lt45")
-text = "...What was that? I can't hear a thing over this damn machine. Hold on... This damn radiator"
+text = "...What was that? I can't hear a thing over this damn machine. "
 wait_for_prompt = true
 metadata/_custom_type_script = "uid://cwgrdj7ntjmds"

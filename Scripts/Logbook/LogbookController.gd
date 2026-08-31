@@ -21,8 +21,8 @@ const PAGE_WIDTH_SEGMENTS := 24
 const PAGE_LENGTH_SEGMENTS := 6
 # The animated GLB reports a very large skinned AABB (roughly the whole desk).
 # Use a deliberate hitbox around the visible closed book instead.
-const CLICKABLE_CENTER := Vector3(0.0, 0.08, 0.0)
-const CLICKABLE_SIZE := Vector3(0.28, 1.9, 2.4)
+const CLICKABLE_CENTER := Vector3(0.0, 0.00, 0.0)
+const CLICKABLE_SIZE := Vector3(0.28, 0.3, 0.3)
 signal page_turn_midpoint
 signal page_turn_finished
 
