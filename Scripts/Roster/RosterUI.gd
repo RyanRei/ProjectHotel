@@ -11,6 +11,7 @@ const COLOR_GREEN := Color("758e55")
 const COLOR_YELLOW := Color("b18b37")
 const COLOR_GRAY := Color("747b7a")
 signal computah_closed
+@export var pcClick:AudioStreamPlayer
 
 var database := RosterDatabase.new()
 var current_tab := "RESIDENTS"
@@ -52,6 +53,7 @@ func _input(event: InputEvent) -> void:
 
 
 func open_roster() -> void:
+	pcClick.play()
 	visible = true
 	move_to_front()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -60,6 +62,7 @@ func open_roster() -> void:
 
 
 func close_roster() -> void:
+	pcClick.play()
 	computah_closed.emit()
 	visible = false
 	search_field.release_focus()

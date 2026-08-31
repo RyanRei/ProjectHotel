@@ -3,12 +3,12 @@
 [ext_resource type="Script" uid="uid://b5vh1alvaioay" path="res://Scripts/ResrouceScripts/EncounterData.gd" id="1_enc"]
 [ext_resource type="Script" uid="uid://cwgrdj7ntjmds" path="res://Scripts/ResrouceScripts/DialougeNode.gd" id="2_node"]
 [ext_resource type="Script" uid="uid://vwswsn27uvpe" path="res://Scripts/ResrouceScripts/DialougeChoice.gd" id="3_choice"]
-[ext_resource type="AudioStream" path="res://Assets/Sound/voicelines/Shift 2/Ven/intro.wav" id="4_intro"]
-[ext_resource type="AudioStream" path="res://Assets/Sound/voicelines/Shift 2/Ven/q1.wav" id="5_q1"]
-[ext_resource type="AudioStream" path="res://Assets/Sound/voicelines/Shift 2/Ven/q2.wav" id="6_q2"]
-[ext_resource type="AudioStream" path="res://Assets/Sound/voicelines/Shift 2/Ven/q3.wav" id="7_q3"]
-[ext_resource type="AudioStream" path="res://Assets/Sound/voicelines/Shift 2/Ven/q4.wav" id="8_q4"]
-[ext_resource type="AudioStream" path="res://Assets/Sound/voicelines/Shift 2/Ven/closing.wav" id="9_closing"]
+[ext_resource type="AudioStream" uid="uid://bhqo11sw07ub2" path="res://Assets/Sound/voicelines/Shift 2/Ven/intro.wav" id="4_intro"]
+[ext_resource type="AudioStream" uid="uid://dje2btuwwqb1c" path="res://Assets/Sound/voicelines/Shift 2/Ven/q1.wav" id="5_q1"]
+[ext_resource type="AudioStream" uid="uid://cyitpkon6xms4" path="res://Assets/Sound/voicelines/Shift 2/Ven/q2.wav" id="6_q2"]
+[ext_resource type="AudioStream" uid="uid://bwgwngn86sgbd" path="res://Assets/Sound/voicelines/Shift 2/Ven/q3.wav" id="7_q3"]
+[ext_resource type="AudioStream" uid="uid://b2v15aktllk1q" path="res://Assets/Sound/voicelines/Shift 2/Ven/q4.wav" id="8_q4"]
+[ext_resource type="AudioStream" uid="uid://xy8k3tj4ja2i" path="res://Assets/Sound/voicelines/Shift 2/Ven/closing.wav" id="9_closing"]
 
 [sub_resource type="Resource" id="aside"]
 script = ExtResource("2_node")

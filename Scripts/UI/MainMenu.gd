@@ -16,22 +16,40 @@ const DESIGN_SIZE := Vector2(1280.0, 720.0)
 @onready var trust_label: Label = %Subtitle
 @onready var title_rule_left: ColorRect = %TitleRuleLeft
 @onready var title_rule_right: ColorRect = %TitleRuleRight
+@export var hoverSound:AudioStreamPlayer
+
+@export var selectionSound:AudioStreamPlayer
+
 
 
 func _ready() -> void:
 	MusicManager.play_menu()
+	begin_button.mouse_entered.connect(play_hover_sound)
+	settings_button.mouse_entered.connect(play_hover_sound)
+	quit_button.mouse_entered.connect(play_hover_sound)
+	back_button.mouse_entered.connect(play_hover_sound)
+	quit_button.mouse_entered.connect(play_hover_sound)
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	_fit_design_canvas()
 	get_viewport().size_changed.connect(_fit_design_canvas)
 	menu_buttons.show()
 	options_panel.hide()
-
+	begin_button.pressed.connect(await play_select_sound)
 	begin_button.pressed.connect(_begin_shift)
+	
+	
 	settings_button.pressed.connect(_open_options)
+	settings_button.pressed.connect(play_select_sound)
+	
 	quit_button.pressed.connect(_quit_game)
+	quit_button.pressed.connect(play_select_sound)
+	
 	volume_slider.value_changed.connect(_set_master_volume)
 	fullscreen_toggle.toggled.connect(_set_fullscreen)
+	
 	back_button.pressed.connect(_close_options)
+	back_button.pressed.connect(play_select_sound)
+	
 	for button in [begin_button, settings_button, quit_button]:
 		button.mouse_entered.connect(button.grab_focus)
 		button.gui_input.connect(_on_menu_button_gui_input.bind(button))
@@ -42,6 +60,13 @@ func _ready() -> void:
 	fullscreen_toggle.button_pressed = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN
 	begin_button.grab_focus()
 	_run_trust_neon_cycle()
+
+
+func play_hover_sound():
+	hoverSound.play()
+	
+func play_select_sound():
+	selectionSound.play()
 
 
 func _run_trust_neon_cycle() -> void:

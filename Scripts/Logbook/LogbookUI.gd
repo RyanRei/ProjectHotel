@@ -7,7 +7,8 @@ const PageCurlScript = preload("res://Scripts/Logbook/PageCurl2D.gd")
 const StickyTabScript = preload("res://Scripts/Logbook/StickyBookmarkButton.gd")
 const BINDER_TEXTURE = preload("res://Assets/UI/Logbook/logbook_open_binder.png")
 const TABLE_FONT = preload("res://Assets/Fonts/ShareTechMono-Regular.ttf")
-
+@export var bookOpen:AudioStreamPlayer
+@export var bookClose:AudioStreamPlayer
 const INK := Color("332b23")
 const MUTED_INK := Color("6f6354")
 const PAPER_DARK := Color("bea980")
@@ -99,6 +100,7 @@ func is_point_over_book(screen_position: Vector2) -> bool:
 
 
 func open_logbook() -> void:
+	bookOpen.play()
 	show_page(current_page)
 	visible = true
 	move_to_front()
@@ -106,6 +108,7 @@ func open_logbook() -> void:
 
 signal logbookClosed
 func close_logbook() -> void:
+	bookClose.play()
 	logbookClosed.emit()
 	visible = false
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED

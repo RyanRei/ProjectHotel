@@ -3,15 +3,13 @@
 [ext_resource type="Script" uid="uid://vwswsn27uvpe" path="res://Scripts/ResrouceScripts/DialougeChoice.gd" id="1_choice"]
 [ext_resource type="Script" uid="uid://b5vh1alvaioay" path="res://Scripts/ResrouceScripts/EncounterData.gd" id="1_enc"]
 [ext_resource type="Script" uid="uid://cwgrdj7ntjmds" path="res://Scripts/ResrouceScripts/DialougeNode.gd" id="2_node"]
-[ext_resource type="AudioStream" path="res://Assets/Sound/voicelines/Shift 2/Caleb/intro.wav" id="3_intro"]
-[ext_resource type="AudioStream" path="res://Assets/Sound/voicelines/Shift 2/Caleb/devious.wav" id="4_devious"]
+[ext_resource type="AudioStream" uid="uid://d3vcfq77aifyj" path="res://Assets/Sound/voicelines/Shift 2/Caleb/intro.wav" id="3_intro"]
+[ext_resource type="AudioStream" uid="uid://db01gdvkto533" path="res://Assets/Sound/voicelines/Shift 2/Caleb/devious.wav" id="4_devious"]
 
 [sub_resource type="Resource" id="taunt"]
 script = ExtResource("2_node")
 voiceline = ExtResource("4_devious")
 text = "God, you really do think this place is safe, don't you? That's cute. From in here, it's a really nice place not to be interrupted. As for Ven, he was taken care of. Get some sleep. You've earned it."
-wait_for_prompt = false
-final_choice = "NORMAL"
 
 [sub_resource type="Resource" id="q1"]
 script = ExtResource("1_choice")

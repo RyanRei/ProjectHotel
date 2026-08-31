@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://8jkjcns4wayu"
+path="res://.godot/imported/book close.mp3-4242ab8208088a8687f5365d55399d1e.mp3str"
+
+[deps]
+
+source_file="res://Assets/Sound/sfx/book close.mp3"
+dest_files=["res://.godot/imported/book close.mp3-4242ab8208088a8687f5365d55399d1e.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
