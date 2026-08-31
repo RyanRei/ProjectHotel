@@ -56,7 +56,7 @@ next_node = SubResource("r4")
 [sub_resource type="Resource" id="start"]
 script = ExtResource("2_node")
 voiceline = ExtResource("4_intro")
-text = "Hey, it's Ethan. Room 103. Sorry to bother you this late. My card's not working for some reason, not really sure why. Whenever you get a chance, could you let me back in?"
+text = "Hey, it's Ethan. Room 410. Sorry to bother you this late. My card's not working for some reason, not really sure why. Whenever you get a chance, could you let me back in?"
 choices = Array[ExtResource("3_choice")]([SubResource("q1"), SubResource("q2"), SubResource("q3"), SubResource("q4")])
 wait_for_prompt = true
 
@@ -68,5 +68,5 @@ caller_type = "KILLER"
 dialogue = SubResource("start")
 communication_type = "RESIDENT"
 time = "8:00 PM"
-room_number = "103"
+room_number = "410"
 trigger_hour = 20

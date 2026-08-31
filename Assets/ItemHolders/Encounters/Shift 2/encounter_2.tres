@@ -13,7 +13,7 @@
 [sub_resource type="Resource" id="aside"]
 script = ExtResource("2_node")
 voiceline = ExtResource("9_closing")
-text = "Oh, and one more thing before I leave. My brother Caleb is driving up tonight from Albany. He should be here around one-thirty. He doesn't have a room, just visiting. If he calls, could you point him this way?"
+text = "Oh and one more thing before I leave, if you don't mind. My brother's driving up tonight, should be here around one thirty. Driving all the way from Albany. He doesn't have a room, just visiting. If he calls, could you point him this way?"
 
 [sub_resource type="Resource" id="r1"]
 script = ExtResource("2_node")

@@ -12,7 +12,7 @@
 [resource]
 script = ExtResource("2_078v1")
 voiceline = ExtResource("8_cdrxj")
-text = "I..uh..am Williams from Room one-twelve. This blasted card is not working at all."
+text = "I..uh..am Williams. Room One Twelve. This blasted card won't open the door"
 duration = 5.0
 next_node = ExtResource("6_vhim0")
 choices = Array[ExtResource("1_mq5x0")]([ExtResource("2_cdrxj"), ExtResource("3_3wqew"), ExtResource("4_hnnkm"), ExtResource("5_tuelr")])

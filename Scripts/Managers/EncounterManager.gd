@@ -3,6 +3,8 @@ extends Node
 
 const MALE_VISITOR_SCENE: PackedScene = preload("res://Scenes/humanEntity.tscn")
 const FEMALE_VISITOR_SCENE: PackedScene = preload("res://Scenes/femaleEntity.tscn")
+const VISITOR_VOICE_BUS := &"VisitorVoice"
+const VISITOR_VOICE_NODE := &"VisitorVoice3D"
 @export var logBookController:LogbookController
 var encounterOngoing:=false
 @export var phone:Phone
@@ -37,9 +39,14 @@ var waiting_for_end_shift := false
 ## while start_encounter() is awaiting its startup animation.
 var encounter_starting := false
 var encounter_generation := 0
+var caleb_ending_audio: CalebEndingAudio
 
 
 func _ready() -> void:
+	_configure_visitor_voice_bus()
+	caleb_ending_audio = CalebEndingAudio.new()
+	caleb_ending_audio.name = "CalebEndingAudio"
+	add_child(caleb_ending_audio)
 	MusicManager.play_gameplay()
 	encounter_button.startEncounter.connect(_on_end_shift_pressed)
 	if not TimeManager.shift_ended.is_connected(_on_clock_shift_ended):
@@ -48,6 +55,9 @@ func _ready() -> void:
 
 
 func begin_day() -> void:
+	if caleb_ending_audio != null:
+		caleb_ending_audio.stop_sequence()
+	MusicManager.set_call_ducked(false)
 	waiting_for_end_shift = false
 	encounterOngoing = false
 	encounter_starting = false
@@ -181,6 +191,7 @@ func start_encounter() -> void:
 	var communication_type := _get_communication_type(encounter)
 	if communication_type=="RESIDENT":
 		await wait_for_phone()
+		MusicManager.set_call_ducked(true)
 	elif communication_type=="VISITOR":
 		await move_customer(_get_visitor_model(encounter), MovePosition.MOVE_IN)
 		if run_generation != encounter_generation:
@@ -201,7 +212,10 @@ func start_encounter() -> void:
 
 	logBookController.updateLogbook(encounter)
 
-	DialogueManager.start_dialogue(_get_dialogue(encounter), encounter.name)
+	var spatial_voice_player: AudioStreamPlayer3D
+	if communication_type == "VISITOR":
+		spatial_voice_player = _get_or_create_visitor_voice_player(guestModel)
+	DialogueManager.start_dialogue(_get_dialogue(encounter), encounter.name, spatial_voice_player)
 
 	var choice:String=await DialogueManager.dialogue_finished
 	if run_generation != encounter_generation:
@@ -210,10 +224,14 @@ func start_encounter() -> void:
 	# Some residents provide information only once access has actually been
 	# authorized. Keep that dialogue out of the verification phase.
 	if choice == "ACCEPT" and encounter.accepted_dialogue != null:
-		DialogueManager.start_dialogue(encounter.accepted_dialogue, encounter.name)
+		DialogueManager.start_dialogue(encounter.accepted_dialogue, encounter.name, spatial_voice_player)
 		await DialogueManager.dialogue_finished
 		if run_generation != encounter_generation:
 			return
+	if _is_caleb_consequence_call(encounter):
+		await caleb_ending_audio.start_sequence()
+	elif communication_type == "RESIDENT":
+		MusicManager.set_call_ducked(false)
 	
 	await finish_encounter(encounter, choice)
 
@@ -293,6 +311,12 @@ func _get_communication_type(encounter: EncounterData) -> String:
 	return encounter.communication_type
 
 
+func _is_caleb_consequence_call(encounter: EncounterData) -> bool:
+	if encounter.encounter_id == "caleb_taunt":
+		return true
+	return encounter.encounter_id == "caleb" and not bool(GameState.story_flags.get("ven_admitted", false))
+
+
 func _store_story_choice(encounter: EncounterData, choice: String) -> void:
 	match encounter.encounter_id:
 		"ven_keer":
@@ -331,6 +355,8 @@ func _on_end_shift_pressed() -> void:
 	if not waiting_for_end_shift:
 		return
 	waiting_for_end_shift = false
+	if caleb_ending_audio != null:
+		caleb_ending_audio.stop_sequence()
 	await encounter_button.turnOff()
 	TimeManager.set_time(6, 0)  # jump to 6 AM
 	TimeManager.pause()
@@ -506,6 +532,68 @@ func _get_visitor_model(encounter: EncounterData) -> PackedScene:
 	if encounter.visitor_gender == "MALE":
 		return MALE_VISITOR_SCENE
 	return encounter.model
+
+
+func _get_or_create_visitor_voice_player(person: Node3D) -> AudioStreamPlayer3D:
+	if not is_instance_valid(person):
+		return null
+	var existing := person.get_node_or_null(NodePath(String(VISITOR_VOICE_NODE))) as AudioStreamPlayer3D
+	if existing != null:
+		return existing
+	var player := AudioStreamPlayer3D.new()
+	player.name = VISITOR_VOICE_NODE
+	# Character assets are scaled 2.2x and their roots sit below floor height.
+	# This places speech near the mouth instead of at the character's feet.
+	player.position = Vector3(0.0, 3.35, 0.0)
+	player.bus = VISITOR_VOICE_BUS
+	player.volume_db = 0.5
+	player.attenuation_model = AudioStreamPlayer3D.ATTENUATION_INVERSE_DISTANCE
+	player.unit_size = 6.0
+	player.max_distance = 26.0
+	player.max_db = 0.5
+	player.panning_strength = 0.55
+	player.attenuation_filter_cutoff_hz = 11000.0
+	player.attenuation_filter_db = -8.0
+	player.emission_angle_enabled = true
+	# Godot expresses this as the half-angle; 75 degrees gives a broad,
+	# human-like forward field (roughly a 150-degree total cone).
+	player.emission_angle_degrees = 75.0
+	player.emission_angle_filter_attenuation_db = -5.0
+	person.add_child(player)
+	return player
+
+
+func _configure_visitor_voice_bus() -> void:
+	if AudioServer.get_bus_index(VISITOR_VOICE_BUS) >= 0:
+		return
+	AudioServer.add_bus()
+	var bus_index := AudioServer.bus_count - 1
+	AudioServer.set_bus_name(bus_index, VISITOR_VOICE_BUS)
+	AudioServer.set_bus_send(bus_index, &"Master")
+
+	# Remove close-microphone proximity and excessive breath detail without
+	# making an unobstructed person two metres away sound muffled.
+	var equalizer := AudioEffectEQ10.new()
+	equalizer.set_band_gain_db(0, -8.0) # 31 Hz rumble
+	equalizer.set_band_gain_db(1, -4.0) # 62 Hz proximity
+	equalizer.set_band_gain_db(2, -2.0) # 125 Hz proximity
+	equalizer.set_band_gain_db(3, -1.0) # 250 Hz warmth control
+	equalizer.set_band_gain_db(8, -2.0) # 8 kHz breath/sibilance detail
+	equalizer.set_band_gain_db(9, -3.5) # 16 kHz close-mic air
+	AudioServer.add_bus_effect(bus_index, equalizer)
+
+	# A restrained early-room impression. The dry voice remains dominant so the
+	# lobby reads as an occupied interior rather than an echoing hall.
+	var reverb := AudioEffectReverb.new()
+	reverb.room_size = 0.32
+	reverb.damping = 0.68
+	reverb.spread = 0.78
+	reverb.predelay_msec = 12.0
+	reverb.predelay_feedback = 0.08
+	reverb.hipass = 0.18
+	reverb.dry = 0.96
+	reverb.wet = 0.12
+	AudioServer.add_bus_effect(bus_index, reverb)
 
 func wait_for_phone():
 	phone.start_ringing()

@@ -54,8 +54,8 @@ static func logbook_schedule() -> Array[Dictionary]:
 		log_entry(18, 12, "6:12 PM", "Elena Voss", "203", "IN", ""),
 		log_entry(18, 35, "6:35 PM", "Tracey Morgan", "104", "CALL", "Tracey Morgan called from the lobby phone and reported that her card may be inside Room 104."),
 		log_entry(19, 5, "7:05 PM", "Sennet Cole", "102", "OUT", ""),
-		log_entry(20, 40, "8:40 PM", "Nora Bell", "205", "CALL", ""),
-		log_entry(20, 55, "8:55 PM", "Michael Turner", "207", "CALL", "Michael Turner requested fresh towels for Room 207. No card fault was reported for Daniel Reeves."),
+		log_entry(20, 40, "8:40 PM", "Room 205", "205", "CALL", ""),
+		log_entry(20, 55, "8:55 PM", "Room 207", "207", "CALL", "Room 207 requested fresh towels. No card fault was reported for Daniel Reeves."),
 		log_entry(21, 55, "9:55 PM", "Maya Chen", "104", "VIS", "Tracey Morgan notified reception that Maya Chen is expected between 10:15 PM and 10:45 PM."),
 		log_entry(23, 48, "11:48 PM", "Arthur Williams", "112", "CALL", "Arthur Williams called reception from Room 112 about the radiator humming again. Maintenance was deferred until morning."),
 	]

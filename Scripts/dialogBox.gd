@@ -71,7 +71,7 @@ func _on_dialogue_finished(choice: String) -> void:
 		question_menu.hide()
 		accept_reject.active = false
 		accept_reject.hide()
-	audio_stream_player.stop()
+	_stop_voice_players()
 	typing = false
 	waiting_for_line_audio = false
 	awaiting_advance = false
@@ -127,8 +127,7 @@ func run_dialogue(current_node: DialogueNode):
 	var line_duration := current_node.duration
 
 	if current_node.voiceline:
-		audio_stream_player.stream = current_node.voiceline
-		audio_stream_player.play()
+		_play_voice(current_node.voiceline)
 		line_duration = maxf(line_duration, current_node.voiceline.get_length())
 
 	await show_line(current_node.text)
@@ -149,6 +148,10 @@ func run_dialogue(current_node: DialogueNode):
 		waiting_for_line_audio = false
 	if run_generation != dialogue_generation or not DialogueManager.active or current_node != DialogueManager.current_node:
 		return
+	if current_node.auto_advance:
+		await hide_line()
+		DialogueManager.advance()
+		return
 
 	continue_indicator.show()
 	await wait_for_advance()
@@ -156,7 +159,7 @@ func run_dialogue(current_node: DialogueNode):
 		return
 	# This is the final advance press for the displayed line. Stop its voice
 	# whether the next state hides the box or replaces it with the action prompt.
-	audio_stream_player.stop()
+	_stop_voice_players()
 
 	if current_node.wait_for_prompt:
 		if current_node.question_only_prompt and not current_node.choices.is_empty():
@@ -312,12 +315,30 @@ func show_line(text: String):
 	typing = false
 
 func hide_line():
-	audio_stream_player.stop()
+	_stop_voice_players()
 	var tween = create_tween()
 	tween.tween_property($DialoguePanel, "modulate:a", 0.0, 0.25)
 	await tween.finished
 	hide_dialogue_ui()
 	return tween
+
+
+func _play_voice(stream: AudioStream) -> void:
+	_stop_voice_players()
+	var spatial_player := DialogueManager.current_spatial_voice_player
+	if is_instance_valid(spatial_player):
+		spatial_player.stream = stream
+		spatial_player.play()
+		return
+	audio_stream_player.stream = stream
+	audio_stream_player.play()
+
+
+func _stop_voice_players() -> void:
+	audio_stream_player.stop()
+	var spatial_player := DialogueManager.current_spatial_voice_player
+	if is_instance_valid(spatial_player):
+		spatial_player.stop()
 
 func show_choices(choices: Array[DialogueChoice]):
 	
@@ -358,6 +379,9 @@ func show_choices(choices: Array[DialogueChoice]):
 
 func _input(event):
 	if event.is_action_pressed("History"):
+		if DialogueManager.active and DialogueManager.current_node != null and DialogueManager.current_node.unskippable:
+			get_viewport().set_input_as_handled()
+			return
 		if tutorial != null and tutorial.is_tutorial_prompt_active():
 			get_viewport().set_input_as_handled()
 			return
@@ -369,6 +393,9 @@ func _input(event):
 		return
 
 	if event.is_action_pressed("toggle_hud") and DialogueManager.active:
+		if DialogueManager.current_node != null and DialogueManager.current_node.unskippable:
+			get_viewport().set_input_as_handled()
+			return
 		if toggle_hud_locked:
 			get_viewport().set_input_as_handled()
 			return
@@ -394,6 +421,9 @@ func _input(event):
 
 	if not question_menu.visible:
 		if event.is_action_pressed("Confirm"):
+			if DialogueManager.current_node != null and DialogueManager.current_node.unskippable and (typing or waiting_for_line_audio):
+				get_viewport().set_input_as_handled()
+				return
 			if confirm_locked:
 				get_viewport().set_input_as_handled()
 				return
@@ -479,6 +509,9 @@ func _on_question_back_pressed() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if is_hud_visible and typing and event.is_action_pressed("Confirm"):
+		if DialogueManager.current_node != null and DialogueManager.current_node.unskippable:
+			get_viewport().set_input_as_handled()
+			return
 		typing = false
 		text_label.text = reveal_text
 		get_viewport().set_input_as_handled()
@@ -486,7 +519,8 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _process(_delta: float) -> void:
 	var tutorial_prompt_active := tutorial != null and tutorial.is_tutorial_prompt_active()
-	history_indicator.visible = not history_open and not tutorial_prompt_active
+	var consequence_cutscene := DialogueManager.active and DialogueManager.current_node != null and DialogueManager.current_node.unskippable
+	history_indicator.visible = not history_open and not tutorial_prompt_active and not consequence_cutscene
 
 
 

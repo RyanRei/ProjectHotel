@@ -1,12 +1,14 @@
 extends Node
 
 const MUSIC_VOLUME_DB := -9.0
+const CALL_VOLUME_DB := -13.0
 
 var _player: AudioStreamPlayer
 var _menu_music: AudioStreamMP3
 var _gameplay_music: AudioStreamMP3
 var _stress_music: AudioStreamWAV
 var _transition: Tween
+var _call_ducked := false
 
 
 func _ready() -> void:
@@ -43,7 +45,28 @@ func play_stress() -> void:
 	_transition.tween_callback(_start_stress_track)
 	# This fade runs only when the stress track is first selected. The WAV's
 	# internal loop continues without invoking play_stress() or fading again.
-	_transition.tween_property(_player, "volume_db", MUSIC_VOLUME_DB, 1.0)
+	_transition.tween_property(_player, "volume_db", _target_volume_db(), 1.0)
+
+
+func set_call_ducked(ducked: bool) -> void:
+	_call_ducked = ducked
+	if _player == null or not _player.playing:
+		return
+	if _transition and _transition.is_valid():
+		_transition.kill()
+	_transition = create_tween()
+	_transition.tween_property(_player, "volume_db", _target_volume_db(), 0.3)
+
+
+func fade_out(duration := 0.9) -> void:
+	_call_ducked = false
+	if _player == null or not _player.playing:
+		return
+	if _transition and _transition.is_valid():
+		_transition.kill()
+	_transition = create_tween()
+	_transition.tween_property(_player, "volume_db", -50.0, maxf(duration, 0.05))
+	_transition.tween_callback(_player.stop)
 
 
 func _start_stress_track() -> void:
@@ -56,12 +79,16 @@ func _play_track(track: AudioStreamMP3) -> void:
 	if _transition and _transition.is_valid():
 		_transition.kill()
 	if _player.stream == track and _player.playing:
-		_player.volume_db = MUSIC_VOLUME_DB
+		_player.volume_db = _target_volume_db()
 		return
 	_player.stop()
 	_player.stream = track
-	_player.volume_db = MUSIC_VOLUME_DB
+	_player.volume_db = _target_volume_db()
 	_player.play()
+
+
+func _target_volume_db() -> float:
+	return CALL_VOLUME_DB if _call_ducked else MUSIC_VOLUME_DB
 
 
 func _restart_current_track() -> void:

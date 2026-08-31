@@ -15,6 +15,10 @@
 script = ExtResource("2_node")
 voiceline = ExtResource("6_alt_reveal")
 text = "He never got the chance, did he? Honestly, you made this super easy for me. I didn't even have to set foot in your precious building and act like his younger brother. He was standing right outside your door, just ready to accept his fate."
+wait_for_prompt = false
+unskippable = true
+auto_advance = true
+final_choice = "NORMAL"
 
 [sub_resource type="Resource" id="alt_q1"]
 script = ExtResource("3_choice")
@@ -43,6 +47,7 @@ text = "Hey. It's Caleb, here to see my brother, Ven, Room 412? He said he'd let
 choices = Array[ExtResource("3_choice")]([SubResource("alt_q1"), SubResource("alt_q2"), SubResource("alt_q3"), SubResource("alt_q4")])
 wait_for_prompt = true
 question_only_prompt = true
+unskippable = true
 
 [sub_resource type="Resource" id="r1"]
 script = ExtResource("2_node")
@@ -58,7 +63,7 @@ next_node = SubResource("r1")
 [sub_resource type="Resource" id="r2"]
 script = ExtResource("2_node")
 voiceline = ExtResource("8_q2")
-text = "Flew in from Denver, actually. The cab dropped me off maybe twenty minutes ago. I'm running on no sleep, so bear with me."
+text = "Flew in from Denver, actually. The Cab dropped me off maybe twenty minutes ago. I'm running on like no sleep, so bear with me if I'm not making a ton of sense"
 wait_for_prompt = true
 
 [sub_resource type="Resource" id="q2"]

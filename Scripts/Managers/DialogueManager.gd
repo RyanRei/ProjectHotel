@@ -6,13 +6,15 @@ var current_chosen:int
 var current_node: DialogueNode
 var active := false
 var current_speaker_name := ""
+var current_spatial_voice_player: AudioStreamPlayer3D
 
 var current_active_choices: Array[DialogueChoice] = []
 
-func start_dialogue(start_node: DialogueNode, speaker_name: String = ""):
+func start_dialogue(start_node: DialogueNode, speaker_name: String = "", spatial_voice_player: AudioStreamPlayer3D = null):
 	current_chosen=0
 	current_node = start_node
 	current_speaker_name = speaker_name
+	current_spatial_voice_player = spatial_voice_player
 	active = true
 	current_active_choices = current_node.choices.duplicate()
 	play_current_node()

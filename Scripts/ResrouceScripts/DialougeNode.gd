@@ -9,4 +9,8 @@ extends Resource
 ## Used by reveal/taunt calls where the player must choose a question but must
 ## not be offered an access decision.
 @export var question_only_prompt: bool=false
+## Prevents Confirm from fast-forwarding the typewriter or voice playback.
+@export var unskippable: bool=false
+## Advances after text and voice finish without showing the Continue indicator.
+@export var auto_advance: bool=false
 @export_enum("ACCEPT","REJECT","QUESTION","NORMAL") var final_choice:String="NORMAL"

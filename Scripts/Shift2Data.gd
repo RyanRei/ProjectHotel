@@ -4,8 +4,8 @@ extends RefCounted
 
 static func resident_specs() -> Array[Dictionary]:
 	return [
-		{"room":"103", "name":"Ethan Cole", "check_in":"Aug 19, 5:08 PM", "checkout":"Sep 01, 10:00 AM", "status":"Occupied", "dob":"Mar 09, 1991", "id_type":"Reservation Card", "id":"5512", "phone":"6381", "companion":"Diana Webb"},
-		{"room":"103", "name":"Diana Webb", "check_in":"Aug 19, 5:11 PM", "checkout":"Sep 01, 10:00 AM", "status":"Occupied", "dob":"Jul 21, 1992", "id_type":"Reservation Card", "id":"8846", "phone":"2019", "companion":"Ethan Cole"},
+		{"room":"410", "name":"Ethan Cole", "check_in":"Aug 19, 5:08 PM", "checkout":"Sep 01, 10:00 AM", "status":"Occupied", "dob":"Mar 09, 1991", "id_type":"Reservation Card", "id":"5512", "phone":"6381", "companion":"Diana Webb"},
+		{"room":"410", "name":"Diana Webb", "check_in":"Aug 19, 5:11 PM", "checkout":"Sep 01, 10:00 AM", "status":"Occupied", "dob":"Jul 21, 1992", "id_type":"Reservation Card", "id":"8846", "phone":"2019", "companion":"Ethan Cole"},
 		{"room":"412", "name":"Ven Keer", "check_in":"Aug 31, 11:45 PM", "checkout":"Sunday, 10:00 AM", "status":"Occupied", "dob":"Oct 18, 1995", "id_type":"Reservation Card", "id":"4097", "phone":"1170", "companion":"None"},
 		{"room":"207", "name":"Michael Turner", "check_in":"Aug 21, 7:12 PM", "checkout":"Sep 01, 10:00 AM", "status":"Occupied", "dob":"Feb 18, 1989", "id_type":"Reservation Card", "id":"7742", "phone":"6105", "companion":"Daniel Reeves"},
 		{"room":"207", "name":"Daniel Reeves", "check_in":"Aug 21, 7:10 PM", "checkout":"Sep 01, 10:00 AM", "status":"Occupied", "dob":"Nov 02, 1987", "id_type":"Reservation Card", "id":"1906", "phone":"2418", "companion":"Michael Turner"},
@@ -24,7 +24,7 @@ static func visitor_records() -> Array[Dictionary]:
 
 static func room_records() -> Array[Dictionary]:
 	return [
-		room_record("103", "Ethan Cole / Diana Webb", "Occupied", "Aug 19, 5:08 PM", "Sep 01, 10:00 AM", "Shared reservation"),
+		room_record("410", "Ethan Cole / Diana Webb", "Occupied", "Aug 19, 5:08 PM", "Sep 01, 10:00 AM", "Shared reservation"),
 		room_record("207", "Daniel Reeves / Michael Turner", "Occupied", "Aug 21, 7:10 PM", "Sep 01, 10:00 AM", "Shared reservation"),
 		room_record("412", "Previous occupant: Lydia Shaw", "Stale", "Aug 27, 3:20 PM", "Aug 31, 9:40 PM", "Last updated 11:32 PM; live assignment synchronizing", true),
 	]

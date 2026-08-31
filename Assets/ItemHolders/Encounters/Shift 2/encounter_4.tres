@@ -10,34 +10,29 @@
 script = ExtResource("2_node")
 voiceline = ExtResource("4_devious")
 text = "God, you really do think this place is safe, don't you? That's cute. From in here, it's a really nice place not to be interrupted. As for Ven, he was taken care of. Get some sleep. You've earned it."
+wait_for_prompt = false
+unskippable = true
+auto_advance = true
+final_choice = "NORMAL"
 
 [sub_resource type="Resource" id="q1"]
 script = ExtResource("1_choice")
-text = "What's your relationship to Ven?"
+text = "How can I help you?"
 next_node = SubResource("taunt")
 
 [sub_resource type="Resource" id="q2"]
 script = ExtResource("1_choice")
-text = "How did you get here tonight?"
-next_node = SubResource("taunt")
-
-[sub_resource type="Resource" id="q3"]
-script = ExtResource("1_choice")
-text = "When did he ask you to come in?"
-next_node = SubResource("taunt")
-
-[sub_resource type="Resource" id="q4"]
-script = ExtResource("1_choice")
-text = "Do you have any ID on you?"
+text = "Would you like me to redirect this call to room service?"
 next_node = SubResource("taunt")
 
 [sub_resource type="Resource" id="start"]
 script = ExtResource("2_node")
 voiceline = ExtResource("3_intro")
 text = "Hey. It's Ven. Sorry to bother you again."
-choices = Array[ExtResource("1_choice")]([SubResource("q1"), SubResource("q2"), SubResource("q3"), SubResource("q4")])
+choices = Array[ExtResource("1_choice")]([SubResource("q1"), SubResource("q2")])
 wait_for_prompt = true
 question_only_prompt = true
+unskippable = true
 
 [resource]
 script = ExtResource("1_enc")

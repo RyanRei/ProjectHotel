@@ -228,7 +228,7 @@ func _apply_results(results: Array, story_flags: Dictionary = {}, report_day: in
 func _get_result_details(encounter_id: String, succeeded: bool, story_flags: Dictionary) -> String:
 	match encounter_id:
 		"ethan_cole":
-			return "Room 103 companion record exposed the stolen reservation card." if succeeded else "A stolen card holder gained access to Room 103."
+			return "Room 410 companion record exposed the stolen reservation card." if succeeded else "A stolen card holder gained access to Room 410."
 		"ven_keer":
 			if bool(story_flags.get("ven_inside_death", false)):
 				return "Initially admitted, then killed inside Room 412 after the visitor breach."

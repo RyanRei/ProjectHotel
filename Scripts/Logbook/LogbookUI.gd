@@ -441,7 +441,12 @@ func add_details(page: Dictionary) -> void:
 func add_notes(page: Dictionary) -> void:
 	right_entries.add_child(make_section_heading("NOTES"))
 
-	var label := make_label(str(page["notes"]), 11, INK)
+	var formatted_notes := PackedStringArray()
+	for note_line in str(page["notes"]).split("\n"):
+		var note := note_line.strip_edges()
+		if not note.is_empty():
+			formatted_notes.append("•  " + note)
+	var label := make_label("\n".join(formatted_notes), 11, INK)
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 
