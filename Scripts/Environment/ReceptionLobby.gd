@@ -10,6 +10,8 @@ var entrance_open := false
 var elevator_open := false
 var _entrance_tween: Tween
 var _elevator_tween: Tween
+var _elevator_open_sound: AudioStreamPlayer
+var _elevator_close_sound: AudioStreamPlayer
 
 
 func _ready() -> void:
@@ -46,10 +48,9 @@ func open_elevator() -> void:
 	elevator_open = true
 	if _elevator_tween != null:
 		_elevator_tween.kill()
-	_elevator_tween = create_tween().set_parallel(true)
-	_elevator_tween.tween_property(elevator_left, "position:z", -13.2, 0.82).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
-	_elevator_tween.tween_property(elevator_right, "position:z", -2.8, 0.82).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
-	await _elevator_tween.finished
+	_play_elevator_open_sound()
+	# Delay before door starts opening (non-blocking)
+	get_tree().create_timer(0.8).timeout.connect(_start_elevator_open_animation)
 
 
 func close_elevator() -> void:
@@ -58,7 +59,48 @@ func close_elevator() -> void:
 	elevator_open = false
 	if _elevator_tween != null:
 		_elevator_tween.kill()
+	await _play_elevator_close_sound()
+	# Delay before door starts closing (non-blocking)
+	get_tree().create_timer(0.3).timeout.connect(_start_elevator_close_animation)
+
+
+func _play_elevator_open_sound() -> void:
+	# Play elevator door opening sound
+	var player := AudioStreamPlayer.new()
+	add_child(player)
+	player.bus = &"Master"
+	# Load your elevator open sound here
+	player.stream = load("res://Assets/Sound/sfx/doorOpening.mp3")
+	if player.stream != null:
+		player.play()
+		await player.finished
+	player.queue_free()
+
+
+func _play_elevator_close_sound() -> void:
+	# Play elevator door closing sound
+	var player := AudioStreamPlayer.new()
+	add_child(player)
+	player.bus = &"Master"
+	# Load your elevator close sound here
+	player.stream = load("res://Assets/Sound/sfx/doorClosing.mp3")
+	if player.stream != null:
+		player.play()
+		await player.finished
+	player.queue_free()
+
+
+func _start_elevator_open_animation() -> void:
+	if _elevator_tween != null:
+		_elevator_tween.kill()
+	_elevator_tween = create_tween().set_parallel(true)
+	_elevator_tween.tween_property(elevator_left, "position:z", -13.2, 0.82).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
+	_elevator_tween.tween_property(elevator_right, "position:z", -2.8, 0.82).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
+
+
+func _start_elevator_close_animation() -> void:
+	if _elevator_tween != null:
+		_elevator_tween.kill()
 	_elevator_tween = create_tween().set_parallel(true)
 	_elevator_tween.tween_property(elevator_left, "position:z", -10.0, 0.78).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
 	_elevator_tween.tween_property(elevator_right, "position:z", -6.0, 0.78).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
-	await _elevator_tween.finished

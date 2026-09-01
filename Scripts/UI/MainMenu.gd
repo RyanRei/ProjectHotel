@@ -28,7 +28,7 @@ func _ready() -> void:
 	begin_button.mouse_entered.connect(play_hover_sound)
 	settings_button.mouse_entered.connect(play_hover_sound)
 	back_button.mouse_entered.connect(play_hover_sound)
-	quit_button.mouse_entered.connect(play_hover_sound)
+	#quit_button.mouse_entered.connect(play_hover_sound)
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	_fit_design_canvas()
 	get_viewport().size_changed.connect(_fit_design_canvas)

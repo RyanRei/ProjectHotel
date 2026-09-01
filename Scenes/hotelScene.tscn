@@ -16,7 +16,7 @@
 [ext_resource type="PackedScene" uid="uid://baabtnhguem4d" path="res://Scenes/Tutorial/box_pointing_to_text.tscn" id="6_rs52r"]
 [ext_resource type="PackedScene" uid="uid://bb8bpfxy4igwf" path="res://Assets/3D Models/Computer/desktop_computer.glb" id="7_i2uxr"]
 [ext_resource type="Resource" uid="uid://borvgm7cvlbtd" path="res://Assets/ItemHolders/Encounters/Shift 1/encounter_2.tres" id="7_yrwa2"]
-[ext_resource type="PackedScene" path="res://Scenes/RosterUI.tscn" id="8_roster"]
+[ext_resource type="PackedScene" uid="uid://dneeofe0xoqcs" path="res://Scenes/RosterUI.tscn" id="8_roster"]
 [ext_resource type="Script" uid="uid://m6c7lfrjow88" path="res://Scripts/Roster/ComputerMonitor.gd" id="9_monitor"]
 [ext_resource type="Script" uid="uid://b7i3xkbxsn32n" path="res://Scripts/DeskCameraController.gd" id="10_camera"]
 [ext_resource type="Script" uid="uid://dop5fevvwspt4" path="res://Scripts/InteractionHand.gd" id="11_hand"]
@@ -27,10 +27,12 @@
 [ext_resource type="PackedScene" uid="uid://b51biclicg0bf" path="res://Assets/3D Models/Bulb/light.glb" id="13_jloce"]
 [ext_resource type="Script" uid="uid://ca5auu7qff8vv" path="res://Scripts/Logbook/LogbookController.gd" id="13_logbook_controller"]
 [ext_resource type="PackedScene" uid="uid://yqtwdwhowpt1" path="res://Scenes/day_report_ui.tscn" id="13_qnepm"]
-[ext_resource type="PackedScene" path="res://Scenes/LogbookUI.tscn" id="14_logbook_ui"]
+[ext_resource type="PackedScene" uid="uid://cw0yaw10bfhlc" path="res://Scenes/LogbookUI.tscn" id="14_logbook_ui"]
 [ext_resource type="AudioStream" uid="uid://cbaafyuvhebc2" path="res://Assets/Sound/sfx/pageFlip.mp3" id="17_ue4or"]
 [ext_resource type="Texture2D" uid="uid://uaaui4wtmpk7" path="res://Assets/Textures/alterwall.jpg" id="20_5hxig"]
+[ext_resource type="AudioStream" uid="uid://conoabt0c7ikh" path="res://Assets/Sound/sfx/select.mp3" id="23_ka3iq"]
 [ext_resource type="Resource" uid="uid://brqsu6qudugp3" path="res://Assets/ItemHolders/Encounters/Shift 2/encounter_1.tres" id="24_c24b1"]
+[ext_resource type="AudioStream" uid="uid://byvs2uiqd8it7" path="res://Assets/Sound/sfx/zipclick.mp3" id="24_da6py"]
 [ext_resource type="Resource" uid="uid://ocqe63udp2ju" path="res://Assets/ItemHolders/Encounters/Shift 1/encounter_3.tres" id="25_2gwif"]
 [ext_resource type="Resource" uid="uid://c55r1htmn33lf" path="res://Assets/ItemHolders/Encounters/Shift 2/encounter_2.tres" id="25_ue4or"]
 [ext_resource type="Resource" uid="uid://dvpitgbkkwxsb" path="res://Assets/ItemHolders/Encounters/Shift 1/encounter_4.tres" id="26_vnq4p"]
@@ -75,6 +77,12 @@ albedo_color = Color(0.71, 0.71, 0.71, 1)
 albedo_texture = ExtResource("20_5hxig")
 metallic_specular = 0.19
 roughness = 0.8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_u8vdq"]
+albedo_color = Color(0.19768879, 0.0017389249, 0.0017652735, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_u8vdq"]
+size = Vector3(4.0634766, 15.713806, 3.2890625)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u8vdq"]
 bg_color = Color(0, 0, 0, 0.8117647)
@@ -131,22 +139,22 @@ transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 0.7720361, 2.0122602
 transform = Transform3D(7.9988327, -0.0007051654, -0.13666779, 0, 7.9998937, -0.041277084, 0.1366696, 0.04127106, 7.9987264, -2.1664891, 2.9574757, 1.562563)
 script = ExtResource("9_monitor")
 
-[node name="defaultMaterial" parent="models/computah/Sketchfab_model/Collada visual scene group/Mouse_Wheel_Low" parent_id_path=PackedInt32Array(1114786589, 1131302171) index="0" unique_id=999183091]
+[node name="defaultMaterial" parent="models/computah/Sketchfab_model/Collada visual scene group/Mouse_Wheel_Low" parent_id_path=PackedInt32Array(1114786589, 931537614) index="0" unique_id=627341503]
 transform = Transform3D(0.39959186, 9.313323e-05, 0.018049983, -9.313345e-05, 0.3999994, -2.0982698e-06, -0.018049983, -2.1059532e-06, 0.39959213, -0.14093643, -0.030498207, 0.20731899)
 
-[node name="defaultMaterial2" parent="models/computah/Sketchfab_model/Collada visual scene group/Mouse_Low" parent_id_path=PackedInt32Array(1114786589, 552149035) index="0" unique_id=211799687]
+[node name="defaultMaterial2" parent="models/computah/Sketchfab_model/Collada visual scene group/Mouse_Low" parent_id_path=PackedInt32Array(1114786589, 1828755019) index="0" unique_id=1801691567]
 transform = Transform3D(0.39888582, 0.0001539214, 0.029831205, -0.00015392152, 0.3999998, -5.746493e-06, -0.029831205, -5.74952e-06, 0.39888588, -0.13918996, -0.030419528, 0.2191678)
 
-[node name="defaultMaterial3" parent="models/computah/Sketchfab_model/Collada visual scene group/Base_Low" parent_id_path=PackedInt32Array(1114786589, 600102034) index="0" unique_id=1632585161]
+[node name="defaultMaterial3" parent="models/computah/Sketchfab_model/Collada visual scene group/Base_Low" parent_id_path=PackedInt32Array(1114786589, 391435273) index="0" unique_id=1726580685]
 transform = Transform3D(0.39999992, 3.637979e-12, -2.7939677e-09, 0, 0.39999992, 9.313226e-10, 3.7252903e-09, -1.1641532e-09, 0.39999992, 0.002469182, -0.019545555, 0.14461479)
 
-[node name="defaultMaterial4" parent="models/computah/Sketchfab_model/Collada visual scene group/Vert_Low" parent_id_path=PackedInt32Array(1114786589, 190110689) index="0" unique_id=915900434]
+[node name="defaultMaterial4" parent="models/computah/Sketchfab_model/Collada visual scene group/Vert_Low" parent_id_path=PackedInt32Array(1114786589, 283883891) index="0" unique_id=230907164]
 transform = Transform3D(0.2999999, 7.275958e-12, -4.1909516e-09, -1.6370905e-11, 0.3, 2.2118911e-09, 2.7939677e-09, -1.7462298e-09, 0.3, 0.0084812045, -0.05689746, 0.1804916)
 
-[node name="defaultMaterial5" parent="models/computah/Sketchfab_model/Collada visual scene group/Computer_Low" parent_id_path=PackedInt32Array(1114786589, 288841810) index="0" unique_id=1293543901]
+[node name="defaultMaterial5" parent="models/computah/Sketchfab_model/Collada visual scene group/Computer_Low" parent_id_path=PackedInt32Array(1114786589, 854288613) index="0" unique_id=1152155996]
 transform = Transform3D(0.49997613, -0.0013246113, 0.004698918, 0.000566037, 0.49372703, 0.078952394, -0.004849129, -0.078943305, 0.49370477, 0.004231155, -0.00551641, 0.24766394)
 
-[node name="defaultMaterial6" parent="models/computah/Sketchfab_model/Collada visual scene group/Key_Board_Low" parent_id_path=PackedInt32Array(1114786589, 1683541517) index="0" unique_id=622999514]
+[node name="defaultMaterial6" parent="models/computah/Sketchfab_model/Collada visual scene group/Key_Board_Low" parent_id_path=PackedInt32Array(1114786589, 1356701745) index="0" unique_id=483080815]
 transform = Transform3D(0.3499632, 2.6129557e-05, 0.0050641145, -2.6129625e-05, 0.3500003, -1.8964056e-07, -0.0050641196, -1.9290019e-07, 0.34996325, -0.07371694, -0.058675766, 0.15438148)
 
 [node name="Logbook" parent="models" unique_id=2051017322 node_paths=PackedStringArray("logbook", "logUpdateAudio", "pageFlipAudio") instance=ExtResource("4_jmvtc")]
@@ -156,14 +164,14 @@ logbook = NodePath("../../CanvasLayer/LogbookUI")
 logUpdateAudio = NodePath("whencorniferbemapping")
 pageFlipAudio = NodePath("pageflip")
 
-[node name="Collada visual scene group" parent="models/Logbook/Sketchfab_model" parent_id_path=PackedInt32Array(2051017322, 617261688) index="0" unique_id=1577816945]
+[node name="Collada visual scene group" parent="models/Logbook/Sketchfab_model" parent_id_path=PackedInt32Array(2051017322, 666743868) index="0" unique_id=856617868]
 transform = Transform3D(1, 0, 0, 0, -4.3711385e-08, -0.99999994, 0, 0.99999994, -4.3711385e-08, 0, 0, 0)
 
-[node name="defaultMaterial_001" parent="models/Logbook/Sketchfab_model/Collada visual scene group/notebook" parent_id_path=PackedInt32Array(2051017322, 1298453669) index="0" unique_id=1044404364]
+[node name="defaultMaterial_001" parent="models/Logbook/Sketchfab_model/Collada visual scene group/notebook" parent_id_path=PackedInt32Array(2051017322, 1391991240) index="0" unique_id=1418264626]
 transform = Transform3D(-0.99800265, 0.14202243, 0.027653921, -0.056808602, -2.495963, 0.00078626315, 0.027653925, -0.0019657402, 0.99961776, 0.15295768, 0.022822142, -0.0021170676)
 surface_material_override/0 = ExtResource("12_u3pq5")
 
-[node name="defaultMaterial" parent="models/Logbook/Sketchfab_model/Collada visual scene group/penna" parent_id_path=PackedInt32Array(2051017322, 1969647053) index="0" unique_id=1910885735]
+[node name="defaultMaterial" parent="models/Logbook/Sketchfab_model/Collada visual scene group/penna" parent_id_path=PackedInt32Array(2051017322, 1138495084) index="0" unique_id=491395924]
 transform = Transform3D(1, -2.0816682e-17, 2.7939677e-09, -1.3877788e-17, 1.0000001, -1.3322676e-15, 0, 1.7763568e-15, 1.0000002, 0.37629592, 0, -0.005208224)
 
 [node name="whencorniferbemapping" type="AudioStreamPlayer3D" parent="models/Logbook" unique_id=1175347376]
@@ -216,6 +224,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.800312, -3.96, -11.85965)
 visible = false
 size = Vector3(30, 2, 40)
 material = SubResource("StandardMaterial3D_ldmme")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="models" unique_id=672192914]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.650295, 2.6322327, -2.8292909)
+material_override = SubResource("StandardMaterial3D_u8vdq")
+mesh = SubResource("BoxMesh_u8vdq")
 
 [node name="Lights" type="Node" parent="." unique_id=1123067539]
 
@@ -446,9 +459,17 @@ text = "Nice! The moment you hang up, the clock starts moving again and get read
 [node name="UI" type="CanvasLayer" parent="." unique_id=1109577428]
 layer = 20
 
-[node name="DialogBox" parent="UI" unique_id=2097814497 node_paths=PackedStringArray("accept_reject", "tutorial") instance=ExtResource("4_wnmts")]
+[node name="DialogBox" parent="UI" unique_id=2097814497 node_paths=PackedStringArray("accept_reject", "scroll", "select", "tutorial") instance=ExtResource("4_wnmts")]
 accept_reject = NodePath("../accept_reject")
+scroll = NodePath("scroll")
+select = NodePath("select")
 tutorial = NodePath("../../TutorialManager")
+
+[node name="scroll" type="AudioStreamPlayer" parent="UI/DialogBox" unique_id=898951191]
+stream = ExtResource("24_da6py")
+
+[node name="select" type="AudioStreamPlayer" parent="UI/DialogBox" unique_id=1052808195]
+stream = ExtResource("23_ka3iq")
 
 [node name="continue_encounters" parent="UI" unique_id=823420143 instance=ExtResource("2_m1xol")]
 
@@ -500,7 +521,7 @@ shift_transition_ui = NodePath("../ReportLayer/ShiftTransitionUI")
 tutorial = NodePath("../TutorialManager")
 
 [node name="empty" type="Node3D" parent="." unique_id=84633623]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.403927, -1.555706, -19.83374)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, -1.55, -8)
 
 [node name="Audio" type="Node" parent="." unique_id=521623217]
 
