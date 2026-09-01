@@ -1,50 +1,53 @@
-[gd_scene load_steps=14 format=3]
+[gd_scene load_steps=17 format=3]
 
 [ext_resource type="Script" path="res://Scripts/UI/NewspaperReport2D.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://Assets/UI/Newspaper/shift1_combined_outcomes.png" id="2_outcome_image"]
-
-[sub_resource type="SystemFont" id="Font_headline"]
-font_names = PackedStringArray("Georgia", "Times New Roman")
-font_weight = 700
-
-[sub_resource type="SystemFont" id="Font_body"]
-font_names = PackedStringArray("Georgia", "Times New Roman")
-font_weight = 400
-
-[sub_resource type="SystemFont" id="Font_sans"]
-font_names = PackedStringArray("Arial Narrow", "Arial")
-font_weight = 700
+[ext_resource type="FontFile" path="res://Assets/Fonts/Monstar.ttf" id="3_headline_font"]
+[ext_resource type="FontFile" path="res://Assets/Fonts/Sign-Painting-Corporate-Regular.otf" id="4_content_font"]
+[ext_resource type="FontFile" path="res://Assets/Fonts/Sign-Painting-Corporate-Bold.otf" id="5_subheading_font"]
+[ext_resource type="FontFile" path="res://Assets/Fonts/Chestoy-Regular.otf" id="6_masthead_font"]
+[ext_resource type="FontFile" path="res://Assets/Fonts/SFCartoonistHand-Bold.ttf" id="7_content_detail_font"]
 
 [sub_resource type="LabelSettings" id="Masthead"]
-font = SubResource("Font_headline")
-font_size = 54
+font = ExtResource("6_masthead_font")
+font_size = 64
 font_color = Color(0.105, 0.078, 0.055, 1)
 outline_size = 1
 outline_color = Color(0.105, 0.078, 0.055, 1)
 
 [sub_resource type="LabelSettings" id="Headline"]
-font = SubResource("Font_headline")
-font_size = 42
+font = ExtResource("5_subheading_font")
+font_size = 44
 font_color = Color(0.11, 0.075, 0.05, 1)
 
 [sub_resource type="LabelSettings" id="Section"]
-font = SubResource("Font_sans")
-font_size = 21
+font = ExtResource("5_subheading_font")
+font_size = 23
 font_color = Color(0.12, 0.085, 0.06, 1)
 
 [sub_resource type="LabelSettings" id="Value"]
-font = SubResource("Font_headline")
-font_size = 46
+font = ExtResource("3_headline_font")
+font_size = 48
 font_color = Color(0.12, 0.07, 0.045, 1)
 
 [sub_resource type="LabelSettings" id="Body"]
-font = SubResource("Font_body")
-font_size = 17
+font = ExtResource("4_content_font")
+font_size = 19
+font_color = Color(0.135, 0.1, 0.072, 1)
+
+[sub_resource type="LabelSettings" id="ResyanaBody"]
+font = ExtResource("7_content_detail_font")
+font_size = 19
+font_color = Color(0.135, 0.1, 0.072, 1)
+
+[sub_resource type="LabelSettings" id="ResyanaCaption"]
+font = ExtResource("7_content_detail_font")
+font_size = 16
 font_color = Color(0.135, 0.1, 0.072, 1)
 
 [sub_resource type="LabelSettings" id="Small"]
-font = SubResource("Font_sans")
-font_size = 14
+font = ExtResource("4_content_font")
+font_size = 16
 font_color = Color(0.135, 0.1, 0.072, 1)
 
 [sub_resource type="Shader" id="Shader_newsprint_photo"]
@@ -83,23 +86,6 @@ points = PackedVector2Array(61, 47, 1459, 47, 1459, 957, 61, 957, 61, 47)
 width = 2.0
 default_color = Color(0.36, 0.22, 0.13, 0.48)
 
-[node name="TopKicker" type="Label" parent="Display/Paper"]
-offset_left = 78.0
-offset_top = 42.0
-offset_right = 600.0
-offset_bottom = 62.0
-text = "THE SHELTER'S INDEPENDENT MORNING PAPER"
-label_settings = SubResource("Small")
-
-[node name="Price" type="Label" parent="Display/Paper"]
-offset_left = 1325.0
-offset_top = 42.0
-offset_right = 1438.0
-offset_bottom = 62.0
-text = "PRICE 25C"
-label_settings = SubResource("Small")
-horizontal_alignment = 2
-
 [node name="CenterFold" type="Line2D" parent="Display/Paper"]
 points = PackedVector2Array(768, 42, 768, 962)
 width = 1.5
@@ -115,70 +101,13 @@ points = PackedVector2Array(76, 154, 1444, 154)
 width = 1.5
 default_color = Color(0.28, 0.16, 0.1, 0.75)
 
-[node name="Dateline" type="Label" parent="Display/Paper"]
-offset_left = 550.0
-offset_top = 128.0
-offset_right = 986.0
-offset_bottom = 148.0
-text = "07:00 AM  -  AUGUST 27  -  FINAL EDITION"
-label_settings = SubResource("Small")
-horizontal_alignment = 1
-
-[node name="IssueNumber" type="Label" parent="Display/Paper"]
-offset_left = 78.0
-offset_top = 128.0
-offset_right = 290.0
-offset_bottom = 148.0
-text = "VOL. 18  -  NO. 41"
-label_settings = SubResource("Small")
-
-[node name="Established" type="Label" parent="Display/Paper"]
-offset_left = 1240.0
-offset_top = 128.0
-offset_right = 1438.0
-offset_bottom = 148.0
-text = "ESTABLISHED 1987"
-label_settings = SubResource("Small")
-horizontal_alignment = 2
-
 [node name="Masthead" type="Label" parent="Display/Paper"]
-offset_left = 154.0
-offset_top = 55.0
-offset_right = 1120.0
-offset_bottom = 128.0
+offset_left = 76.0
+offset_top = 48.0
+offset_right = 1444.0
+offset_bottom = 140.0
 text = "THE DAILY TIMES"
 label_settings = SubResource("Masthead")
-
-[node name="ShelterMark" type="Node2D" parent="Display/Paper"]
-
-[node name="Seal" type="Polygon2D" parent="Display/Paper/ShelterMark"]
-polygon = PackedVector2Array(86, 64, 126, 64, 144, 82, 144, 115, 126, 133, 86, 133, 68, 115, 68, 82)
-color = Color(0.28, 0.12, 0.08, 1)
-
-[node name="SealInset" type="Polygon2D" parent="Display/Paper/ShelterMark"]
-polygon = PackedVector2Array(90, 72, 122, 72, 136, 86, 136, 111, 122, 125, 90, 125, 76, 111, 76, 86)
-color = Color(0.88, 0.75, 0.52, 1)
-
-[node name="Initials" type="Label" parent="Display/Paper/ShelterMark"]
-offset_left = 77.0
-offset_top = 81.0
-offset_right = 135.0
-offset_bottom = 119.0
-text = "NH"
-label_settings = SubResource("Section")
-horizontal_alignment = 1
-
-[node name="EditionBackground" type="Polygon2D" parent="Display/Paper"]
-polygon = PackedVector2Array(1170, 55, 1438, 55, 1438, 129, 1170, 129)
-color = Color(0.75, 0.59, 0.39, 1)
-
-[node name="Edition" type="Label" parent="Display/Paper"]
-offset_left = 1182.0
-offset_top = 67.0
-offset_right = 1426.0
-offset_bottom = 120.0
-text = "MORNING REPORT\nSHIFT 1"
-label_settings = SubResource("Section")
 horizontal_alignment = 1
 
 [node name="Headline" type="Label" parent="Display/Paper"]
@@ -230,7 +159,7 @@ offset_top = 640.0
 offset_right = 1016.0
 offset_bottom = 666.0
 text = "MORNING PHOTOGRAPH — NIGHTHAVEN REMAINED SECURE"
-label_settings = SubResource("Small")
+label_settings = SubResource("ResyanaCaption")
 horizontal_alignment = 1
 
 [node name="Stats" type="Node2D" parent="Display/Paper" groups=["stat_reveal"]]
@@ -250,13 +179,13 @@ width = 4.0
 default_color = Color(0.32, 0.19, 0.11, 1)
 
 [node name="ReputationTitle" type="Label" parent="Display/Paper/Stats"]
-offset_left = 1145.0
+offset_left = 1038.0
 offset_top = 310.0
-offset_right = 1415.0
+offset_right = 1442.0
 offset_bottom = 347.0
 text = "HOTEL REPUTATION"
 label_settings = SubResource("Section")
-horizontal_alignment = 0
+horizontal_alignment = 1
 
 [node name="ReputationMark" type="Node2D" parent="Display/Paper/Stats"]
 [node name="RibbonLeft" type="Polygon2D" parent="Display/Paper/Stats/ReputationMark"]
@@ -282,12 +211,13 @@ horizontal_alignment = 1
 
 [node name="ReputationValue" type="Label" parent="Display/Paper/Stats"]
 unique_name_in_owner = true
-offset_left = 1138.0
+offset_left = 1122.0
 offset_top = 363.0
-offset_right = 1320.0
+offset_right = 1324.0
 offset_bottom = 425.0
 text = "76 / 100"
 label_settings = SubResource("Value")
+horizontal_alignment = 1
 
 [node name="ReputationDelta" type="Label" parent="Display/Paper/Stats"]
 unique_name_in_owner = true
@@ -297,40 +227,41 @@ offset_right = 1418.0
 offset_bottom = 421.0
 text = "(-4)"
 theme_override_colors/font_color = Color(0.647, 0.184, 0.157, 1)
-theme_override_fonts/font = SubResource("Font_headline")
-theme_override_font_sizes/font_size = 34
+theme_override_fonts/font = ExtResource("4_content_font")
+theme_override_font_sizes/font_size = 32
 horizontal_alignment = 2
 
 [node name="ShareTitle" type="Label" parent="Display/Paper/Stats"]
-offset_left = 1130.0
+offset_left = 1038.0
 offset_top = 488.0
-offset_right = 1415.0
+offset_right = 1442.0
 offset_bottom = 525.0
 text = "SHARE PRICE"
 label_settings = SubResource("Section")
-horizontal_alignment = 0
+horizontal_alignment = 1
 
 [node name="MarketMark" type="Node2D" parent="Display/Paper/Stats"]
 [node name="Axis" type="Line2D" parent="Display/Paper/Stats/MarketMark"]
-points = PackedVector2Array(1058, 594, 1058, 519, 1121, 519)
+points = PackedVector2Array(1058, 519, 1058, 594, 1121, 594)
 width = 3.0
 default_color = Color(0.29, 0.16, 0.09, 1)
 [node name="Trend" type="Line2D" parent="Display/Paper/Stats/MarketMark"]
-points = PackedVector2Array(1063, 568, 1078, 546, 1091, 555, 1117, 527)
+points = PackedVector2Array(1063, 527, 1078, 549, 1091, 540, 1117, 582)
 width = 5.0
 default_color = Color(0.64, 0.18, 0.15, 1)
 [node name="Arrow" type="Polygon2D" parent="Display/Paper/Stats/MarketMark"]
-polygon = PackedVector2Array(1106, 527, 1121, 522, 1117, 539)
+polygon = PackedVector2Array(1105, 577, 1121, 590, 1117, 570)
 color = Color(0.64, 0.18, 0.15, 1)
 
 [node name="ShareValue" type="Label" parent="Display/Paper/Stats"]
 unique_name_in_owner = true
-offset_left = 1130.0
+offset_left = 1122.0
 offset_top = 541.0
-offset_right = 1300.0
+offset_right = 1308.0
 offset_bottom = 603.0
 text = "$39.85"
 label_settings = SubResource("Value")
+horizontal_alignment = 1
 
 [node name="ShareDelta" type="Label" parent="Display/Paper/Stats"]
 unique_name_in_owner = true
@@ -340,8 +271,8 @@ offset_right = 1418.0
 offset_bottom = 599.0
 text = "(-6.5%)"
 theme_override_colors/font_color = Color(0.647, 0.184, 0.157, 1)
-theme_override_fonts/font = SubResource("Font_headline")
-theme_override_font_sizes/font_size = 34
+theme_override_fonts/font = ExtResource("4_content_font")
+theme_override_font_sizes/font_size = 32
 horizontal_alignment = 2
 
 [node name="BreakdownTitle" type="Label" parent="Display/Paper"]
@@ -397,7 +328,7 @@ offset_top = 837.0
 offset_right = 380.0
 offset_bottom = 918.0
 text = "Room 104 access restored. The maintenance report supported her claim."
-label_settings = SubResource("Body")
+label_settings = SubResource("ResyanaBody")
 horizontal_alignment = 1
 autowrap_mode = 2
 
@@ -434,7 +365,7 @@ offset_top = 837.0
 offset_right = 724.0
 offset_bottom = 918.0
 text = "Reservation maker, check-in time and registered occupant all contradicted him."
-label_settings = SubResource("Body")
+label_settings = SubResource("ResyanaBody")
 horizontal_alignment = 1
 autowrap_mode = 2
 
@@ -471,7 +402,7 @@ offset_top = 837.0
 offset_right = 1068.0
 offset_bottom = 918.0
 text = "Relationship, purpose, arrival window and desk ID were verified."
-label_settings = SubResource("Body")
+label_settings = SubResource("ResyanaBody")
 horizontal_alignment = 1
 autowrap_mode = 2
 
@@ -508,47 +439,15 @@ offset_top = 830.0
 offset_right = 1417.0
 offset_bottom = 925.0
 text = "MISSED CLUE: Hearing-loss note and the 11:48 PM radiator call matched his story."
-label_settings = SubResource("Body")
+label_settings = SubResource("ResyanaBody")
 horizontal_alignment = 1
 autowrap_mode = 2
 
-[node name="TapeTopLeft" type="Polygon2D" parent="Display/Paper" groups=["stick_detail"]]
-polygon = PackedVector2Array(48, 22, 214, 35, 205, 74, 42, 60)
-color = Color(0.79, 0.69, 0.48, 0.9)
-
-[node name="TapeTopRight" type="Polygon2D" parent="Display/Paper" groups=["stick_detail"]]
-polygon = PackedVector2Array(1320, 34, 1487, 20, 1492, 60, 1326, 74)
-color = Color(0.79, 0.69, 0.48, 0.9)
-
-[node name="TapeBottomLeft" type="Polygon2D" parent="Display/Paper" groups=["stick_detail"]]
-polygon = PackedVector2Array(44, 938, 205, 948, 212, 986, 50, 976)
-color = Color(0.79, 0.69, 0.48, 0.82)
-
-[node name="TapeBottomRight" type="Polygon2D" parent="Display/Paper" groups=["stick_detail"]]
-polygon = PackedVector2Array(1328, 948, 1488, 938, 1493, 976, 1334, 986)
-color = Color(0.79, 0.69, 0.48, 0.82)
 
 [node name="FooterRule" type="Line2D" parent="Display/Paper"]
 points = PackedVector2Array(76, 950, 1442, 950)
 width = 2.0
 default_color = Color(0.36, 0.22, 0.13, 0.72)
-
-[node name="FooterLeft" type="Label" parent="Display/Paper"]
-offset_left = 78.0
-offset_top = 947.0
-offset_right = 500.0
-offset_bottom = 968.0
-text = "NIGHTHAVEN MARKET & SECURITY DESK"
-label_settings = SubResource("Small")
-
-[node name="FooterRight" type="Label" parent="Display/Paper"]
-offset_left = 1200.0
-offset_top = 947.0
-offset_right = 1438.0
-offset_bottom = 968.0
-text = "PAGE 1 OF 1"
-label_settings = SubResource("Small")
-horizontal_alignment = 2
 
 [node name="Instruction" type="Label" parent="Display"]
 unique_name_in_owner = true

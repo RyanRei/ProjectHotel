@@ -33,6 +33,10 @@ func get_records(tab_name: String) -> Array[Dictionary]:
 	_ensure_current_day()
 	match tab_name:
 		"VISITORS":
+			# Caleb is story-driven, so refresh this tab after Ven's call rather
+			# than retaining the records loaded at the beginning of the shift.
+			if loaded_day == 2:
+				visitors = Shift2Data.visitor_records()
 			return visitors
 		"ROOMS":
 			return get_room_records()

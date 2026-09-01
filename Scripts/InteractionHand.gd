@@ -13,28 +13,28 @@ var is_pressed := false
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	set_process_input(true)
+	set_process_unhandled_input(true)
 	resized.connect(queue_redraw)
 	queue_redraw()
 
 
 func _process(_delta: float) -> void:
 	var was_hovering := is_hovering
-	is_hovering = GameState.desk_state and find_interactable() != null
-	visible = GameState.desk_state and not is_desk_ui_open()
+	is_hovering = GameState.desk_state and not is_modal_ui_open() and find_interactable() != null
+	visible = GameState.desk_state and not is_desk_ui_open() and not is_modal_ui_open()
 	if was_hovering != is_hovering:
 		queue_redraw()
 	elif Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		queue_redraw()
 
 
-func _input(event: InputEvent) -> void:
+func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		is_pressed = event.pressed
 		queue_redraw()
 		# An open desk interface owns the mouse. Never ray-cast through it into
 		# the monitor, telephone, or logbook sitting in the 3D scene behind it.
-		if not GameState.desk_state or is_desk_ui_open():
+		if not GameState.desk_state or is_desk_ui_open() or is_modal_ui_open():
 			return
 		if event.pressed:
 			var pointer_position := get_pointer_position(event.position)
@@ -86,6 +86,19 @@ func get_pointer_position(mouse_position: Vector2) -> Vector2:
 func is_desk_ui_open() -> bool:
 	for node in get_tree().get_nodes_in_group("desk_ui"):
 		if node is CanvasItem and (node as CanvasItem).visible:
+			return true
+	return false
+
+
+func is_modal_ui_open() -> bool:
+	for node in get_tree().get_nodes_in_group("pause_menu"):
+		if node is CanvasItem and (node as CanvasItem).visible:
+			return true
+	for node in get_tree().get_nodes_in_group("day_report_ui"):
+		if node is CanvasItem and (node as CanvasItem).visible:
+			return true
+	for node in get_tree().get_nodes_in_group("call_manager"):
+		if node.has_method("blocks_desk_interaction") and bool(node.call("blocks_desk_interaction")):
 			return true
 	return false
 

@@ -26,6 +26,12 @@ func start_ringing() -> void:
 func interact() -> void:
 	if ringing and not answering:
 		answer()
+		return
+	if answering or not DialogueManager.active:
+		return
+	var call_manager := get_tree().get_first_node_in_group("call_manager")
+	if call_manager != null and call_manager.has_method("request_call_manager_toggle"):
+		call_manager.call("request_call_manager_toggle")
 
 
 func answer() -> void:

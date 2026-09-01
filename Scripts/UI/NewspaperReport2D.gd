@@ -39,20 +39,25 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not visible:
 		return
 	var clicked: bool = event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed
+	if standalone_mode and event.is_action_pressed("ui_cancel"):
+		get_tree().quit()
+	elif event.is_action_pressed("ui_accept") or event.is_action_pressed("ui_cancel") or clicked:
+		handle_primary_action()
+
+
+func handle_primary_action() -> void:
 	if standalone_mode:
-		if event.is_action_pressed("ui_cancel"):
-			get_tree().quit()
-		elif event.is_action_pressed("ui_accept") or clicked:
-			play_report_animation()
-	elif _can_close and (event.is_action_pressed("ui_cancel") or event.is_action_pressed("ui_accept") or clicked):
-		_can_close = false
-		# Closing the final report can synchronously change to the main-menu
-		# scene and free this node. Consume the input while the viewport is still
-		# valid, before notifying the end-of-day flow.
-		var viewport := get_viewport()
-		if viewport != null:
-			viewport.set_input_as_handled()
-		report_closed.emit()
+		play_report_animation()
+		return
+	if not _can_close:
+		return
+	_can_close = false
+	# Closing the final report can synchronously change to the main-menu scene
+	# and free this node, so consume the input before emitting.
+	var viewport := get_viewport()
+	if viewport != null:
+		viewport.set_input_as_handled()
+	report_closed.emit()
 
 
 func show_report(report: Dictionary) -> void:
@@ -134,7 +139,9 @@ func set_report(report: Dictionary) -> void:
 	if report.has("outcome_image") and report.outcome_image is Texture2D:
 		%OutcomeImage.texture = report.outcome_image
 	if report.has("day"):
-		$Display/Paper/Edition.text = "MORNING REPORT\nSHIFT %d" % int(report.day)
+		var edition := paper.get_node_or_null("Edition") as Label
+		if edition != null:
+			edition.text = "MORNING REPORT\nSHIFT %d" % int(report.day)
 	if report.has("results"):
 		_apply_results(report.results, report.get("story_flags", {}), int(report.get("day", 1)))
 
@@ -254,6 +261,31 @@ func _set_metric_change(label: Label, change: float, suffix: String) -> void:
 		label.add_theme_color_override("font_color", Color("2f713d"))
 	else:
 		label.add_theme_color_override("font_color", Color("5b5145"))
+	if label == %ShareDelta:
+		_set_market_trend(change)
+
+
+func _set_market_trend(change: float) -> void:
+	var trend := paper.get_node("Stats/MarketMark/Trend") as Line2D
+	var arrow := paper.get_node("Stats/MarketMark/Arrow") as Polygon2D
+	if change < 0.0:
+		var loss_color := Color("a52f28")
+		trend.points = PackedVector2Array([Vector2(1063, 527), Vector2(1078, 549), Vector2(1091, 540), Vector2(1117, 582)])
+		arrow.polygon = PackedVector2Array([Vector2(1105, 577), Vector2(1121, 590), Vector2(1117, 570)])
+		trend.default_color = loss_color
+		arrow.color = loss_color
+		arrow.visible = true
+	elif change > 0.0:
+		var profit_color := Color("2f713d")
+		trend.points = PackedVector2Array([Vector2(1063, 582), Vector2(1078, 554), Vector2(1091, 563), Vector2(1117, 527)])
+		arrow.polygon = PackedVector2Array([Vector2(1106, 527), Vector2(1121, 522), Vector2(1117, 539)])
+		trend.default_color = profit_color
+		arrow.color = profit_color
+		arrow.visible = true
+	else:
+		trend.points = PackedVector2Array([Vector2(1063, 556), Vector2(1117, 556)])
+		trend.default_color = Color("5b5145")
+		arrow.visible = false
 
 
 func _compact_number(value: float) -> String:

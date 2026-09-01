@@ -4,6 +4,6 @@
 
 [resource]
 script = ExtResource("1")
-text = "By the way, you can press Tab to step into your desk and interact with your logbook, computer screen, and telephone. Press it again to get back to your call system, where you'll actually manage the shift."
+text = "Press Tab to enter Desk Mode and inspect your logbook or computer. To reconnect to the Call Manager, press Tab again or click the telephone."
 duration = 0.0
 final_choice = "NORMAL"

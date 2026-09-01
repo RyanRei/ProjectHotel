@@ -16,7 +16,7 @@ signal record_selected(title: String, tab: String)
 @export var pcClick:AudioStreamPlayer
 
 var database := RosterDatabase.new()
-var current_tab := "RESIDENTS"
+var current_tab := "ROOMS"
 var filtered_records: Array[Dictionary] = []
 var tab_buttons: Dictionary = {}
 
@@ -64,8 +64,10 @@ func open_roster() -> void:
 	visible = true
 	move_to_front()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	# Every new inspection starts on the same Rooms view shown on the physical
+	# monitor, instead of retaining whichever tab was used previously.
+	switch_tab("ROOMS")
 	search_field.grab_focus()
-	refresh_records(search_field.text)
 	roster_opened.emit()
 
 
@@ -128,7 +130,7 @@ func build_header() -> Control:
 func build_tabs() -> Control:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 8)
-	for tab_name in ["RESIDENTS", "VISITORS", "ROOMS"]:#, "ACCESS LOG"]:
+	for tab_name in ["ROOMS", "VISITORS", "RESIDENTS"]:
 		var button := Button.new()
 		button.text = tab_name
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL

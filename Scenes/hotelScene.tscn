@@ -396,7 +396,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_bgc5f")
 
 [node name="Label" parent="TutorialManager/CanvasLayer for tesing/check tab/PanelTexts/PanelContainer" index="1" unique_id=34167543]
 theme_override_font_sizes/font_size = 24
-text = "\"Press Tab to step into your desk i.e your logbook, computer screen telephone. Press it again to get back to your call system, where you'll actually manage the shift"
+text = "\"Press Tab to enter Desk Mode. Press Tab again or click the telephone to reconnect to the Call Manager.\""
 
 [node name="box" parent="TutorialManager/CanvasLayer for tesing/check tab/PanelTexts" parent_id_path=PackedInt32Array(2106677204, 1698298257) index="1" unique_id=1463505934]
 offset_left = 901.0
@@ -444,7 +444,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_bgc5f")
 text = "Nice! The moment you hang up, the clock starts moving again and get ready for the next ring anytime."
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=1109577428]
-layer = 5
+layer = 20
 
 [node name="DialogBox" parent="UI" unique_id=2097814497 node_paths=PackedStringArray("accept_reject", "tutorial") instance=ExtResource("4_wnmts")]
 accept_reject = NodePath("../accept_reject")
@@ -455,6 +455,7 @@ tutorial = NodePath("../../TutorialManager")
 [node name="accept_reject" parent="UI" unique_id=1154958162 instance=ExtResource("4_abrt6")]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=479090964]
+layer = 10
 
 [node name="RosterUI" parent="CanvasLayer" unique_id=1232414128 instance=ExtResource("8_roster")]
 
@@ -470,11 +471,17 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("11_hand")
 
-[node name="DayReportUI" parent="CanvasLayer" unique_id=86161530 instance=ExtResource("13_qnepm")]
+[node name="ReportLayer" type="CanvasLayer" parent="."]
+layer = 40
 
-[node name="ShiftTransitionUI" parent="CanvasLayer" unique_id=1068896443 instance=ExtResource("30_shift_transition")]
+[node name="DayReportUI" parent="ReportLayer" unique_id=86161530 instance=ExtResource("13_qnepm")]
 
-[node name="PauseMenu" parent="CanvasLayer" unique_id=405723742 instance=ExtResource("32_pause_menu")]
+[node name="ShiftTransitionUI" parent="ReportLayer" unique_id=1068896443 instance=ExtResource("30_shift_transition")]
+
+[node name="PauseLayer" type="CanvasLayer" parent="."]
+layer = 100
+
+[node name="PauseMenu" parent="PauseLayer" unique_id=405723742 instance=ExtResource("32_pause_menu")]
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=436142256]
 
@@ -488,8 +495,8 @@ logBookController = NodePath("../models/Logbook")
 phone = NodePath("../models/Telephone")
 encounter_button = NodePath("../UI/continue_encounters")
 days = Array[ExtResource("2_2hvnh")]([SubResource("Resource_u3pq5"), SubResource("Resource_5hxig")])
-day_report_ui = NodePath("../CanvasLayer/DayReportUI")
-shift_transition_ui = NodePath("../CanvasLayer/ShiftTransitionUI")
+day_report_ui = NodePath("../ReportLayer/DayReportUI")
+shift_transition_ui = NodePath("../ReportLayer/ShiftTransitionUI")
 tutorial = NodePath("../TutorialManager")
 
 [node name="empty" type="Node3D" parent="." unique_id=84633623]

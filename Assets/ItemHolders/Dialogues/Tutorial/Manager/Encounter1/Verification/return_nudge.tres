@@ -4,6 +4,6 @@
 
 [resource]
 script = ExtResource("1")
-text = "Geez. Did you just forget already? You need to press Tab to move back to the call. You can't leave your resident hanging."
+text = "Don't leave the resident waiting. Press Tab or click the telephone to reconnect to the Call Manager."
 duration = 0.0
 final_choice = "NORMAL"

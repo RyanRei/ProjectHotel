@@ -222,6 +222,15 @@ func updateLogbook(encounter:EncounterData) -> void:
 		logUpdateAudio.play()
 
 
+func add_story_log_note(note: String) -> void:
+	if not logbook:
+		push_warning("LogbookController has no LogbookUI assigned; story note was not recorded.")
+		return
+	logbook.append_log_note(GameState.day - 1, note)
+	if logUpdateAudio:
+		logUpdateAudio.play()
+
+
 func _on_time_updated(_hour: int, _minute: int) -> void:
 	_sync_scheduled_entries()
 

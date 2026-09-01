@@ -400,6 +400,17 @@ func append_log_entry(page_index: int, entry: Array, note: String = "") -> void:
 		show_page(page_index)
 
 
+func append_log_note(page_index: int, note: String) -> void:
+	if page_index < 0 or page_index >= pages.size() or note.is_empty():
+		return
+	var page := pages[page_index]
+	var existing_notes := str(page.get("notes", ""))
+	page["notes"] = note if existing_notes.is_empty() else existing_notes + "\n" + note
+	pages[page_index] = page
+	if current_page == page_index and is_node_ready() and right_entries != null:
+		show_page(page_index)
+
+
 func add_table(page: Dictionary) -> void:
 	var columns: Array = page["columns"]
 	var rows: Array = page["rows"]

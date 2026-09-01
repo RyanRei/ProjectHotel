@@ -166,6 +166,7 @@ func _focus_relative(direction: int) -> void:
 
 
 func _begin_shift() -> void:
+	DayReportManager.clear_reports()
 	GameState.day = 1
 	GameState.encounter = 1
 	GameState.reputation = 80.0

@@ -62,7 +62,7 @@ next_node = SubResource("r4")
 [sub_resource type="Resource" id="start"]
 script = ExtResource("2_node")
 voiceline = ExtResource("4_intro")
-text = "Hey, it's me, Ven. Room 412. I promise I'm not usually this much of a disaster, but my card's apparently decided tonight's the night it wants to give up on me. Haven't even had my dinner for the night."
+text = "Hey, it's me, Ven. Room 412. I promise I'm not usually this much of a disaster, but my card's apparently decided tonight's the night it wants to give up on me."
 choices = Array[ExtResource("3_choice")]([SubResource("q1"), SubResource("q2"), SubResource("q3"), SubResource("q4")])
 wait_for_prompt = true
 
@@ -75,7 +75,7 @@ dialogue = SubResource("start")
 accepted_dialogue = SubResource("aside")
 communication_type = "RESIDENT"
 time = "12:10 AM"
-LogbookEntry = "11:45 PM - Room 412 - Ven Keer checked in. VIP; keep a low profile and do not disclose to press or other guests."
+LogbookEntry = ""
 report_weight = 3.0
 room_number = "412"
 trigger_hour = 0

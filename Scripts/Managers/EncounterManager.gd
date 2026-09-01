@@ -228,6 +228,8 @@ func start_encounter() -> void:
 		await DialogueManager.dialogue_finished
 		if run_generation != encounter_generation:
 			return
+		if encounter.encounter_id == "ven_keer":
+			_reveal_caleb_reference()
 	if _is_caleb_consequence_call(encounter):
 		await caleb_ending_audio.start_sequence()
 	elif communication_type == "RESIDENT":
@@ -290,6 +292,12 @@ func _skip_unavailable_encounters() -> void:
 	while has_encounter():
 		var candidate := get_current_encounter()
 		match candidate.encounter_id:
+			"caleb":
+				# Ven only reveals Caleb after being admitted. A rejected Ven means
+				# Caleb never appears as an encounter or in hotel records.
+				if not bool(GameState.story_flags.get("ven_admitted", false)):
+					GameState.encounter += 1
+					continue
 			"caleb_taunt":
 				# The final call only happens when Ven was admitted and the
 				# impersonator was subsequently allowed through as Caleb.
@@ -297,6 +305,16 @@ func _skip_unavailable_encounters() -> void:
 					GameState.encounter += 1
 					continue
 		return
+
+
+func _reveal_caleb_reference() -> void:
+	if bool(GameState.story_flags.get("caleb_revealed", false)):
+		return
+	GameState.story_flags["caleb_revealed"] = true
+	if logBookController != null:
+		logBookController.add_story_log_note(
+			"Ven expects his brother Caleb around 1:30 AM; visitor for Room 412."
+		)
 
 
 func _get_dialogue(encounter: EncounterData) -> DialogueNode:
@@ -646,12 +664,10 @@ func _get_consequence(encounter: EncounterData, choice: String) -> String:
 func end_day():
 	var finished_day :int= GameState.day
 
-	DayReportManager.add_report(finished_day, day_results)
+	var completed_report: Dictionary = DayReportManager.add_report(finished_day, day_results)
 	day_results.clear()
 	
-	await day_report_ui.show_report(
-	DayReportManager.get_report(finished_day)
-	)
+	await day_report_ui.show_report(completed_report)
 
 	# The Shift 2 newspaper is the final Win/Game Over screen. Once the player
 	# closes it, return directly to the main menu instead of starting another day.

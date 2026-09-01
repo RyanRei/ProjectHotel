@@ -254,7 +254,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_nkdpq")
 
 [node name="Label" parent="checktab/PanelTexts/PanelContainer" index="1" unique_id=34167543]
 theme_override_font_sizes/font_size = 24
-text = "\"Press Tab to step into your desk i.e your logbook, computer screen telephone. Press it again to get back to your call system, where you'll actually manage the shift"
+text = "\"Press Tab to enter Desk Mode. Press Tab again or click the telephone to reconnect to the Call Manager.\""
 
 [node name="box" parent="checktab/PanelTexts" parent_id_path=PackedInt32Array(1075765468, 1698298257) index="1" unique_id=1463505934]
 offset_left = 901.0

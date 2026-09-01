@@ -94,16 +94,12 @@ func create_idle_display() -> void:
 	system_name.position = Vector2(18, 11)
 	header.add_child(system_name)
 
-	var clock := make_screen_label("11:45 PM", 18, SCREEN_TEXT)
-	clock.position = Vector2(622, 13)
-	header.add_child(clock)
-
-	var tab_names := ["RESIDENTS", "VISITORS", "ROOMS", "ACCESS LOG"]
+	var tab_names := ["ROOMS", "VISITORS", "RESIDENTS"]
 	for index in tab_names.size():
 		var tab := ColorRect.new()
 		tab.color = SCREEN_AMBER if index == 0 else SCREEN_PANEL
-		tab.position = Vector2(22 + index * 181, 86)
-		tab.size = Vector2(174, 42)
+		tab.position = Vector2(22 + index * 242, 86)
+		tab.size = Vector2(234, 42)
 		background.add_child(tab)
 		var tab_label := make_screen_label(tab_names[index], 15, SCREEN_TEXT)
 		tab_label.position = Vector2(16, 10)
@@ -114,15 +110,19 @@ func create_idle_display() -> void:
 	search.position = Vector2(22, 140)
 	search.size = Vector2(724, 40)
 	background.add_child(search)
-	var search_text := make_screen_label("SEARCH NAME / ROOM / STATUS", 14, Color("8e9388"))
+	var search_text := make_screen_label("SEARCH ROOM RECORDS", 14, Color("8e9388"))
 	search_text.position = Vector2(14, 10)
 	search.add_child(search_text)
 
 	var rows := [
-		"ROOM 104    TRACEY MORGAN       OCCUPIED",
-		"ROOM 207    ARTHUR WILLIAMS     OCCUPIED",
-		"ROOM 312    MAYA BENNETT        AWAY",
-		"ROOM 408    DANIEL KIM          OCCUPIED",
+		"ROOM 102    VACANT",
+		"ROOM 104    TRACEY MORGAN              OCCUPIED",
+		"ROOM 112    ARTHUR / ANGELICA WILLIAMS OCCUPIED",
+		"ROOM 203    ELENA VOSS                  OCCUPIED",
+	] if GameState.day == 1 else [
+		"ROOM 207    DANIEL REEVES / MICHAEL TURNER  OCCUPIED",
+		"ROOM 410    ETHAN COLE / DIANA WEBB         OCCUPIED",
+		"ROOM 412    ASSIGNMENT UPDATE                IN SYNC",
 	]
 	for index in rows.size():
 		var row := ColorRect.new()

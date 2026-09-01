@@ -13,13 +13,14 @@ static func resident_specs() -> Array[Dictionary]:
 
 
 static func visitor_records() -> Array[Dictionary]:
-	return [
-		make_record("CALEB KEER", "ROOM 412  -  EXPECTED", "EXPECTED", [
+	var records: Array[Dictionary] = []
+	if bool(GameState.story_flags.get("caleb_revealed", false)):
+		records.append(make_record("CALEB KEER", "ROOM 412  -  EXPECTED", "EXPECTED", [
 			["HOST", "Ven Keer"], ["ROOM", "412"], ["ARRIVAL WINDOW", "Around 1:30 AM"],
 			["RELATION", "Brother"], ["RESERVATION CARD", "None - visitor"],
 			["NOTE", "Travel method not recorded in the computer"],
-		]),
-	]
+		]))
+	return records
 
 
 static func room_records() -> Array[Dictionary]:
@@ -32,8 +33,13 @@ static func room_records() -> Array[Dictionary]:
 
 static func logbook_schedule() -> Array[Dictionary]:
 	return [
-		log_entry(18, 0, "6:00 PM", "SHIFT 2", "--", "IN", "Shift opened. Communication History cleared for the new shift."),
-		log_entry(23, 45, "11:45 PM", "Ven Keer", "412", "IN", "New VIP check-in. Keep a low profile; do not disclose his stay to press or other guests."),
+		log_entry(18, 35, "6:35 PM", "Priya Shah", "318", "IN", ""),
+		log_entry(21, 10, "9:10 PM", "Room 305", "305", "CALL", "Room 305 reported a flickering bathroom light."),
+		log_entry(22, 20, "10:20 PM", "Marcus Lane", "109", "OUT", ""),
+		log_entry(23, 45, "11:45 PM", "Ven Keer", "412", "IN", "VIP Ven Keer checked into Room 412 at 11:45 PM. Do not disclose his stay."),
+		log_entry(0, 35, "12:35 AM", "Room 226", "226", "CALL", ""),
+		log_entry(2, 15, "2:15 AM", "Lena Ortiz", "318", "VIS", ""),
+		log_entry(3, 40, "3:40 AM", "Owen Price", "205", "VIS", ""),
 	]
 
 

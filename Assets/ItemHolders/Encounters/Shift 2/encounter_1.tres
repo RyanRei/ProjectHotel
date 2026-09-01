@@ -68,5 +68,6 @@ caller_type = "KILLER"
 dialogue = SubResource("start")
 communication_type = "RESIDENT"
 time = "8:00 PM"
+LogbookEntry = "Room 410 is shared by Ethan Cole and Diana Webb."
 room_number = "410"
 trigger_hour = 20

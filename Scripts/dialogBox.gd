@@ -45,6 +45,7 @@ var tutorial_line_allow_navigation := false
 var tab_feature_available := true
 
 func _ready() -> void:
+	add_to_group("call_manager")
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if not InputMap.has_action("toggle_hud"):
 		InputMap.add_action("toggle_hud")
@@ -269,7 +270,7 @@ func present_action_prompt(run_generation := dialogue_generation) -> void:
 	is_decision_pending = true
 	is_hud_visible = true
 	is_in_choices = false
-	hint_label.text = "[TAB] Inspect Desk"
+	hint_label.text = "[TAB] Desk Mode"
 	if tab_feature_available:
 		hint_label.show()
 	else:
@@ -308,7 +309,21 @@ func present_action_prompt(run_generation := dialogue_generation) -> void:
 	await hide_line()
 	DialogueManager.advance(choice_made)
 
-func toggle_action_hud():
+func request_call_manager_toggle() -> bool:
+	if not DialogueManager.active or not tab_feature_available or toggle_hud_locked:
+		return false
+	if tutorial_line_active or history_open:
+		return false
+	if DialogueManager.current_node != null and DialogueManager.current_node.unskippable:
+		return false
+	if tutorial_check_tab_active:
+		tutorial_check_tab_active = false
+		tab_checked.emit()
+	toggle_action_hud()
+	return true
+
+
+func toggle_action_hud() -> void:
 	if not DialogueManager.active:
 		return
 	is_hud_visible = !is_hud_visible
@@ -329,7 +344,7 @@ func toggle_action_hud():
 		else:
 			$DialoguePanel.show()
 			
-		hint_label.text = "[TAB] Inspect Desk"
+		hint_label.text = "[TAB] Desk Mode"
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	else:
 		GameState.enter_desk_state()
@@ -341,7 +356,7 @@ func toggle_action_hud():
 				accept_reject.hide()
 				accept_reject.active = false
 			
-		hint_label.text = "[TAB] Open Actions"
+		hint_label.text = "[TAB / PHONE] Call Manager"
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	if tab_feature_available:
 		hint_label.show()
@@ -380,7 +395,7 @@ func set_tab_feature_available(value: bool) -> void:
 	if not value:
 		hint_label.hide()
 	elif is_decision_pending:
-		hint_label.text = "[TAB] Inspect Desk" if is_hud_visible else "[TAB] Open Actions"
+		hint_label.text = "[TAB] Desk Mode" if is_hud_visible else "[TAB / PHONE] Call Manager"
 		hint_label.show()
 
 func wait_for_advance() -> void:
@@ -447,7 +462,7 @@ func show_choices(choices: Array[DialogueChoice]):
 	is_decision_pending = true
 	is_hud_visible = true
 	is_in_choices = true
-	hint_label.text = "[TAB] Inspect Desk"
+	hint_label.text = "[TAB] Desk Mode"
 	if tab_feature_available:
 		hint_label.show()
 	else:
@@ -530,19 +545,7 @@ func _input(event):
 		return
 
 	if event.is_action_pressed("toggle_hud") and DialogueManager.active:
-		if not tab_feature_available:
-			get_viewport().set_input_as_handled()
-			return
-		if DialogueManager.current_node != null and DialogueManager.current_node.unskippable:
-			get_viewport().set_input_as_handled()
-			return
-		if toggle_hud_locked:
-			get_viewport().set_input_as_handled()
-			return
-		if tutorial_check_tab_active:
-			tutorial_check_tab_active = false
-			tab_checked.emit()
-		toggle_action_hud()
+		request_call_manager_toggle()
 		get_viewport().set_input_as_handled()
 		return
 
@@ -661,6 +664,12 @@ func _process(_delta: float) -> void:
 	var tutorial_prompt_active := tutorial != null and tutorial.is_tutorial_prompt_active()
 	var consequence_cutscene := DialogueManager.active and DialogueManager.current_node != null and DialogueManager.current_node.unskippable
 	history_indicator.visible = not history_open and not tutorial_prompt_active and not consequence_cutscene
+
+
+func blocks_desk_interaction() -> bool:
+	if not visible or not is_hud_visible:
+		return false
+	return tutorial_line_active or history_open or $DialoguePanel.visible or question_menu.visible or accept_reject.visible
 
 
 
